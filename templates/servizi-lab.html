@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-secondary-fixed": "#002204",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "tertiary": "#524431",
+                    "surface-tint": "#196c32",
+                    "surface-container-high": "#eae8e7",
+                    "on-background": "#1b1c1c",
+                    "on-primary-fixed": "#002109",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-primary-container": "#98eba2",
+                    "tertiary-container": "#6b5b47",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-variant": "#e4e2e1",
+                    "on-tertiary-container": "#ead4bb",
+                    "on-secondary-container": "#00731e",
+                    "secondary-container": "#91f78e",
+                    "outline": "#707a6e",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#fbf9f8",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#40493f",
+                    "outline-variant": "#bfc9bc",
+                    "background": "#fbf9f8",
+                    "surface-container-highest": "#e4e2e1",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0eded",
+                    "surface-dim": "#dcd9d9",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-container": "#186c32",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1b1c1c",
+                    "tertiary-fixed": "#f5dfc6",
+                    "surface-bright": "#fbf9f8",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#303030",
+                    "on-tertiary-fixed": "#251a0a",
+                    "on-tertiary-fixed-variant": "#534432",
+                    "inverse-primary": "#87d992",
+                    "secondary-fixed": "#94f990",
+                    "on-primary-fixed-variant": "#005321",
+                    "primary-fixed-dim": "#87d992",
+                    "secondary": "#006e1c",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-fixed": "#a3f5ac",
+                    "primary": "#005220"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .premium-shadow {
+            box-shadow: 0px 20px 40px rgba(27, 28, 28, 0.06);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface leading-tight selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Navigation Bar Unificata -->
+<nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+        <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+            <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="text-primary font-bold border-b-2 border-primary pb-1" href="servizi-lab.html">Lab</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Projects</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Blog</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contacts</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Area Riservata
+            </a>
+        </div>
+    </div>
+</nav>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[85vh] flex items-center overflow-hidden">
+<div class="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center w-full">
+<div class="z-10">
+<span class="inline-block font-label text-xs uppercase tracking-[0.3em] text-primary mb-6">Atelier Botanical | Curated Blueprint</span>
+<h1 class="font-headline text-6xl md:text-8xl italic tracking-tighter mb-8 leading-[0.85] text-on-surface">
+                    Design <br/> <span class="pl-12">Meets Lab.</span>
+</h1>
+<p class="font-body text-xl text-on-surface-variant max-w-md mb-12 leading-relaxed">
+                    Un approccio sartoriale alla progettazione architettonica dove l'estetica si fonde con la precisione tecnica integrata.
+                </p>
+<div class="flex gap-4">
+<button class="bg-primary text-on-primary px-10 py-5 rounded-lg font-bold uppercase tracking-[0.2em] text-xs hover:bg-primary-container transition-all shadow-xl shadow-primary/20">Inizia il tuo Progetto</button>
+</div>
+</div>
+<div class="relative">
+<div class="aspect-[4/5] rounded-xl overflow-hidden premium-shadow transform rotate-1">
+<img alt="Interior Design" class="w-full h-full object-cover" data-alt="Modern architectural interior with clean lines, large windows, minimalist furniture, and soft natural morning light hitting textured walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLyWlliaK6xSzU6PBqdC9n13wwexhqPFR_n88wxRjXtdDMudbD17uVyTtrmVXp9A7jCdAcAhHn02cTsnHDSICQVZclLK7EzZKElc2nB_tHfH5KGzK3WE7bEbAMS4yV9EdQUBgWFbL_ZttMEm-4-g0PwOUc_DTXPpbwKz-D3yDWG7JObeOR7XIgyg-vSKHu3J1AgJBnfRarP5AJvTxdwHr83B6AWPlyUxW31ZgOS0l3U-CRyb6fvJpFxZSt-55d4Ht3_n7orxOweiI"/>
+</div>
+<div class="absolute -bottom-8 -left-8 bg-tertiary p-10 rounded-lg text-tertiary-fixed-dim max-w-[280px] transform -rotate-2 shadow-2xl">
+<p class="font-headline italic text-3xl mb-3">Materiali Nobili</p>
+<p class="font-body text-xs opacity-70 uppercase tracking-[0.2em] font-bold">Selected Collection 2024</p>
+</div>
+</div>
+</div>
+<div class="absolute top-1/2 right-0 w-1/3 h-full bg-surface-container-low -z-10 translate-y-[-50%]"></div>
+</section>
+<!-- Section: Consulenza e Progettazione (Technical Spec Modules) -->
+<section class="py-32 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="mb-24 max-w-2xl">
+<span class="font-label text-xs uppercase tracking-[0.3em] text-primary mb-4 block">Integrated Design</span>
+<h2 class="font-headline text-5xl md:text-6xl italic mb-8 leading-tight">Consulenza e Progettazione</h2>
+<p class="text-on-surface-variant text-lg max-w-xl">Dallo studio della luce alla selezione dei materiali, ogni dettaglio è una specifica tecnica verso la perfezione abitativa dell'Atelier Botanical.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-10">
+<!-- Spec Module: Materials -->
+<div class="bg-surface-container-high p-12 rounded-xl flex flex-col h-full border-b-4 border-primary/20 transition-all hover:border-primary">
+<div class="mb-16">
+<span class="material-symbols-outlined text-5xl text-primary" data-icon="texture">texture</span>
+</div>
+<h3 class="font-headline text-3xl mb-6">Materiali &amp; Texture</h3>
+<div class="mt-auto space-y-6">
+<div class="flex justify-between items-end border-b border-outline/20 pb-3">
+<span class="font-label text-xs uppercase tracking-widest opacity-60">Analisi Materica</span>
+<span class="font-headline italic text-2xl text-primary">01</span>
+</div>
+<p class="text-sm leading-relaxed text-on-surface-variant">
+                            Selezione curata di legni, pietre e metalli basata su durabilità, sostenibilità e impatto tattile organico.
+                        </p>
+</div>
+</div>
+<!-- Spec Module: Lighting -->
+<div class="bg-surface-container-high p-12 rounded-xl flex flex-col h-full border-b-4 border-primary/20 transition-all hover:border-primary">
+<div class="mb-16">
+<span class="material-symbols-outlined text-5xl text-primary" data-icon="light_mode">light_mode</span>
+</div>
+<h3 class="font-headline text-3xl mb-6">Lighting Design</h3>
+<div class="mt-auto space-y-6">
+<div class="flex justify-between items-end border-b border-outline/20 pb-3">
+<span class="font-label text-xs uppercase tracking-widest opacity-60">Schema Illuminotecnico</span>
+<span class="font-headline italic text-2xl text-primary">02</span>
+</div>
+<p class="text-sm leading-relaxed text-on-surface-variant">
+                            Studio fotometrico per armonizzare luce naturale ed artificiale, creando scenari botanici per ogni momento.
+                        </p>
+</div>
+</div>
+<!-- Spec Module: Systems -->
+<div class="bg-surface-container-high p-12 rounded-xl flex flex-col h-full border-b-4 border-primary/20 transition-all hover:border-primary">
+<div class="mb-16">
+<span class="material-symbols-outlined text-5xl text-primary" data-icon="settings_input_component">settings_input_component</span>
+</div>
+<h3 class="font-headline text-3xl mb-6">Sistemi &amp; Domotica</h3>
+<div class="mt-auto space-y-6">
+<div class="flex justify-between items-end border-b border-outline/20 pb-3">
+<span class="font-label text-xs uppercase tracking-widest opacity-60">Technical Integration</span>
+<span class="font-headline italic text-2xl text-primary">03</span>
+</div>
+<p class="text-sm leading-relaxed text-on-surface-variant">
+                            Integrazione invisibile di impianti ad alta efficienza e sistemi smart per il massimo comfort abitativo tecnologico.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Il Cantiere Trasparente (Visual Timeline) -->
+<section class="py-32 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+<div class="max-w-2xl">
+<span class="font-label text-xs uppercase tracking-[0.3em] text-primary mb-4 block">Process Management</span>
+<h2 class="font-headline text-5xl md:text-6xl italic mb-8">Il Cantiere Trasparente</h2>
+<p class="text-on-surface-variant text-lg">Eliminiamo l'incertezza. Un workflow documentato e tracciabile, dove la direzione lavori è sinonimo di garanzia, controllo e precisione tecnica.</p>
+</div>
+<div class="font-headline text-9xl text-primary opacity-5 select-none hidden lg:block -mb-8">Workflow</div>
+</div>
+<div class="relative">
+<!-- Timeline Line -->
+<div class="absolute top-1/2 left-0 w-full h-[1px] bg-outline-variant/30 hidden md:block"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
+<!-- Step 1 -->
+<div class="group">
+<div class="bg-surface-container-lowest p-10 rounded-xl premium-shadow relative z-10 transition-transform group-hover:-translate-y-3">
+<div class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-8">1</div>
+<h4 class="font-headline text-3xl mb-4">Rilievo Tecnico</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Analisi millimetrica dello stato di fatto attraverso tecnologie laser scanner per un punto di partenza senza errori progettuali.
+                            </p>
+<div class="mt-8 pt-8 border-t border-outline/10 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs uppercase font-bold tracking-[0.2em]">Fase Analitica</span>
+</div>
+</div>
+<div class="mt-10 overflow-hidden rounded-lg aspect-video shadow-lg">
+<img alt="Technical drawing" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="A clean top-down view of an architectural blueprint drawing with professional measuring tools like a ruler and compass" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDt0vcOKZqXwmZAy-JdFYJesdiZkpEJRjaHQz159Td1iv1axHF9KQFXwC5r18NhTdLIxq6PnDkdiUKnIUZ2zsyxDdlw57EcsjF4AkEz_R5XHLH6ih8hCG-u4QELoinxm7xmZZlwoiM5PEfGam0axlJAPuupCQrm2pyMpH4NPhsx0bRDczG9CU8btrde2qcRTdiwb4Vs1xtThS_O54P3I0wI_uKNsCHtrC3f7oFisictkdSzZFaHWs8dP1rIqS2JhgCMhFV_NmXfo68"/>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="group">
+<div class="bg-surface-container-lowest p-10 rounded-xl premium-shadow relative z-10 transition-transform group-hover:-translate-y-3">
+<div class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-8">2</div>
+<h4 class="font-headline text-3xl mb-4">Integrated Design</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Sviluppo creativo e tecnico sincronizzato. Render fotorealistici e tavole esecutive che non lasciano spazio a interpretazioni.
+                            </p>
+<div class="mt-8 pt-8 border-t border-outline/10 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs uppercase font-bold tracking-[0.2em]">Fase Creativa</span>
+</div>
+</div>
+<div class="mt-10 overflow-hidden rounded-lg aspect-video shadow-lg">
+<img alt="Modern interior render" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Highly detailed 3D photorealistic architectural render of a minimalist modern living room with warm wood textures and designer furniture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhAQQ4DumCmKt4WWSS7SMmePOupDiohhKOSs9YA3ywo5hZUE81I-gYkCeG-L3iEssqmYVCGA9loBV1N7voSZ40yfAbq9Qmhk4_P4efpNaUR7OsC3XLAjy0ZTomfWxRQDXZwUw1iQnrPCBrsPJ1FuYE2wZuhmvHwg0chsucjGgVgaDnadyTjMLj-j0df7ysbGN5PhgCEaE-xuZihcsWrHCnNenJC94vnuQz-2lLlkoxwNtbMk2nRt9Xs9iWniyxDtDuBHJi1Bqr7_k"/>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="group">
+<div class="bg-surface-container-lowest p-10 rounded-xl premium-shadow relative z-10 transition-transform group-hover:-translate-y-3">
+<div class="w-14 h-14 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-8">3</div>
+<h4 class="font-headline text-3xl mb-4">Direzione Lavori</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                                Presenza costante in cantiere. Coordinamento delle maestranze e controllo rigoroso di tempi, materiali e budget tecnico.
+                            </p>
+<div class="mt-8 pt-8 border-t border-outline/10 flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-xs uppercase font-bold tracking-[0.2em]">Fase Esecutiva</span>
+</div>
+</div>
+<div class="mt-10 overflow-hidden rounded-lg aspect-video shadow-lg">
+<img alt="Construction site" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Clean and organized construction site interior during renovation with scaffolding and focused morning light through open windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1UQlCVoJT3vOP_EvtW0hml6DYUzq4RUlEBwo5nw8rAyi3CyKuz5NAPNSuQrnX-XDcrqMELxzIsoFBy1dnOZEVtOJX3OP7824c9r5Z_owieXnN4NvVIUoH7hU8OqQ2EW05sYbg8ALadEkPMY9QtBpGqYaoIL3PBrAa71UbuuttfdRWu_cYlLGMmYvsjB2RG23b6kBTkEkmS16auw9CJeK7CVJaijiSudGpibOrC2umKykvjQ0pn0z0TWiH4eJRCFVAyr5hhtC8SO8"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Area Riservata -->
+<section class="py-32 bg-surface">
+<div class="max-w-7xl mx-auto px-8">
+<div class="relative rounded-2xl overflow-hidden bg-primary p-16 md:p-24 text-on-primary flex flex-col md:flex-row items-center justify-between gap-16 shadow-2xl">
+<!-- Background Accent -->
+<div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-container opacity-90"></div>
+<div class="relative z-10 max-w-xl">
+<span class="font-label text-xs uppercase tracking-[0.4em] text-secondary-container mb-8 block">Atelier Gateway</span>
+<h2 class="font-headline text-5xl md:text-6xl italic mb-8 leading-tight">Il tuo progetto, <br/>sempre online.</h2>
+<p class="text-on-primary/90 text-xl leading-relaxed">
+                        Accedi all'Area Riservata per monitorare l'avanzamento, visualizzare i documenti tecnici e consultare i render in tempo reale.
+                    </p>
+</div>
+<div class="relative z-10 shrink-0">
+<button class="bg-surface-container-lowest text-primary px-12 py-6 rounded-lg font-bold uppercase tracking-[0.2em] text-xs flex items-center gap-4 hover:bg-tertiary-fixed transition-all shadow-xl group">
+<span class="material-symbols-outlined transition-transform group-hover:scale-110" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+                        Area Riservata
+                    </button>
+</div>
+<!-- Decorative Graphic -->
+<div class="absolute -right-20 -bottom-20 w-96 h-96 border border-on-primary/10 rounded-full scale-150 pointer-events-none"></div>
+</div>
+</div>
+</section>
+<!-- Secondary Banner: Project Grid (Asymmetric) -->
+<section class="py-32 bg-surface-container-low overflow-hidden">
+<div class="max-w-7xl mx-auto px-8">
+<div class="grid grid-cols-12 gap-12 items-start">
+<div class="col-span-12 lg:col-span-5">
+<span class="font-label text-xs uppercase tracking-[0.3em] text-primary mb-6 block">Our Portfolio</span>
+<h3 class="font-headline text-7xl md:text-8xl italic leading-[0.85] mb-10">Selected <br/>Works.</h3>
+<p class="font-body text-on-surface-variant text-lg mb-14 leading-relaxed">Una selezione curata di residenze d'autore dove il Design Lab ha applicato la sua filosofia del Curated Blueprint e della precisione tecnica.</p>
+<a class="inline-flex items-center gap-4 text-primary font-bold border-b-2 border-primary/30 pb-2 hover:border-primary transition-all uppercase tracking-widest text-xs" href="portfolio.html">
+                        Visualizza Portfolio 
+                        <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="col-span-12 lg:col-span-7 grid grid-cols-2 gap-6">
+<div class="aspect-[3/4] rounded-xl overflow-hidden translate-y-16 shadow-2xl transition-transform hover:-translate-y-2 duration-700">
+<img alt="Residence A" class="w-full h-full object-cover" data-alt="Exterior of a luxury modern minimalist villa with limestone walls and reflection pool at dusk" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlnbSLrB-00dIVU8B_MgD861XGovD-EBedFdTNUVMThpKmq2PJuMsOd70eH68oeUkMDMHpghxeKDeODUFGHNI2pnQ5B_6mpA-nQVxctivjmF3Ov14hKAfonf3_raDzfH9gXI3zzqYijXRfp4z-7G00sysXpCiwzA2NJlfvU61Qx1Ze9TWorAAXSzh8dM-hL56lD3pb83hJ047UWkhr0eRTrJq4bOfZTcKdqhfxNOeiGGtX49P3ZVha-Zp2RiZ3Lbd8OuqZzQgzDyE"/>
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden shadow-2xl transition-transform hover:-translate-y-2 duration-700">
+<img alt="Residence B" class="w-full h-full object-cover" data-alt="Close up of high-end kitchen cabinet details featuring dark wood and marble textures with designer lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG9UkhXanHnqeyrsJuyYofAMkwjbm8p-8w6SrClrldx7Kv0GYP51bvZDjuY-LTqntHo_k0ZUDPow-RLgKgYqSo26ze_ipE4OsyOYc8hHBtYcrye6pVOmK7LcuRfHwKHG8GvDFPruj6X-xpYDZs8rwbKKH72un6Q0HPLi6xMSwgTmdm1_2k5uz27_1igKnT88cew1wfr-V3qv5wXDhpKYdcecOgG00yER06hMYL4o3wshcvgedsXFVfAZnaZN9H8FYpcAaxB2EZa7o"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-24 px-8 mt-auto bg-surface-container border-t border-outline/10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-7xl mx-auto">
+<div class="col-span-1 md:col-span-2">
+<img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-10 w-auto mb-8">
+<p class="font-body text-sm uppercase tracking-[0.2em] text-on-surface-variant max-w-sm leading-relaxed font-semibold">
+                L'architettura è una pratica tecnica elevata ad arte. Costruiamo il futuro dell'Atelier Botanical con la precisione del passato.
+            </p>
+</div>
+<div>
+<h5 class="font-label text-xs uppercase tracking-[0.3em] text-primary mb-8 font-bold">Esplora</h5>
+<ul class="space-y-5">
+<li><a class="text-on-surface/60 hover:text-primary transition-colors font-label text-xs uppercase tracking-[0.2em] font-semibold" href="#">Privacy Policy</a></li>
+<li><a class="text-on-surface/60 hover:text-primary transition-colors font-label text-xs uppercase tracking-[0.2em] font-semibold" href="#">Terms of Service</a></li>
+<li><a class="text-on-surface/60 hover:text-primary transition-colors font-label text-xs uppercase tracking-[0.2em] font-semibold" href="#">Newsletter</a></li>
+<li><a class="text-on-surface/60 hover:text-primary transition-colors font-label text-xs uppercase tracking-[0.2em] font-semibold" href="#">Office Locations</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label text-xs uppercase tracking-[0.3em] text-primary mb-8 font-bold">Contatti</h5>
+<p class="text-on-surface/60 font-label text-xs uppercase tracking-[0.2em] leading-loose font-semibold">
+                Avellino, Italy<br/>
+                info@designlab.collection<br/>
+                +39 0825 123456
+            </p>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-8 mt-24 pt-8 border-t border-outline/10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface/40 font-bold">
+                © 2024 Home Design Lab &amp; Collection. Atelier Botanical.
+            </p>
+<div class="flex gap-6">
+<a class="text-on-surface/40 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl" data-icon="share">share</span></a>
+<a class="text-on-surface/40 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined text-xl" data-icon="mail">mail</span></a>
+</div>
+</div>
+</div>
+</footer>
+<script defer src="assets/js/site.js"></script>
+</body></html>

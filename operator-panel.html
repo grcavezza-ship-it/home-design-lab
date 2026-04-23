@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="light" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Operator Panel - Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+    <!-- Navigation -->
+    <nav class="bg-surface-container border-b border-outline/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-primary">Home Design Lab</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="dashboard.html" class="text-on-surface hover:text-primary">
+                        <span class="material-symbols-outlined align-middle mr-1">dashboard</span>
+                        Dashboard
+                    </a>
+                    <a href="#" class="text-primary font-medium">
+                        <span class="material-symbols-outlined align-middle mr-1">business</span>
+                        Cantieri
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-white text-sm">person</span>
+                        </div>
+                        <span id="user-name" class="text-sm font-medium">Caricamento...</span>
+                    </div>
+                    <button onclick="logout()" class="text-red-600 hover:text-red-800">
+                        <span class="material-symbols-outlined align-middle">logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- User Welcome Section -->
+        <div class="mb-8">
+            <div class="bg-surface-container rounded-lg p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-primary mb-2">Benvenuto, <span id="user-fullname">Operatore</span></h2>
+                        <p class="text-on-surface/70">Gestisci i tuoi cantieri e completa le attività assegnate</p>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm text-on-surface/70">Cantieri assegnati</div>
+                        <div class="text-3xl font-bold text-primary" id="cantieri-count">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cantieri Container -->
+        <div id="cantieri-container">
+            <!-- Content will be loaded here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Cantiere Detail Modal -->
+    <div id="cantiere-detail-modal">
+        <!-- Content will be dynamically generated -->
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://your-project.supabase.co';
+        const supabaseKey = 'your-anon-key';
+        
+        // Initialize Supabase
+        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Load environment variables
+        fetch('./config.js')
+            .then(response => response.json())
+            .then(config => {
+                if (config.supabaseUrl && config.supabaseAnonKey) {
+                    window.supabase = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                }
+            })
+            .catch(err => console.log('Using fallback Supabase config'));
+
+        // Logout function
+        async function logout() {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        }
+
+        // Check authentication and load user info
+        async function checkAuth() {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            
+            if (!user || error) {
+                window.location.href = 'login.html';
+                return false;
+            }
+
+            // Get user profile
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('user_id', user.id)
+                .single();
+
+            if (!profile) {
+                window.location.href = 'login.html';
+                return false;
+            }
+
+            // Update UI with user info
+            document.getElementById('user-name').textContent = profile.full_name || profile.email;
+            document.getElementById('user-fullname').textContent = profile.full_name || 'Operatore';
+
+            return true;
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuthenticated = await checkAuth();
+            if (isAuthenticated) {
+                // Load the Google Drive integration script first
+                const driveScript = document.createElement('script');
+                driveScript.src = './google-drive-integration.js';
+                driveScript.onload = () => {
+                    console.log('Google Drive integration loaded');
+                };
+                document.head.appendChild(driveScript);
+                
+                // Load the operator panel script
+                const script = document.createElement('script');
+                script.src = './operator-panel.js';
+                script.onload = () => {
+                    console.log('Operator panel loaded');
+                    // Update cantieri count when loaded
+                    setTimeout(() => {
+                        const count = document.querySelectorAll('#cantieri-container .bg-surface-container').length;
+                        document.getElementById('cantieri-count').textContent = count;
+                    }, 1000);
+                };
+                document.head.appendChild(script);
+            }
+        });
+    </script>
+</body>
+</html>

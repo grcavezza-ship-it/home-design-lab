@@ -1,0 +1,31 @@
+{
+  "name": "home-design-lab",
+  "version": "1.0.0",
+  "description": "Home Design Lab - Real Estate and Architecture Platform",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "build": "echo 'Build completed'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "real-estate",
+    "architecture",
+    "design",
+    "portfolio"
+  ],
+  "author": "Home Design Lab",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

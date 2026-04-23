@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Villa Orizzonte | Atelier Botanical</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=Manrope:wght@300;400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#bfc9bc",
+                    "tertiary-fixed": "#f5dfc6",
+                    "on-primary-fixed": "#002109",
+                    "inverse-surface": "#303030",
+                    "on-tertiary-fixed": "#251a0a",
+                    "surface-dim": "#dcd9d9",
+                    "on-secondary": "#ffffff",
+                    "primary-container": "#186c32",
+                    "tertiary-container": "#6b5b47",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary": "#006e1c",
+                    "on-primary-container": "#98eba2",
+                    "inverse-on-surface": "#f3f0f0",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#707a6e",
+                    "primary-fixed": "#a3f5ac",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#196c32",
+                    "primary": "#005220",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed-variant": "#534432",
+                    "on-secondary-fixed-variant": "#005313",
+                    "inverse-primary": "#87d992",
+                    "surface-container-low": "#f6f3f2",
+                    "on-secondary-fixed": "#002204",
+                    "on-background": "#1b1c1c",
+                    "on-secondary-container": "#00731e",
+                    "tertiary": "#524431",
+                    "secondary-container": "#91f78e",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#eae8e7",
+                    "background": "#fbf9f8",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "primary-fixed-dim": "#87d992",
+                    "on-primary-fixed-variant": "#005321",
+                    "surface": "#fbf9f8",
+                    "surface-container-highest": "#e4e2e1",
+                    "secondary-fixed": "#94f990",
+                    "on-tertiary-container": "#ead4bb",
+                    "on-surface": "#1b1c1c",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-error-container": "#93000a",
+                    "surface-container": "#f0eded",
+                    "surface-bright": "#fbf9f8",
+                    "on-surface-variant": "#40493f",
+                    "surface-variant": "#e4e2e1"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .serif-italic { font-family: 'Noto Serif', serif; font-style: italic; }
+        .text-justify-custom { text-align: justify; text-justify: inter-word; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-12 py-6 bg-background/80 backdrop-blur-xl">
+<a class="text-2xl font-serif tracking-tighter text-on-surface hover:text-primary transition-colors" href="index.html">Atelier Botanical</a>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-on-surface/60 font-label uppercase tracking-[0.2em] text-[10px] hover:text-primary transition-colors duration-300" href="servizi-lab.html">Lab</a>
+<a class="text-primary border-b border-tertiary-fixed-dim pb-1 font-label uppercase tracking-[0.2em] text-[10px]" href="collection.html">Collection</a>
+<a class="text-on-surface/60 font-label uppercase tracking-[0.2em] text-[10px] hover:text-primary transition-colors duration-300" href="chi-siamo.html">Studio</a>
+<a class="text-on-surface/60 font-label uppercase tracking-[0.2em] text-[10px] hover:text-primary transition-colors duration-300" href="journal.html">Journal</a>
+</div>
+<div class="flex items-center gap-6">
+<a class="text-[10px] font-label uppercase tracking-[0.2em] font-bold text-primary hover:opacity-70 transition-opacity inline-flex items-center" href="contatti.html">Inquire</a>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high ring-1 ring-outline-variant/30">
+<img alt="Studio Profile" data-alt="Close-up portrait of a professional architect in a minimal sunlit studio environment with warm natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGbnORRTnZowIM474gzces-DGc6cIzySVe0X0G2822MKVCPrHIeQ1KwH3z6fmkS2qaO1C8IREEPz6SaRsO3NRL-OPAzDZR4yCLN_rOODir84k--n0no7-NsT0MyLFvDi52KBIti1CfxVzwT0KURMyI8Ur3lKRB54Nq1YgkAU0TCTKpLA3qZRYjj11vQvdLx2GicZ6ayrG0sMeAUUj_mpA6tvIijw7a8Usfpsklb8mf1Ur22SeMrXzvU55bwbrs9Uax33x6Z1tqynU"/>
+</div>
+</div>
+</nav>
+<main class="pt-24">
+<!-- Hero & Gallery Section -->
+<section class="px-6 md:px-12 py-12">
+<div class="flex flex-col md:flex-row gap-4 h-[716px]">
+<div class="flex-grow md:w-2/3 h-full overflow-hidden bg-surface-container-low group">
+<img alt="Villa Orizzonte Exterior" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Modern architectural villa with floor-to-ceiling glass walls overlooking a lush botanical garden at dusk with soft interior lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzuJU5Jqw03nHY0ibGs30M83y0FUpvchaWRcQV50GL5_VauiWAgAS61jCeVF69KCsWgQjpiAiG_xes-AK4F3ysrGqa6bkm0q6Rndf33xpeStGF68tIgS_cSQvP4s0tq2N1Plvx6PTrjMoSNrTpwtoTji8OxMwc8gl5GH7AzuyK68msexZ7RG8bhJedMnmC8RTrVj7n0bTLxYRCnKEXyZdLDdSa3DtlZ-kJpn6dPUeXnHqPxmzTY2el-hrQmWztvcsqXc9wN4V_hX0"/>
+</div>
+<div class="md:w-1/3 flex flex-col gap-4 h-full">
+<div class="h-1/2 overflow-hidden bg-surface-container-low group">
+<img alt="Villa Orizzonte Interior" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Minimalist luxury living room with natural oak flooring, white linen furniture, and large windows showcasing garden greenery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0JqEVgRSD9ZVKNde6aO_gppTk8zuTLTnZyGS7pdeCK_gQa67DAHPHzb1BROFLbmDAMz9DHIQ5Nm2Sclgw5IKhuhfJsl90sirkkFza1mOmueN4gGbtd2e_QadHFqwqFpuYaOAd2-XJZq7XwpzPw6R1Cg4s6tBKxUfG6602EWGbUYMu_bhgTo8CSNQgb8Aw3pak1dsgO2tmSGd9NVrnFUtH9sKku_qrFaXi3Gq6cpxUycY0ag3it-BMbjAKs8mg_NOk6zYVGVGKxJg"/>
+</div>
+<div class="h-1/2 overflow-hidden bg-surface-container-low group">
+<img alt="Villa Orizzonte Detail" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" data-alt="Architectural detail of a floating stone staircase with integrated LED lighting and textured concrete wall background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuo0tjO2fZxjdQxz4gzlykTOPSnlbKHR7B95h7SE0pogF4tas4nkNvv8arAmD0zL2PJIJyg0K-XOgvMPic6LI2MHXTaXCj7w7qIW0UbkXRgiDiokB5aYEYi8MAHMp5bxxf8gJDgBZB5oK8a1sIAugBHXrl3K8AsSt-AWwa2wYhfDouDx4XWGlFSoWawzPh-ZYkBbEIOMHg2dxo4e9HX-KUiei6J7_E6uVOiUBcveebDAxj2w0moYTnHTe7U1j0RoCGGlqwRuTMz6k"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Property Overview -->
+<section class="px-6 md:px-12 py-16 grid grid-cols-1 lg:grid-cols-12 gap-16">
+<div class="lg:col-span-8">
+<span class="font-label text-xs uppercase tracking-[0.4em] text-primary mb-6 block">The Collection / Residential</span>
+<h1 class="font-headline text-7xl md:text-9xl italic tracking-tighter mb-12">Villa Orizzonte</h1>
+<div class="flex flex-wrap gap-16 mb-20">
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-2">Location</p>
+<p class="font-body text-2xl font-light">Lake Como, Italy</p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-2">Surface</p>
+<p class="font-body text-2xl font-light">420 sqm</p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-2">Energy Class</p>
+<p class="font-body text-2xl font-semibold text-primary">A+</p>
+</div>
+</div>
+<div class="max-w-3xl space-y-12">
+<div>
+<h2 class="font-label text-[10px] uppercase tracking-[0.4em] mb-8 text-on-surface/50">The Renovation Story</h2>
+<p class="font-body text-xl leading-relaxed text-on-surface-variant text-justify-custom">
+                        Born from the skeletal remains of a mid-century modernist retreat, Villa Orizzonte has been reimagined as a dialogue between architectural precision and the untamed botanical landscape of the Como shoreline. Our studio focused on "the horizon" as the primary design axis, ensuring every structural element frames the water without obstruction.
+                    </p>
+</div>
+<div>
+<p class="font-body text-xl leading-relaxed text-on-surface-variant text-justify-custom">
+                        The restoration involved the delicate integration of sustainable geothermal systems and a bespoke automation layer that vanishes into the materiality of the walls. It is not just a residence, but a living blueprint of future-proof luxury.
+                    </p>
+</div>
+</div>
+</div>
+<!-- CTA Sidebar -->
+<div class="lg:col-span-4">
+<div class="bg-surface-container-low p-10 rounded-lg sticky top-32 border border-outline-variant/20 shadow-sm">
+<h3 class="font-headline text-4xl italic mb-6">Private Viewing</h3>
+<p class="font-body text-sm text-on-surface-variant leading-relaxed mb-10">Experience the architectural harmony of Villa Orizzonte first-hand. Private tours are curated by our principal designers.</p>
+<button class="w-full py-5 bg-primary text-on-primary font-label text-[11px] uppercase tracking-[0.3em] font-bold hover:bg-secondary transition-colors duration-300">
+                    Book a Private Visit
+                </button>
+<div class="mt-10 pt-10 border-t border-outline-variant/30">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="verified">verified</span>
+<span class="font-label text-[10px] uppercase tracking-[0.3em] font-bold">Authenticated Property</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Specifications -->
+<section class="bg-surface-container-low py-32 px-6 md:px-12 border-y border-outline-variant/10">
+<div class="max-w-screen-xl mx-auto">
+<h2 class="font-label text-[10px] uppercase tracking-[0.5em] mb-20 text-center text-on-surface/50">Technical Specifications</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Spec 1: Materials -->
+<div class="bg-background p-10 rounded-sm border border-outline-variant/20 flex flex-col justify-between h-80 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-6" data-icon="texture">texture</span>
+<h4 class="font-headline text-2xl italic mb-4">Materials Archive</h4>
+</div>
+<ul class="font-label text-[10px] uppercase tracking-[0.2em] space-y-3 text-on-surface-variant">
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Honed Travertine Silver</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Smoked European Oak</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Carbon-Injected Concrete</li>
+</ul>
+</div>
+<!-- Spec 2: Home Automation -->
+<div class="bg-background p-10 rounded-sm border border-outline-variant/20 flex flex-col justify-between h-80 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-6" data-icon="nest_remote_comfort_sensor">nest_remote_comfort_sensor</span>
+<h4 class="font-headline text-2xl italic mb-4">Automation</h4>
+</div>
+<ul class="font-label text-[10px] uppercase tracking-[0.2em] space-y-3 text-on-surface-variant">
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Invisible Audio Integration</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Adaptive Circadian Lighting</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Biometric Access Control</li>
+</ul>
+</div>
+<!-- Spec 3: Climate -->
+<div class="bg-background p-10 rounded-sm border border-outline-variant/20 flex flex-col justify-between h-80 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500">
+<div>
+<span class="material-symbols-outlined text-primary text-3xl mb-6" data-icon="thermostat">thermostat</span>
+<h4 class="font-headline text-2xl italic mb-4">Sustainability</h4>
+</div>
+<ul class="font-label text-[10px] uppercase tracking-[0.2em] space-y-3 text-on-surface-variant">
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Geothermal Heat Exchange</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Rainwater Filtration Lab</li>
+<li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-tertiary-fixed-dim"></span> Passive Solar Orientation</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Aesthetic Accent Section -->
+<section class="px-6 md:px-12 py-40 flex flex-col md:flex-row gap-24 items-center max-w-screen-2xl mx-auto">
+<div class="w-full md:w-1/2">
+<div class="relative">
+<div class="aspect-square bg-tertiary-fixed-dim absolute -top-8 -left-8 w-32 h-32 -z-10 opacity-30"></div>
+<img alt="Architectural Materiality" class="w-full h-[700px] object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Macro photography of raw travertine stone textures juxtaposed with a smooth dark metal edge in a high-contrast architectural setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPp_wiN-dgEfQ6tGbFQ2i0eoV-mpJ5kLS6ADniEn_7LhiVpQWCp1O9AOaFjXMzYLK0J4i2fzUg4Gw0E3uJsWRP7agXXW1liUmBzo9vCfxICm5F4HxInm8jPGLuubzzV-0-VWDQVy6rpy_F-BksZvtTCkEr1jDFDhQkeB8KOG11EN_h4aX25fc7Q2NEDxAHhLm6J8THVNXTlUlia49zK7K_ta8q3MzQIPkrdAV5M-eK5ts2oipa4UiaDKxqlXAHpNAjNLiPOqwvvMo"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 lg:pl-12">
+<h3 class="font-headline text-5xl md:text-7xl italic leading-tight mb-12 tracking-tight">"Architecture is a botanical process, grown from the site's own DNA."</h3>
+<p class="font-label text-xs uppercase tracking-[0.4em] text-primary font-bold border-l-2 border-primary pl-6 py-2">Lead Architect — Atelier Botanical</p>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-outline-variant/20 bg-surface-container-low px-12 py-24">
+<div class="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
+<div class="md:col-span-2">
+<div class="font-serif text-3xl tracking-tighter text-on-surface mb-8">Atelier Botanical</div>
+<p class="font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant max-w-md leading-relaxed">
+                Designing the intersection of luxury living and ecological integrity. Dedicated to the craft of enduring architectural statements.
+            </p>
+</div>
+<div class="flex flex-col gap-6">
+<p class="font-label text-[11px] uppercase tracking-[0.3em] text-primary font-bold mb-4">Navigation</p>
+<a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors" href="#">Materials Archive</a>
+<a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors" href="#">Sustainability Report</a>
+<a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors" href="journal.html">Journal</a>
+</div>
+<div class="flex flex-col justify-between">
+<div class="flex flex-col gap-6">
+<p class="font-label text-[11px] uppercase tracking-[0.3em] text-primary font-bold mb-4">Legal</p>
+<a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+</div>
+<p class="font-label text-[9px] uppercase tracking-[0.3em] text-on-surface/40 mt-16">
+                © 2024 Atelier Botanical. Architectural Precision.
+            </p>
+</div>
+</div>
+</footer>
+<script defer src="assets/js/site.js"></script>
+</body></html>

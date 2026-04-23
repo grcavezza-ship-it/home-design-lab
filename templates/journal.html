@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary": "#1B4332", // Atelier Botanical Deep Green
+                "secondary": "#2D6A4F",
+                "accent": "#B7E4C7",
+                "background": "#F8F9F8", // Soft editorial off-white
+                "surface": "#FFFFFF",
+                "on-surface": "#1B1C1C",
+                "on-surface-variant": "#4A4A4A",
+                "outline": "#D1D5DB",
+                "primary-container": "#D8F3DC"
+            },
+            "borderRadius": {
+                "DEFAULT": "0rem", // Sharp editorial edges
+                "lg": "0rem",
+                "xl": "0rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Noto Serif", "serif"],
+                "body": ["Manrope", "sans-serif"],
+                "label": ["Manrope", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #F8F9F8;
+            color: #1B1C1C;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Noto Serif', serif;
+        }
+        .editorial-border {
+            border-bottom: 1px solid rgba(27, 67, 50, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Navigation Bar Unificata -->
+<nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+        <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+            <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Projects</a>
+            <a class="text-primary font-bold border-b-2 border-primary pb-1" href="journal.html">Blog</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contacts</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Area Riservata
+            </a>
+        </div>
+    </div>
+</nav>
+<main class="pt-32 pb-24">
+<!-- Hero Section -->
+<header class="max-w-[1440px] mx-auto px-6 md:px-12 mb-24">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-7">
+<p class="font-label text-[10px] uppercase tracking-[0.4em] text-primary mb-6 font-bold">The Journal / Issue No. 04</p>
+<h1 class="text-6xl md:text-8xl font-serif text-primary leading-[1.05] tracking-tight mb-10">
+                    Technical <br/><span class="italic font-normal">Elegance</span>.
+                </h1>
+<p class="text-on-surface-variant max-w-xl text-xl leading-relaxed font-light">
+                    A curated archive of architectural insights, material science, and the evolving regulations of modern living spaces. Exploring precision engineering through a botanical lens.
+                </p>
+</div>
+<div class="lg:col-span-5 aspect-[4/5] overflow-hidden bg-primary-container">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" data-alt="Modern architectural interior with clean lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKjBoyZW_RVnv6_JvojLw2dSM0vjiYv-BTuF1Z2I3sOfX773c_-lADPbs10ieMJ5nxgP1tue6yjpmkgURlWNQssOe_oJtFyBpG8ou7RnK2ue97mblJeF-GFuOE_v2gmPp-4vAC7UfDUzEcRSZzD_mvuZSJzboaRmbJ8MAvOAX97YkSB4IXbcljEpznrazyVpFYctmDwL1113WkaYyByZFxmjcbleHQmCs414dY6mBi70CQVpkg9ZYJ181Djdp5lhkRG_xV0g654mM"/>
+</div>
+</div>
+</header>
+<!-- Category Filter -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-12 mb-20">
+<div class="flex flex-wrap gap-8 border-y border-primary/10 py-6">
+<button class="text-[10px] uppercase tracking-[0.3em] font-bold text-primary border-b border-primary">All Archives</button>
+<button class="text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all">Interior Trends</button>
+<button class="text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all">Construction Pills</button>
+<button class="text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all">Local Regulations</button>
+<button class="text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all">Sustainability</button>
+</div>
+</section>
+<!-- Journal Grid -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+<!-- Main Featured Post -->
+<article class="lg:col-span-8 group cursor-pointer">
+<div class="aspect-[16/9] overflow-hidden bg-primary-container mb-10">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale-[0.5] group-hover:grayscale-0" data-alt="Sleek corporate boardroom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQpF3k2_eAjmhsozT42WsMO0_g2stcCD_FuBdJwD95QZ6kq6LJxA1qxjSOukvc9muYBgFzIS7uUeWBi9yCDUy7ZLYSBndHalWubOp-S4jvut8V6f5Wj-1ppz-eSbqnbK-rve_9h-vPckooHAgPGDRWsC53axdkgFESg-5HXXi_Vb3Kgata2EweudQvw35GLwAIpWLvtvoT8en3HCTfG5rMwlCdiNcZlGf52vCs1_ZgwLdEZ47G9BnZ7zGJkrdSQkWf6YbO9vmMPLc"/>
+</div>
+<div class="max-w-3xl">
+<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-6 block">Construction Pills</span>
+<h2 class="text-4xl md:text-5xl font-serif text-primary mb-8 group-hover:italic transition-all duration-500">The Physics of Quiet: Structural Soundproofing in Open Layouts</h2>
+<p class="text-on-surface-variant font-light text-lg leading-relaxed mb-10">Implementing acoustic precision within expansive concrete structures requires more than just insulation. We dive into the science of decoupled wall systems and high-density material layers.</p>
+<div class="flex items-center gap-4 py-4 border-t border-primary/5">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-primary-container grayscale">
+<img class="w-full h-full object-cover" data-alt="Portrait of Julian Vane" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAKFUC1YbV6Yk1uNOzaQQ_16utp_n9YOOwqtOIsK-4UNAuMpTpD6I9vonC6IJaS69y86kQgnmwGE9CS4dbe3EEUoKgoislCtrq5wHW-Ieu11v7quxh7Wv9RkgjKgAj6zG19G6_yZiW96iC_Uan-6HoiYyIdE4FEYbp4-RC590p_O2Rve2jKDBmEUaGpFiJnCDuthpx5l_u_oQPzSuLu-h8-YLKlMe6HIGn891wuOYIJFui-JHBsnEk1NeVilLuZ6eLSWjxG-Pu0Co"/>
+</div>
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-primary">Julian Vane</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Senior Structural Lead</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Sidebar Secondary Posts -->
+<aside class="lg:col-span-4 space-y-20">
+<article class="group cursor-pointer">
+<div class="aspect-square w-full overflow-hidden bg-primary-container mb-8">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Close up of high-end building materials" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgYTmsRwoj0A4bvIWm-WrGEpwWfR-K4GSSBf_1XJmNktAz5qYoDsItnosY_YqQXzbTUH4geTNY2EWC0hJsg2QcavqLN_zno0oMiPNPU77nIISWbep9XOmDtmEtFiE977GJgxc02CcKGDFP0Ov8ZN3fA7l8OZrF1PFfWc8rTGbVmLZfx3h696O-R1xqmrp5AMN99jgnHQ_5qd_CH-jitMeFMUtSj9zQ6pP0FGhXkj7z9POUO3V9nP40wgWlzTu3B5hMr4iaAxbMDPo"/>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block">Interior Trends</span>
+<h3 class="text-2xl font-serif text-primary mb-4 group-hover:italic transition-all">Organic Minimalism: The 2024 Texture Palette</h3>
+<p class="text-sm text-on-surface-variant font-light leading-relaxed line-clamp-3">Moving beyond flat surfaces into tactile luxury. Why raw stone and brushed metal are dominating this season's studio blueprints.</p>
+</article>
+<article class="group cursor-pointer">
+<div class="aspect-square w-full overflow-hidden bg-primary-container mb-8">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Modern blueprints" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeLU2lHF5Qn7oaG_764MyDViwKnnflhRYQC18D7NcNmwOYjtzn-2QlX3-iCdm_SSUTk5JEPeTDgC3tTp2dB5NYRQWfoNmnokhwL8OGnwy2UUOHWCSeb_uxP1hXtXF_lViT9-NIVd6XO-pFFSJX1EnoSsTbDZRX1_wUm1qVmzEv1oNoJ420_0qKZG92r5TqYa725MnHxlAZSQBvJxQDVthkIItmbypJzKxpwa8PUy9p9OjxCsTSI4d4JAR9QFPR_eGMARyRsoRPzPc"/>
+</div>
+<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 block">Local Regulations</span>
+<h3 class="text-2xl font-serif text-primary mb-4 group-hover:italic transition-all">Urban Density: Navigating New Zoning Bylaws</h3>
+<p class="text-sm text-on-surface-variant font-light leading-relaxed line-clamp-3">Understanding the recent shift in residential permits for secondary units and vertical expansion in historic districts.</p>
+</article>
+</aside>
+</div>
+<!-- Technical Spec Row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16 mt-32 pt-20 border-t border-primary/10">
+<article class="flex flex-col group">
+<div class="aspect-video overflow-hidden bg-primary-container mb-8">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Cantilevered concrete staircase" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4X6A8ht2IdJXdEL9028KYTSDVo-ttczcX81uFptmZn6GIP5rKKS_AjWSF0c_1SLtyMInui-a7ewHmjg6XBtbxXa2IizgMp4-Oz2UBXljSck2qO1xtIXgbi-6d0S0JnZNsekCFLTG9k9aXp6aVyIk_JZzq-_sG117rK-YfCYlBPrCDhNaMzdKA5wlFxelAz4FqJwzAw_21-AOHL3WilYkoPV4Z8W2Q4gtIRQcdBoFKbB72HUXc23pom_gBKh51O-KrBwHxvZ2kNS0"/>
+</div>
+<span class="text-[9px] uppercase tracking-[0.4em] font-bold text-on-surface-variant mb-4">SPEC 042</span>
+<h4 class="text-xl font-serif text-primary mb-6 leading-snug">The Cantilever Challenge: Visual Weightlessness</h4>
+<a class="text-primary text-[10px] font-bold uppercase tracking-[0.3em] border-b border-primary/30 pb-1 self-start hover:border-primary transition-all" href="#">Download Spec</a>
+</article>
+<article class="flex flex-col group">
+<div class="aspect-video overflow-hidden bg-primary-container mb-8">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Contemporary lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEYmhv4n2KfdJo0LvKAJNabf6UXIbRsxNnJqF-SchDb3p-FyDsl4amIcvUyeK11f6TZjML6mNjNL3FUswB6PCNCH-NFEzFeiANmRDW1zVwxRpUDQc7s7VZf7k2qYZteWQZyyqjgXdEDvqb_0sJVdqlFPhBGvK_HBy5nnv6YTnvLYZUOoYnVwTunJB8PgRqaw61zAQ3l_Xxozagl7za0pOWWiqyTA3AW5s5xClQfrgwzfhAe0FXBqSzp36hpbbKdBYKz_vjw3wXfDE"/>
+</div>
+<span class="text-[9px] uppercase tracking-[0.4em] font-bold text-on-surface-variant mb-4">LIGHTING LAB</span>
+<h4 class="text-xl font-serif text-primary mb-6 leading-snug">Circadian Sync: Integrated Smart Lighting</h4>
+<a class="text-primary text-[10px] font-bold uppercase tracking-[0.3em] border-b border-primary/30 pb-1 self-start hover:border-primary transition-all" href="#">Read Analysis</a>
+</article>
+<article class="flex flex-col group">
+<div class="aspect-video overflow-hidden bg-primary-container mb-8">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Modern rooftop garden" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpLFlDvt6O4p0UHPZIvsZSW0-VBZL-9ParlxcHzWtcQdYiaC8lRGZeGMlTnfGcmB3Q95St3s_mspZOv94lGxfSlDkEh8UOSRZjGaD8Sfj6yW8yzggIL9zCMARIA3ht5mQlaayQxrsAkAbt6w7m4L3VMZuMOuG9WYgz6-cpMkDJwuGd170UZtti1if6fCdf2_PrVpwJ3CTJZpba8r9045TE7FWntHxIN7r__zyu3FQVA4rRtKo3cB2_ZZi7BGOwR2j_qPszO10BGnY"/>
+</div>
+<span class="text-[9px] uppercase tracking-[0.4em] font-bold text-on-surface-variant mb-4">REGULATION</span>
+<h4 class="text-xl font-serif text-primary mb-6 leading-snug">Green Roof Mandates: Developer Guide</h4>
+<a class="text-primary text-[10px] font-bold uppercase tracking-[0.3em] border-b border-primary/30 pb-1 self-start hover:border-primary transition-all" href="#">Check Guidelines</a>
+</article>
+</div>
+</section>
+<!-- Newsletter Section -->
+<section class="max-w-[1440px] mx-auto px-6 md:px-12 mt-32">
+<div class="bg-primary-container py-24 px-12 md:px-24 flex flex-col md:flex-row justify-between items-center gap-16 relative overflow-hidden">
+<div class="max-w-xl relative z-10">
+<p class="font-label text-[10px] uppercase tracking-[0.4em] text-primary mb-6 font-bold">Archives</p>
+<h2 class="text-4xl md:text-5xl font-serif text-primary mb-8 leading-tight">Weekly technical insights and trend reports.</h2>
+<p class="text-primary/70 font-light italic">Zero fluff. Only architectural precision and curated design data.</p>
+</div>
+<div class="w-full md:w-auto relative z-10">
+<form class="flex flex-col gap-6" id="site-journal-newsletter">
+<input name="email" class="bg-transparent border-b border-primary/30 focus:ring-0 focus:border-primary px-0 py-4 w-full md:w-96 text-primary placeholder-primary/40 text-sm" placeholder="Professional Email" type="email" required/>
+<button class="bg-primary text-white px-12 py-4 font-bold tracking-[0.3em] text-[10px] uppercase hover:bg-secondary transition-colors" type="submit">Subscribe</button>
+</form>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-24 px-6 md:px-12 bg-primary text-white">
+<div class="max-w-[1440px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8 items-start mb-24">
+<div class="md:col-span-2 space-y-10">
+<div class="text-2xl font-serif font-bold tracking-tight">ATELIER BOTANICAL</div>
+<p class="text-accent/60 text-sm max-w-sm leading-relaxed font-light">
+                    Architectural precision meets editorial luxury. Shaping the future of spatial design through botanical research and aesthetic mastery.
+                </p>
+<div class="flex gap-8 text-accent/40">
+<span class="material-symbols-outlined hover:text-accent cursor-pointer transition-colors">architecture</span>
+<span class="material-symbols-outlined hover:text-accent cursor-pointer transition-colors">eco</span>
+<span class="material-symbols-outlined hover:text-accent cursor-pointer transition-colors">design_services</span>
+</div>
+</div>
+<div class="space-y-6">
+<p class="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">Navigation</p>
+<ul class="space-y-4">
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="servizi-lab.html">The Lab</a></li>
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="collection.html">The Collection</a></li>
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="portfolio.html">Blueprints</a></li>
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="login.html">Studio Access</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<p class="text-[10px] uppercase tracking-[0.3em] font-bold text-accent">Legal</p>
+<ul class="space-y-4">
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="#">Terms of Service</a></li>
+<li><a class="text-accent/60 hover:text-white text-xs transition-colors" href="#">Press Kit</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-end border-t border-white/10 pt-12 gap-8">
+<p class="text-accent/40 text-[10px] uppercase tracking-widest">© 2024 Atelier Botanical. Built for architectural precision.</p>
+<p class="text-accent font-serif italic text-2xl">Designing the Void.</p>
+</div>
+</div>
+</footer>
+<script defer src="assets/js/site.js"></script>
+</body></html>
