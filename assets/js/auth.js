@@ -1,469 +1,288 @@
-// Home Design Lab - Authentication System
-// Sistema di autenticazione per area clienti con Supabase
+/**
+ * assets/js/auth.js - Home Design Lab
+ * Sistema di autenticazione unificato - REFACTORED
+ * 
+ * NOTA: Questo file ora e' un wrapper che utilizza esclusivamente 
+ * Supabase SDK nativo (portal-config.js). NON usa piu' token custom.
+ * 
+ * Gestisce login/logout, routing per ruolo (senior/operator/client),
+ * protezione pagine riservate, UI state.
+ */
+(function () {
+    'use strict';
 
-class AuthSystem {
-    constructor() {
-        this.currentUser = null;
-        this.isLoggedIn = false;
-        this.supabase = null;
-        this.init();
-    }
+    // 🔄 DEPRECATO: Non usare piu' localStorage custom
+    // var STORAGE_TOKEN   = 'hdl_token';  // DEPRECATO
+    // var STORAGE_REFRESH = 'hdl_refresh';  // DEPRECATO  
+    // var STORAGE_USER    = 'hdl_user';  // DEPRECATO
 
-    async init() {
-        // Wait for Supabase to be available
-        await this.waitForSupabase();
-        this.setupAuthListener();
-        this.checkAuthStatus();
-        this.setupLoginForm();
-        this.setupLogout();
-        this.updateUI();
-    }
+    // ✅ NUOVO: Usa Supabase SDK nativo per tutta la gestione sessione
+    // Il token viene gestito automaticamente da Supabase con refresh automatico
 
-    async waitForSupabase() {
-        const maxWait = 5000; // 5 seconds
-        const startTime = Date.now();
-        
-        while (!window.supabaseClient && (Date.now() - startTime) < maxWait) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+    var ROLE_REDIRECTS = { 
+        senior: 'dashboard-senior.html', 
+        admin: 'dashboard-senior.html',
+        operator: 'dashboard-operatore.html', 
+        architect: 'dashboard-operatore.html',
+        client: 'area-cliente.html' 
+    };
+    var PROTECTED      = ['/operatore', '/portale-cliente'];
+
+    // 🔄 DEPRECATE: Funzioni localStorage custom non piu' usate
+    // Supabase SDK gestisce tutto automaticamente
+    
+    async function getToken() {
+        // Usa Supabase SDK nativo per ottenere token fresco
+        if (typeof window.getFreshToken === 'function') {
+            return await window.getFreshToken();
         }
-        
-        if (window.supabaseClient && window.supabaseClient.isInitialized) {
-            this.supabase = window.supabaseClient;
-            console.log('AuthSystem: Supabase client available');
-        } else {
-            console.error('AuthSystem: Supabase client not available');
+        // Fallback: usa Supabase diretto
+        if (window.supabase) {
+            const { data: { session } } = await window.supabase.auth.getSession();
+            return session?.access_token || null;
         }
+        return null;
     }
-
-    setupAuthListener() {
-        if (!this.supabase) return;
-
-        this.supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('Auth state changed:', event, session?.user?.email);
+    
+    async function getStoredUser() {
+        // Ottieni user direttamente da Supabase
+        if (window.supabase) {
+            const { data: { user } } = await window.supabase.auth.getUser();
+            if (!user) return null;
             
-            if (event === 'SIGNED_IN') {
-                this.currentUser = session.user;
-                this.isLoggedIn = true;
-                await this.loadUserProfile();
-                this.updateUI();
-                this.redirectToDashboard();
-            } else if (event === 'SIGNED_OUT') {
-                this.currentUser = null;
-                this.isLoggedIn = false;
-                this.updateUI();
-                this.redirectToHome();
+            // Aggiungi ruolo dal profilo
+            try {
+                const { data: profile } = await window.supabase
+                .from('profiles')
+                .select('role, nome, avatar_url')
+                .eq('user_id', user.id)
+                .single();
+            
+            return {
+                ...user,
+                role: profile?.role || 'client',
+                display_name: profile?.nome || user.email,
+                avatar_url: profile?.avatar_url || null
+            };
+            } catch(e) {
+                return { ...user, role: 'client', display_name: user.email };
+            }
+        }
+        return null;
+    }
+    
+    function clearSession() {
+        // Logout tramite Supabase
+        if (window.portalLogout) {
+            window.portalLogout();
+        } else if (window.supabase) {
+            window.supabase.auth.signOut();
+        }
+    }
+
+    function showNotification(msg, type) {
+        var old = document.querySelector('.hdl-notification');
+        if (old) old.remove();
+        var colors = { error:'#b91c1c', success:'#166534', info:'#1e40af' };
+        var el = document.createElement('div');
+        el.className = 'hdl-notification';
+        el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type]||colors.info);
+        el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + ({error:'error',success:'check_circle',info:'info'}[type]||'info') + '</span><p style="flex:1">' + msg + '</p><button onclick="this.parentElement.remove()" style="margin-left:8px;opacity:.7"><span class="material-symbols-outlined" style="font-size:16px">close</span></button>';
+        document.body.appendChild(el);
+        setTimeout(function(){ if(el.parentElement) el.remove(); }, 5000);
+    }
+
+    function setButtonLoading(btn, loading) {
+        if (!btn) return;
+        btn.disabled = loading;
+        btn.textContent = loading ? 'Accesso in corso...' : 'Accedi';
+    }
+
+    async function handleLogin(email, password) {
+        // ✅ NUOVO: Usa Supabase SDK nativo per login
+        if (!window.supabase) {
+            throw new Error('Supabase non inizializzato');
+        }
+        
+        const { data, error } = await window.supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+        
+        if (error) throw new Error(error.message || 'Credenziali non valide');
+        
+        // Ottieni ruolo dal profilo
+        const { data: profile } = await window.supabase
+            .from('profiles')
+            .select('role')
+            .eq('user_id', data.user.id)
+            .single();
+        
+        const role = profile?.role || 'client';
+        const redirect = ROLE_REDIRECTS[role] || 'area-cliente.html';
+        
+        return { 
+            user: { ...data.user, role }, 
+            redirect,
+            session: data.session 
+        };
+    }
+
+    async function handleLogout() {
+        // ✅ NUOVO: Usa Supabase SDK nativo per logout
+        if (window.portalLogout) {
+            await window.portalLogout();
+        } else if (window.supabase) {
+            await window.supabase.auth.signOut();
+        }
+        window.location.href = 'templates/login.html';
+    }
+
+    async function guardProtectedPage() {
+        var path = window.location.pathname;
+        var pageName = path.split('/').pop() || '';
+        
+        // Lista pagine protette (file HTML)
+        var protectedPages = ['dashboard-senior.html', 'dashboard-operatore.html', 'area-cliente.html', 
+                              'gestione-clienti.html', 'gestione-immobili.html', 'gestione-journal.html', 
+                              'gestione-team.html', 'dettaglio-progetto.html'];
+        
+        if (!protectedPages.some(function(p){ return pageName.includes(p); })) return;
+        
+        // Verifica sessione con Supabase
+        var user = await getStoredUser();
+        if (!user) { 
+            window.location.replace('templates/login.html'); 
+            return; 
+        }
+        
+        // Verifica ruolo per pagina
+        if (pageName.includes('dashboard-senior') && user.role !== 'senior' && user.role !== 'admin') { 
+            window.location.replace('area-cliente.html'); 
+            return; 
+        }
+        if (pageName.includes('dashboard-operatore') && !['senior','operator','architect'].includes(user.role)) { 
+            window.location.replace('area-cliente.html'); 
+            return; 
+        }
+        if (pageName.includes('area-cliente') && user.role !== 'client') { 
+            window.location.replace(ROLE_REDIRECTS[user.role] || 'dashboard-senior.html'); 
+            return;
+        }
+    }
+
+    async function updateUI() {
+        var user = await getStoredUser();
+        var loggedIn = Boolean(user);
+        
+        document.querySelectorAll('[data-show-logged-in]').forEach(function(el){ el.style.display = loggedIn?'':'none'; });
+        document.querySelectorAll('[data-show-logged-out]').forEach(function(el){ el.style.display = loggedIn?'none':''; });
+        document.querySelectorAll('[data-user-name]').forEach(function(el){ el.textContent = (user&&user.display_name)||''; });
+        document.querySelectorAll('[data-user-role]').forEach(function(el){ el.textContent = (user&&user.role)||''; });
+        
+        // 🆕 Aggiorna avatar nell'UI (se presente elemento data-user-avatar)
+        document.querySelectorAll('[data-user-avatar]').forEach(function(el){ 
+            if (user && user.avatar_url) {
+                el.src = user.avatar_url;
+                el.style.display = '';
+            } else if (user) {
+                // Genera avatar DiceBear per clienti o placeholder per staff
+                var isStaff = ['senior','operator','admin','architect'].includes(user.role);
+                if (!isStaff) {
+                    // Clienti: avatar illustrato DiceBear
+                    el.src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(user.email)}&backgroundColor=c0aede,b6e3f4,d1d4f9`;
+                } else {
+                    // Staff: placeholder con iniziali
+                    el.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.display_name || 'User')}&background=186C32&color=fff`;
+                }
             }
         });
-    }
-
-    async checkAuthStatus() {
-        if (!this.supabase) return;
-
-        try {
-            const { data: { session } } = await this.supabase.auth.getSession();
-            
-            if (session) {
-                this.currentUser = session.user;
-                this.isLoggedIn = true;
-                await this.loadUserProfile();
-            }
-        } catch (error) {
-            console.error('Error checking auth status:', error);
+        
+        if (user) {
+            document.querySelectorAll('[data-require-role]').forEach(function(el){
+                var allowed = el.getAttribute('data-require-role').split(',').map(function(r){ return r.trim(); });
+                el.style.display = allowed.indexOf(user.role)!==-1?'':'none';
+            });
         }
     }
 
-    async loadUserProfile() {
-        if (!this.currentUser || !this.supabase) return;
-
-        try {
-            const { data, error } = await this.supabase
-                .from('profiles')
-                .select('*')
-                .eq('user_id', this.currentUser.id)
-                .single();
-
-            if (error && error.code !== 'PGRST116') {
-                console.error('Error loading profile:', error);
-                return;
-            }
-
-            if (data) {
-                this.currentUser.profile = data;
-                console.log('Profile loaded:', data);
-            }
-        } catch (error) {
-            console.error('Error loading profile:', error);
+    function setupLoginForm() {
+        var form = document.getElementById('site-login-form');
+        if (!form) return;
+        var stored = getStoredUser(), token = getToken();
+        if (stored && token) {
+            var next = new URLSearchParams(window.location.search).get('next');
+            window.location.replace(next || ROLE_REDIRECTS[stored.role] || '/');
+            return;
         }
-    }
-
-    setupLoginForm() {
-        const loginForm = document.getElementById('site-login-form');
-        if (!loginForm) return;
-
-        loginForm.addEventListener('submit', async (e) => {
+        var toggle = document.getElementById('site-login-password-toggle');
+        var pwInput = document.getElementById('site-login-password');
+        if (toggle && pwInput) {
+            toggle.addEventListener('click', function(){
+                var hidden = pwInput.type === 'password';
+                pwInput.type = hidden ? 'text' : 'password';
+                toggle.textContent = hidden ? 'visibility_off' : 'visibility';
+            });
+        }
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            await this.handleLogin();
-        });
-
-        // Setup password toggle
-        this.setupPasswordToggle();
-    }
-
-    setupPasswordToggle() {
-        const passwordToggle = document.getElementById('site-login-password-toggle');
-        const passwordInput = document.getElementById('site-login-password');
-        
-        if (passwordToggle && passwordInput) {
-            passwordToggle.addEventListener('click', () => {
-                const isPassword = passwordInput.type === 'password';
-                passwordInput.type = isPassword ? 'text' : 'password';
-                passwordToggle.textContent = isPassword ? 'visibility_off' : 'visibility';
-            });
-
-            // Also handle keyboard interaction
-            passwordToggle.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    passwordToggle.click();
-                }
-            });
-        }
-    }
-
-    async handleLogin() {
-        if (!this.supabase) {
-            this.showError('Sistema non disponibile. Riprova più tardi.');
-            return;
-        }
-
-        const email = document.getElementById('site-login-email')?.value;
-        const password = document.getElementById('site-login-password')?.value;
-
-        if (!email || !password) {
-            this.showError('Email e password sono richiesti.');
-            return;
-        }
-
-        try {
-            this.showLoading(true);
-
-            const { data, error } = await this.supabase.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
-
-            if (error) {
-                throw error;
+            var email    = (document.getElementById('site-login-email')||{}).value;
+            var password = (document.getElementById('site-login-password')||{}).value;
+            var btn      = form.querySelector('button[type="submit"]');
+            if (!email || !password) { showNotification('Email e password richiesti','error'); return; }
+            setButtonLoading(btn, true);
+            try {
+                var data = await handleLogin(email.trim(), password);
+                showNotification('Accesso effettuato','success');
+                var next = new URLSearchParams(window.location.search).get('next');
+                setTimeout(function(){ window.location.href = next || data.redirect || ROLE_REDIRECTS[data.user.role] || '/'; }, 600);
+            } catch(err) {
+                showNotification(err.message||'Errore di accesso','error');
+                setButtonLoading(btn, false);
             }
-
-            console.log('Login successful:', data.user.email);
-            this.showSuccess('Login effettuato con successo!');
-
-        } catch (error) {
-            console.error('Login error:', error);
-            this.showError('Credenziali non valide. Riprova.');
-        } finally {
-            this.showLoading(false);
-        }
-    }
-
-    setupLogout() {
-        const logoutButtons = document.querySelectorAll('[data-action="logout"]');
-        logoutButtons.forEach(button => {
-            button.addEventListener('click', async (e) => {
-                e.preventDefault();
-                await this.handleLogout();
-            });
         });
     }
 
-    async handleLogout() {
-        if (!this.supabase) return;
-
-        try {
-            await this.supabase.auth.signOut();
-            console.log('Logout successful');
-        } catch (error) {
-            console.error('Logout error:', error);
-        }
+    function setupLogoutButtons() {
+        document.querySelectorAll('[data-action="logout"]').forEach(function(btn){
+            btn.addEventListener('click', function(e){ e.preventDefault(); handleLogout(); });
+        });
     }
 
-    updateUI() {
-        // Update login/logout buttons
-        const loginButtons = document.querySelectorAll('[data-action="login"]');
-        const logoutButtons = document.querySelectorAll('[data-action="logout"]');
-        const userElements = document.querySelectorAll('[data-user-info]');
-
-        if (this.isLoggedIn && this.currentUser) {
-            // Show user info, hide login buttons
-            loginButtons.forEach(btn => btn.style.display = 'none');
-            logoutButtons.forEach(btn => btn.style.display = 'block');
-            
-            userElements.forEach(element => {
-                element.textContent = this.currentUser.profile?.full_name || this.currentUser.email;
-                element.style.display = 'block';
-            });
-
-        } else {
-            // Show login buttons, hide user info
-            loginButtons.forEach(btn => btn.style.display = 'block');
-            logoutButtons.forEach(btn => btn.style.display = 'none');
-            userElements.forEach(element => element.style.display = 'none');
-        }
-    }
-
-    redirectToDashboard() {
-        if (window.location.pathname !== '/dashboard.html') {
-            window.location.href = 'dashboard.html';
-        }
-    }
-
-    redirectToHome() {
-        if (window.location.pathname !== '/index.html') {
-            window.location.href = 'index.html';
-        }
-    }
-
-    showLoading(show) {
-        const submitButton = document.querySelector('#site-login-form button[type="submit"]');
-        if (submitButton) {
-            submitButton.disabled = show;
-            submitButton.textContent = show ? 'Accesso...' : 'Accedi';
-        }
-    }
-
-    showError(message) {
-        this.showNotification(message, 'error');
-    }
-
-    showSuccess(message) {
-        this.showNotification(message, 'success');
-    }
-
-    showNotification(message, type = 'info') {
-        // Remove existing notifications
-        const existing = document.querySelector('.auth-notification');
-        if (existing) existing.remove();
-
-        // Create notification
-        const notification = document.createElement('div');
-        notification.className = `auth-notification fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 ${
-            type === 'error' ? 'bg-error text-white' :
-            type === 'success' ? 'bg-success text-white' :
-            'bg-primary text-white'
-        }`;
-        
-        notification.innerHTML = `
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined">
-                    ${type === 'error' ? 'error' :
-                      type === 'success' ? 'check_circle' :
-                      'info'}
-                </span>
-                <p class="text-sm font-medium">${message}</p>
-                <button onclick="this.parentElement.parentElement.remove()" class="ml-auto">
-                    <span class="material-symbols-outlined text-sm">close</span>
-                </button>
-            </div>
-        `;
-
-        document.body.appendChild(notification);
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
+    window.HDL = {
+        getToken: getToken,                    // ✅ Ora async, usa Supabase SDK
+        getUser:  getStoredUser,               // ✅ Ora async, usa Supabase SDK
+        logout:   handleLogout,                // ✅ Usa Supabase signOut
+        isLoggedIn:  async function(){ return Boolean(await getStoredUser()); },
+        hasRole:     async function(r){ var u=await getStoredUser(); return u?.role===r; },
+        isOperator:  async function(){ var u=await getStoredUser(); return ['senior','operator'].includes(u?.role); },
+        showNotification: showNotification,
+        // 🆕 NUOVO: Usa authFetch da portal-config.js (gestisce automaticamente refresh)
+        authFetch: async function(url, opts) {
+            if (window.authFetch) {
+                return await window.authFetch(url, opts);
             }
-        }, 5000);
-    }
-}
-
-// Dashboard Manager
-class DashboardManager {
-    constructor() {
-        this.currentUser = null;
-        this.supabase = null;
-        this.init();
-    }
-
-    async init() {
-        // Wait for Supabase to be available
-        await this.waitForSupabase();
-        await this.checkAuth();
-        this.loadDashboardData();
-        this.setupEventListeners();
-    }
-
-    async waitForSupabase() {
-        const maxWait = 5000;
-        const startTime = Date.now();
-        
-        while (!window.supabaseClient && (Date.now() - startTime) < maxWait) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-        }
-        
-        if (window.supabaseClient && window.supabaseClient.isInitialized) {
-            this.supabase = window.supabaseClient.supabase;
-        }
-    }
-
-    async checkAuth() {
-        if (!this.supabase) {
-            window.location.href = 'login.html';
-            return;
-        }
-
-        try {
-            const { data: { session } } = await this.supabase.auth.getSession();
-            
-            if (!session) {
-                window.location.href = 'login.html';
-                return;
+            // Fallback manuale
+            opts = opts||{};
+            var token = await getToken();
+            if (!token) { 
+                window.location.replace('templates/login.html');
+                throw new Error('Sessione scaduta'); 
             }
-
-            this.currentUser = session.user;
-            await this.loadUserProfile();
-        } catch (error) {
-            console.error('Auth check error:', error);
-            window.location.href = 'login.html';
-        }
-    }
-
-    async loadUserProfile() {
-        if (!this.currentUser || !this.supabase) return;
-
-        try {
-            const { data, error } = await this.supabase
-                .from('profiles')
-                .select('*')
-                .eq('user_id', this.currentUser.id)
-                .single();
-
-            if (!error && data) {
-                this.currentUser.profile = data;
+            var headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{}, {Authorization:'Bearer '+token});
+            var res = await fetch(url, Object.assign({},opts,{headers:headers}));
+            if (res.status===401) { 
+                await handleLogout();
+                throw new Error('Sessione scaduta'); 
             }
-        } catch (error) {
-            console.error('Error loading profile:', error);
+            return res;
         }
-    }
+    };
 
-    async loadDashboardData() {
-        if (!this.currentUser || !this.supabase) return;
-
-        try {
-            // Load user projects
-            const { data: projects, error: projectsError } = await this.supabase
-                .from('projects')
-                .select('*')
-                .eq('client_id', this.currentUser.id)
-                .order('created_at', { ascending: false });
-
-            if (!projectsError && projects) {
-                this.renderProjects(projects);
-            }
-
-            // Load user documents
-            const { data: documents, error: documentsError } = await this.supabase
-                .from('documents')
-                .select('*')
-                .eq('user_id', this.currentUser.id)
-                .order('created_at', { ascending: false });
-
-            if (!documentsError && documents) {
-                this.renderDocuments(documents);
-            }
-
-        } catch (error) {
-            console.error('Error loading dashboard data:', error);
-        }
-    }
-
-    renderProjects(projects) {
-        const projectsContainer = document.querySelector('[data-projects-container]');
-        if (!projectsContainer) return;
-
-        if (projects.length === 0) {
-            projectsContainer.innerHTML = `
-                <div class="text-center py-8">
-                    <p class="text-on-surface-variant">Nessun progetto trovato</p>
-                </div>
-            `;
-            return;
-        }
-
-        projectsContainer.innerHTML = projects.map(project => `
-            <div class="bg-surface-container rounded-lg p-6 border border-outline-variant/20">
-                <h3 class="text-lg font-semibold text-on-surface mb-2">${project.title}</h3>
-                <p class="text-sm text-on-surface-variant mb-4">${project.description || 'Nessuna descrizione'}</p>
-                <div class="flex justify-between items-center">
-                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-                        ${project.status || 'In corso'}
-                    </span>
-                    <span class="text-sm text-on-surface">${project.progress_percentage || 0}%</span>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    renderDocuments(documents) {
-        const documentsContainer = document.querySelector('[data-documents-container]');
-        if (!documentsContainer) return;
-
-        if (documents.length === 0) {
-            documentsContainer.innerHTML = `
-                <div class="text-center py-8">
-                    <p class="text-on-surface-variant">Nessun documento trovato</p>
-                </div>
-            `;
-            return;
-        }
-
-        documentsContainer.innerHTML = documents.map(doc => `
-            <div class="bg-surface-container rounded-lg p-4 border border-outline-variant/20">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-primary">description</span>
-                        <div>
-                            <p class="text-sm font-medium text-on-surface">${doc.name}</p>
-                            <p class="text-xs text-on-surface-variant">${this.formatDate(doc.created_at)}</p>
-                        </div>
-                    </div>
-                    <button class="p-2 hover:bg-surface rounded-lg transition-colors">
-                        <span class="material-symbols-outlined text-sm">download</span>
-                    </button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    setupEventListeners() {
-        // Logout button
-        const logoutButton = document.querySelector('[data-action="logout"]');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', async () => {
-                if (this.supabase) {
-                    await this.supabase.auth.signOut();
-                }
-            });
-        }
-    }
-
-    formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('it-IT');
-    }
-}
-
-// Initialize systems
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize auth system
-    if (document.getElementById('site-login-form') || document.querySelector('[data-action="login"]')) {
-        window.authSystem = new AuthSystem();
-    }
-
-    // Initialize dashboard
-    if (document.querySelector('[data-dashboard]')) {
-        window.dashboardManager = new DashboardManager();
-    }
-});
+    document.addEventListener('DOMContentLoaded', async function(){
+        await guardProtectedPage();
+        await updateUI();
+        setupLoginForm();
+        setupLogoutButtons();
+    });
+})();

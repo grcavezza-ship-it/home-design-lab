@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta name="description" content="Portale Cliente - Home Design Lab. Monitora i tuoi progetti e consulta i documenti."/>
+<meta name="keywords" content="architettura, interior design, progettazione, ristrutturazione, Napoli, Home Design Lab"/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Home Design Lab"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="canonical" href="https://www.homedesignlab.it/portale-cliente.html"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portale Cliente | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#186C32','on-primary':'#fff',surface:'#fbf9f8','on-surface':'#1b1c1c',background:'#fbf9f8',outline:'#707a6e','surface-container':'#f0eded','surface-container-low':'#f6f3f2','surface-container-high':'#eae8e7','on-surface-variant':'#40493f','primary-container':'#186c32','on-primary-container':'#98eba2'},fontFamily:{headline:['Noto Serif'],body:['Manrope'],label:['Manrope']}}}};</script>
+<style>body{font-family:'Manrope',sans-serif;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}</style>
+ <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="select-none bg-surface text-on-surface min-h-screen">
+
+
+<header class="sticky top-0 z-40 bg-surface/90 backdrop-blur border-b border-outline/20">
+ <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+ <a href="/"><img src="/assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-10 w-auto"></a>
+ <div class="flex items-center gap-4">
+ <span class="text-sm text-on-surface-variant">Ciao, <span data-user-name class="font-semibold text-on-surface">Cliente</span></span>
+ <button data-action="logout" class="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-on-surface transition">
+ <span class="material-symbols-outlined text-base">logout</span>Esci
+ </button>
+ </div>
+ </div>
+</header>
+
+<main class="max-w-5xl mx-auto px-6 py-10">
+
+ 
+ <section class="mb-10">
+ <h1 class="font-headline text-4xl italic text-on-surface">Il tuo spazio privato</h1>
+ <p class="text-on-surface-variant mt-2 text-base" id="client-name-sub">Benvenuto nel tuo portale personale.</p>
+ </section>
+
+ 
+ <section class="mb-10">
+ <h2 class="font-headline text-2xl italic mb-5">I tuoi progetti</h2>
+ <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+ <p class="text-on-surface-variant text-sm">Caricamento...</p>
+ </div>
+ </section>
+
+ 
+ <section class="mb-10">
+ <h2 class="font-headline text-2xl italic mb-5">Documenti condivisi</h2>
+ <div id="documents-list" class="space-y-3">
+ <p class="text-on-surface-variant text-sm">Caricamento...</p>
+ </div>
+ </section>
+
+ 
+ <section>
+ <h2 class="font-headline text-2xl italic mb-5">Carica un file</h2>
+ <p class="text-on-surface-variant text-sm mb-4">Puoi condividere con il tuo progettista foto, idee, link o qualsiasi documento di riferimento.</p>
+ <form id="form-upload" class="bg-surface-container rounded-2xl p-6 border border-outline/10 space-y-4 max-w-md">
+ <div>
+ <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant mb-1">Progetto di riferimento</label>
+ <select id="upload-project" class="w-full border border-outline/30 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary bg-surface-container-low">
+ <option value="">Seleziona progetto...</option>
+ </select>
+ </div>
+ <div>
+ <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant mb-1">Descrizione (facoltativa)</label>
+ <input id="upload-title" class="w-full border border-outline/30 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary bg-surface-container-low" placeholder="es. Foto del bagno da rinnovare"/>
+ </div>
+ <div>
+ <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant mb-1">File *</label>
+ <input id="upload-file" type="file" required class="w-full text-sm"/>
+ </div>
+ <button type="submit" class="flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-lg font-label text-sm hover:bg-primary/90 transition">
+ <span class="material-symbols-outlined text-base">upload</span>Invia file
+ </button>
+ </form>
+ </section>
+</main>
+
+<script src="/assets/js/auth.js"></script>
+<script>
+var myProjects = [];
+
+function formatBytes(bytes) {
+ if (!bytes) return '';
+ if (bytes < 1024) return bytes + ' B';
+ if (bytes < 1048576) return Math.round(bytes/1024) + ' KB';
+ return (bytes/1048576).toFixed(1) + ' MB';
+}
+function formatDate(d) { if(!d)return ''; return new Date(d).toLocaleDateString('it-IT'); }
+
+function renderProjects(list) {
+ var el = document.getElementById('projects-grid');
+ if (!list.length) { el.innerHTML='<p class="text-on-surface-variant text-sm col-span-2">Nessun progetto attivo.</p>'; return; }
+ var statusLabel = { draft:'Bozza', active:'Attivo', on_hold:'In pausa', completed:'Completato', archived:'Archiviato' };
+ el.innerHTML = list.map(function(p) {
+ var img = p.cover_image ? '<img src="'+p.cover_image+'" class="w-full h-36 object-cover rounded-t-xl" alt=""/>' : '<div class="w-full h-36 bg-surface-container-high rounded-t-xl flex items-center justify-center"><span class="material-symbols-outlined text-4xl text-on-surface-variant">photo</span></div>';
+ return '<div class="bg-surface-container rounded-xl border border-outline/10 overflow-hidden">'
+ + img
+ + '<div class="p-5"><p class="font-semibold">' + p.title + '</p>'
+ + '<p class="text-xs text-on-surface-variant mt-1">' + (statusLabel[p.status]||p.status) + ' · ' + formatDate(p.created_at) + '</p>'
+ + (p.description ? '<p class="text-sm text-on-surface-variant mt-2 line-clamp-2">'+p.description+'</p>' : '')
+ + '</div></div>';
+ }).join('');
+}
+
+function renderDocuments(list) {
+ var el = document.getElementById('documents-list');
+ if (!list.length) { el.innerHTML='<p class="text-on-surface-variant text-sm">Nessun documento condiviso.</p>'; return; }
+ el.innerHTML = list.map(function(d) {
+ return '<div class="flex items-center justify-between bg-surface-container rounded-xl px-5 py-4 border border-outline/10">'
+ +'<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-xl">description</span>'
+ +'<div><p class="text-sm font-medium">'+d.title+'</p><p class="text-xs text-on-surface-variant">'+formatDate(d.created_at)+(d.size_bytes?' · '+formatBytes(d.size_bytes):'')+'</p></div></div>'
+ +'<button onclick="download(\''+d.id+'\')" class="flex items-center gap-1 text-sm text-primary hover:text-primary/70 transition"><span class="material-symbols-outlined text-base">download</span>Scarica</button></div>';
+ }).join('');
+}
+
+async function download(docId) {
+ try {
+ var r = await HDL.authFetch('/api/documenti/'+docId+'/download');
+ var data = await r.json();
+ if (data.url) window.open(data.url, '_blank');
+ } catch(e) { HDL.showNotification('Errore download','error'); }
+}
+
+async function loadDashboard() {
+ try {
+ var r = await HDL.authFetch('/api/cliente/dashboard');
+ var data = await r.json();
+
+ if (data.client) {
+ document.getElementById('client-name-sub').textContent = 'Spazio privato di ' + data.client.legal_name;
+ }
+
+ myProjects = data.projects || [];
+ renderProjects(myProjects);
+ renderDocuments(data.documents || []);
+
+ // Popola select progetto
+ var sel = document.getElementById('upload-project');
+ myProjects.forEach(function(p){
+ var o = document.createElement('option'); o.value=p.id; o.textContent=p.title; sel.appendChild(o);
+ });
+ } catch(e) { HDL.showNotification('Errore caricamento dati','error'); }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+ if (!HDL.isLoggedIn()) return;
+ loadDashboard();
+
+ document.getElementById('form-upload').addEventListener('submit', async function(e) {
+ e.preventDefault();
+ var projectId = document.getElementById('upload-project').value;
+ var file = document.getElementById('upload-file').files[0];
+ var title = document.getElementById('upload-title').value;
+ if (!file) return;
+ if (!projectId) { HDL.showNotification('Seleziona un progetto','error'); return; }
+
+ var fd = new FormData();
+ fd.append('file', file);
+ fd.append('projectId', projectId);
+ fd.append('title', title || file.name);
+
+ try {
+ var token = HDL.getToken();
+ var r = await fetch('/api/cliente/upload', { method:'POST', headers:{Authorization:'Bearer '+token}, body:fd });
+ if (!r.ok) { var err=await r.json(); throw new Error(err.error||'Errore upload'); }
+ HDL.showNotification('File inviato con successo','success');
+ this.reset();
+ } catch(err) { HDL.showNotification(err.message,'error'); }
+ });
+});
+</script>
+</body>
+</html>

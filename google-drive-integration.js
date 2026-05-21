@@ -23,22 +23,17 @@ class GoogleDriveIntegration {
 
     async loadConfig() {
         try {
-            // Try to load from config file first
-            const response = await fetch('./config.js');
-            const config = await response.json();
-            
-            this.apiKey = config.googleApiKey;
-            this.clientId = config.googleClientId;
-            
-            // Fallback to environment variables if config doesn't have Google settings
-            if (!this.apiKey) {
-                this.apiKey = process.env.GOOGLE_API_KEY;
-            }
-            if (!this.clientId) {
-                this.clientId = process.env.GOOGLE_CLIENT_ID;
+            // Try to load from server API endpoint
+            const response = await fetch('/api/config');
+            if (response.ok) {
+                const config = await response.json();
+                // Note: API keys for Google Drive should come from server, not exposed in browser
+                this.apiKey = config.googleApiKey || null;
+                this.clientId = config.googleClientId || null;
             }
         } catch (error) {
-            console.warn('Could not load Google Drive config:', error);
+            console.warn('[Google Drive] Config non disponibile:', error);
+            // Silently fail - Drive integration is optional
         }
     }
 

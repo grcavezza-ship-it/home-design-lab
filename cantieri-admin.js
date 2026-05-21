@@ -1,647 +1,332 @@
-// Construction Site Management System - Admin Panel
-// React component for managing construction sites and tasks
-
+/**
+ * Cantieri Admin - Gestione Cantieri
+ * Home Design Lab
+ */
 class CantieriAdmin {
     constructor() {
-        this.supabase = null;
+        this.currentUser = null;
+        this.cantieri = [];
         this.currentCantiere = null;
         this.operatori = [];
-        this.cantieri = [];
-        this.init();
+        this.googleDrive = null;
     }
 
     async init() {
-        // Initialize Supabase client
-        this.supabase = window.supabase || supabase;
-        
-        // Load initial data
-        await this.loadOperatori();
+        await this.loadCurrentUser();
         await this.loadCantieri();
-        
-        // Setup event listeners
+        this.renderDashboard();
         this.setupEventListeners();
-        
-        // Render initial UI
-        this.renderCantieriList();
     }
 
-    async loadOperatori() {
-        try {
-            const { data, error } = await this.supabase
-                .from('profiles')
-                .select('*')
-                .in('role', ['user', 'architect'])
-                .order('full_name');
-
-            if (error) throw error;
-            this.operatori = data || [];
-        } catch (error) {
-            console.error('Error loading operatori:', error);
-            this.showError('Errore nel caricamento degli operatori');
+    async loadCurrentUser() {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            window.location.href = 'templates/login.html';
+            return;
         }
+        this.currentUser = user;
+        // Update user name if element exists
+        const userNameEl = document.getElementById('user-name');
+        if (userNameEl) userNameEl.textContent = user.email;
     }
 
     async loadCantieri() {
         try {
-            const { data, error } = await this.supabase
+            console.log('Caricamento cantieri...');
+            // Query semplice per test
+            const { data, error } = await supabase
                 .from('cantieri')
-                .select(`
-                    *,
-                    profiles:creato_da(full_name),
-                    cantieri_assegnazioni(
-                        operatori_profiles:operatore_id(full_name, role)
-                    ),
-                    cantiere_tasks(count)
-                `)
+                .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) throw error;
+            if (error) {
+                console.error('Errore query:', error);
+                throw error;
+            }
+            
+            console.log('Cantieri trovati:', data?.length || 0);
             this.cantieri = data || [];
         } catch (error) {
-            console.error('Error loading cantieri:', error);
-            this.showError('Errore nel caricamento dei cantieri');
+            console.error('Errore caricamento cantieri:', error);
+            // Mostra messaggio nell'UI
+            const container = document.getElementById('cantieri-list');
+            if (container) {
+                container.innerHTML = `
+                    <div class="p-6 bg-red-50 border border-red-200 rounded-lg">
+                        <h3 class="text-red-800 font-semibold">Errore di caricamento</h3>
+                        <p class="text-red-600">${error.message || 'Errore sconosciuto'}</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                            Ricarica
+                        </button>
+                    </div>
+                `;
+            }
         }
     }
 
-    setupEventListeners() {
-        // Form submissions
-        document.getElementById('cantiere-form')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveCantiere();
-        });
-
-        // Task form
-        document.getElementById('task-form')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveTask();
-        });
-
-        // Assignment form
-        document.getElementById('assignment-form')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveAssignment();
-        });
+    renderDashboard() {
+        console.log('Rendering dashboard...');
+        const grid = document.getElementById('cantieri-grid');
+        if (!grid) {
+            console.error('ERRORE: Elemento #cantieri-grid non trovato!');
+            return;
+        }
+        console.log('Cantieri caricati:', this.cantieri.length);
+        
+        // Aggiorna stats
+        const stats = this.calculateStats();
+        const totalEl = document.getElementById('stat-total');
+        const attiviEl = document.getElementById('stat-attivi');
+        const completatiEl = document.getElementById('stat-completati');
+        const tasksEl = document.getElementById('stat-tasks');
+        
+        if (totalEl) totalEl.textContent = stats.total;
+        if (attiviEl) attiviEl.textContent = stats.attivi;
+        if (completatiEl) completatiEl.textContent = stats.completati;
+        if (tasksEl) tasksEl.textContent = stats.tasksTotali;
+        
+        // Render solo la griglia dei cantieri
+        grid.innerHTML = this.cantieri.length === 0 
+            ? `
+                <div class="text-center py-12 text-outline col-span-full">
+                    <span class="material-symbols-outlined text-4xl mb-2">construction</span>
+                    <p>Nessun cantiere trovato.</p>
+                    <button onclick="cantieriAdmin.showCreateModal()" 
+                            class="mt-4 bg-primary text-on-primary px-4 py-2 rounded-lg hover:bg-primary/90">
+                        + Crea il tuo primo cantiere
+                    </button>
+                </div>
+            `
+            : this.cantieri.map(cantiere => this.renderCantiereCard(cantiere)).join('');
     }
 
-    renderCantieriList() {
-        const container = document.getElementById('cantieri-list');
-        if (!container) return;
-
-        container.innerHTML = `
-            <div class="mb-6 flex justify-between items-center">
-                <h2 class="text-2xl font-bold text-primary">Gestione Cantieri</h2>
-                <button onclick="cantieriAdmin.showCantiereForm()" 
-                        class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
-                    <span class="material-symbols-outlined align-middle mr-2">add</span>
-                    Nuovo Cantiere
-                </button>
-            </div>
-            
-            <div class="grid gap-4">
-                ${this.cantieri.map(cantiere => this.renderCantiereCard(cantiere)).join('')}
-            </div>
-        `;
+    calculateStats() {
+        return {
+            total: this.cantieri.length,
+            attivi: this.cantieri.filter(c => c.stato === 'attivo').length,
+            completati: this.cantieri.filter(c => c.stato === 'completato').length,
+            tasksTotali: this.cantieri.reduce((sum, c) => sum + (c.cantiere_tasks?.[0]?.count || 0), 0)
+        };
     }
 
     renderCantiereCard(cantiere) {
-        const operatoriAssegnati = cantiere.cantieri_assegnazioni?.map(ca => ca.operatori_profiles.full_name).join(', ') || 'Nessuno';
+        const operatoreNames = cantiere.cantieri_assegnazioni?.map(a => a.operatori_profiles?.nome).filter(Boolean).join(', ') || 'Nessuno';
         const tasksCount = cantiere.cantiere_tasks?.[0]?.count || 0;
-        const statusColor = cantiere.stato === 'attivo' ? 'text-green-600' : 
-                          cantiere.stato === 'completato' ? 'text-blue-600' : 'text-orange-600';
-
+        
         return `
-            <div class="bg-surface-container rounded-lg p-6 shadow-sm border border-outline/20">
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                 onclick="cantieriAdmin.openCantiereDetail('${cantiere.id}')">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-2">${cantiere.nome_progetto}</h3>
-                        <p class="text-on-surface/70 text-sm mb-1">
-                            <span class="material-symbols-outlined align-middle text-sm mr-1">location_on</span>
-                            ${cantiere.indirizzo || 'Indirizzo non specificato'}
-                        </p>
-                        <p class="text-on-surface/70 text-sm mb-1">
-                            <span class="material-symbols-outlined align-middle text-sm mr-1">calendar_today</span>
-                            ${cantiere.data_inizio ? new Date(cantiere.data_inizio).toLocaleDateString('it-IT') : 'Data non specificata'}
-                        </p>
-                        <p class="text-on-surface/70 text-sm">
-                            <span class="material-symbols-outlined align-middle text-sm mr-1">people</span>
-                            Operatori: ${operatoriAssegnati}
-                        </p>
-                    </div>
-                    <div class="text-right">
-                        <span class="${statusColor} font-medium">${cantiere.stato.toUpperCase()}</span>
-                        <div class="mt-2 space-x-2">
-                            <button onclick="cantieriAdmin.editCantiere('${cantiere.id}')" 
-                                    class="text-primary hover:text-primary/80 text-sm">
-                                <span class="material-symbols-outlined align-middle">edit</span>
-                            </button>
-                            <button onclick="cantieriAdmin.deleteCantiere('${cantiere.id}')" 
-                                    class="text-red-600 hover:text-red-800 text-sm">
-                                <span class="material-symbols-outlined align-middle">delete</span>
-                            </button>
-                        </div>
-                    </div>
+                    <h3 class="font-semibold text-lg">${cantiere.nome_progetto}</h3>
+                    <span class="px-2 py-1 text-xs rounded-full ${this.getStatoClass(cantiere.stato)}">
+                        ${cantiere.stato}
+                    </span>
                 </div>
-                
-                <div class="flex justify-between items-center pt-4 border-t border-outline/20">
-                    <div class="flex gap-4 text-sm text-on-surface/70">
-                        <span>
-                            <span class="material-symbols-outlined align-middle text-sm mr-1">checklist</span>
-                            ${tasksCount} tasks
-                        </span>
-                        ${cantiere.drive_folder_id ? `
-                            <span>
-                                <span class="material-symbols-outlined align-middle text-sm mr-1">folder</span>
-                                Drive integrato
-                            </span>
-                        ` : ''}
-                    </div>
-                    <button onclick="cantieriAdmin.openCantiereDetail('${cantiere.id}')" 
-                            class="bg-secondary text-white px-3 py-1 rounded text-sm hover:bg-secondary/90">
-                        Gestisci
-                    </button>
+                <p class="text-gray-600 text-sm mb-2">${cantiere.indirizzo || 'Nessun indirizzo'}</p>
+                <div class="text-sm text-gray-500 mb-4">
+                    <div>Operatori: ${operatoreNames}</div>
+                    <div>Tasks: ${tasksCount}</div>
                 </div>
+                ${cantiere.drive_folder_id ? `
+                    <div class="text-xs text-blue-600">
+                        📁 Google Drive collegato
+                    </div>
+                ` : ''}
             </div>
         `;
     }
 
-    showCantiereForm(cantiere = null) {
-        this.currentCantiere = cantiere;
-        const modal = document.getElementById('cantiere-modal');
-        const form = document.getElementById('cantiere-form');
-        
-        if (!modal || !form) return;
-
-        // Populate form if editing
-        if (cantiere) {
-            form.nome_progetto.value = cantiere.nome_progetto || '';
-            form.indirizzo.value = cantiere.indirizzo || '';
-            form.data_inizio.value = cantiere.data_inizio || '';
-            form.drive_folder_id.value = cantiere.drive_folder_id || '';
-            form.riferimenti.value = cantiere.riferimenti || '';
-            form.stato.value = cantiere.stato || 'attivo';
-        } else {
-            form.reset();
-        }
-
-        modal.classList.remove('hidden');
-    }
-
-    async saveCantiere() {
-        const form = document.getElementById('cantiere-form');
-        const formData = new FormData(form);
-        
-        const cantiereData = {
-            nome_progetto: formData.get('nome_progetto'),
-            indirizzo: formData.get('indirizzo'),
-            data_inizio: formData.get('data_inizio') || null,
-            drive_folder_id: formData.get('drive_folder_id') || null,
-            riferimenti: formData.get('riferimenti'),
-            stato: formData.get('stato'),
-            creato_da: (await this.supabase.auth.getUser()).data.user.id
+    getStatoClass(stato) {
+        const classes = {
+            'attivo': 'bg-green-100 text-green-800',
+            'completato': 'bg-blue-100 text-blue-800',
+            'sospeso': 'bg-yellow-100 text-yellow-800'
         };
-
-        try {
-            let result;
-            if (this.currentCantiere) {
-                // Update existing cantiere
-                result = await this.supabase
-                    .from('cantieri')
-                    .update(cantiereData)
-                    .eq('id', this.currentCantiere.id);
-            } else {
-                // Create new cantiere
-                result = await this.supabase
-                    .from('cantieri')
-                    .insert([cantiereData]);
-            }
-
-            if (result.error) throw result.error;
-
-            this.showSuccess('Cantiere salvato con successo');
-            this.closeModal('cantiere-modal');
-            await this.loadCantieri();
-            this.renderCantieriList();
-        } catch (error) {
-            console.error('Error saving cantiere:', error);
-            this.showError('Errore nel salvataggio del cantiere');
-        }
+        return classes[stato] || 'bg-gray-100 text-gray-800';
     }
 
-    async deleteCantiere(cantiereId) {
-        if (!confirm('Sei sicuro di voler eliminare questo cantiere?')) return;
+    showCreateModal() {
+        document.getElementById('cantiere-modal').classList.remove('hidden');
+    }
 
+    closeModal(modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+    }
+
+    async createCantiere(formData) {
         try {
-            const { error } = await this.supabase
+            const { data, error } = await supabase
                 .from('cantieri')
-                .delete()
-                .eq('id', cantiereId);
+                .insert([{
+                    nome_progetto: formData.nome,
+                    indirizzo: formData.indirizzo,
+                    drive_folder_id: formData.drive_folder_id,
+                    riferimenti: formData.riferimenti,
+                    creato_da: this.currentUser.id
+                }])
+                .select()
+                .single();
 
             if (error) throw error;
-
-            this.showSuccess('Cantiere eliminato con successo');
+            
             await this.loadCantieri();
-            this.renderCantieriList();
+            this.renderDashboard();
+            document.getElementById('cantiere-modal').classList.add('hidden');
+            alert('Cantiere creato con successo!');
         } catch (error) {
-            console.error('Error deleting cantiere:', error);
-            this.showError('Errore nell\'eliminazione del cantiere');
+            console.error('Errore creazione cantiere:', error);
+            alert('Errore nella creazione del cantiere');
         }
     }
 
     async openCantiereDetail(cantiereId) {
-        const cantiere = this.cantieri.find(c => c.id === cantiereId);
-        if (!cantiere) return;
-
-        this.currentCantiere = cantiere;
+        this.currentCantiere = this.cantieri.find(c => c.id === cantiereId);
+        if (!this.currentCantiere) return;
         
-        // Load tasks and assignments for this cantiere
         await this.loadTasks(cantiereId);
-        await this.loadAssignments(cantiereId);
-        
-        // Show detail modal
-        this.renderCantiereDetail();
+        this.renderDetailModal();
     }
 
     async loadTasks(cantiereId) {
         try {
-            const { data, error } = await this.supabase
+            const { data, error } = await supabase
                 .from('cantiere_tasks')
                 .select(`
                     *,
-                    operatori_profiles:assegnato_a(full_name)
+                    operatori_profiles:assegnato_a(nome)
                 `)
                 .eq('cantiere_id', cantiereId)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
-            this.currentTasks = data || [];
+            this.currentCantiere.tasks = data || [];
         } catch (error) {
-            console.error('Error loading tasks:', error);
-            this.currentTasks = [];
+            console.error('Errore caricamento tasks:', error);
         }
     }
 
-    async loadAssignments(cantiereId) {
-        try {
-            const { data, error } = await this.supabase
-                .from('cantieri_assegnazioni')
-                .select(`
-                    *,
-                    operatori_profiles:operatore_id(full_name, role)
-                `)
-                .eq('cantiere_id', cantiereId);
-
-            if (error) throw error;
-            this.currentAssignments = data || [];
-        } catch (error) {
-            console.error('Error loading assignments:', error);
-            this.currentAssignments = [];
-        }
-    }
-
-    renderCantiereDetail() {
+    renderDetailModal() {
         const modal = document.getElementById('cantiere-detail-modal');
-        if (!modal) return;
-
-        const tasksHtml = this.currentTasks?.map(task => this.renderTaskCard(task)).join('') || '<p class="text-gray-500">Nessun task</p>';
-        const assignmentsHtml = this.currentAssignments?.map(assignment => this.renderAssignmentCard(assignment)).join('') || '<p class="text-gray-500">Nessun operatore assegnato</p>';
+        const c = this.currentCantiere;
         
-        const assignedOperatorIds = this.currentAssignments?.map(a => a.operatore_id) || [];
-
         modal.innerHTML = `
-            <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                <div class="bg-surface rounded-lg max-w-6xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-bold">${this.currentCantiere.nome_progetto}</h2>
-                            <button onclick="cantieriAdmin.closeModal('cantiere-detail-modal')" 
-                                    class="text-gray-500 hover:text-gray-700">
-                                <span class="material-symbols-outlined">close</span>
-                            </button>
+            <div class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <h2 class="text-2xl font-bold">${c.nome_progetto}</h2>
+                        <button onclick="document.getElementById('cantiere-detail-modal').classList.add('hidden')" 
+                                class="text-gray-500 hover:text-gray-700">✕</button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="font-semibold mb-2">Informazioni</h3>
+                            <p class="text-sm text-gray-600">${c.indirizzo || 'Nessun indirizzo'}</p>
+                            <p class="text-sm text-gray-600 mt-2">${c.riferimenti || ''}</p>
                         </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Tasks Section -->
-                            <div>
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-semibold">Tasks</h3>
-                                    <button onclick="cantieriAdmin.showTaskForm()" 
-                                            class="bg-primary text-white px-3 py-1 rounded text-sm hover:bg-primary/90">
-                                        <span class="material-symbols-outlined align-middle mr-1">add</span>
-                                        Nuovo Task
-                                    </button>
-                                </div>
-                                <div class="space-y-3">
-                                    ${tasksHtml}
-                                </div>
-                            </div>
-
-                            <!-- Assignments Section -->
-                            <div>
-                                <div class="flex justify-between items-center mb-4">
-                                    <h3 class="text-lg font-semibold">Operatori Assegnati</h3>
-                                    <button onclick="cantieriAdmin.showAssignmentForm()" 
-                                            class="bg-primary text-white px-3 py-1 rounded text-sm hover:bg-primary/90">
-                                        <span class="material-symbols-outlined align-middle mr-1">person_add</span>
-                                        Assegna Operatore
-                                    </button>
-                                </div>
-                                <div class="space-y-3">
-                                    ${assignmentsHtml}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Google Drive Section -->
-                        <div class="mt-6 pt-6 border-t">
-                            <h3 class="text-lg font-semibold mb-4">Documenti Google Drive</h3>
-                            ${this.currentCantiere.drive_folder_id ? `
-                                <div id="drive-files" class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    <div class="text-center text-gray-500 py-8 col-span-full">
-                                        <span class="material-symbols-outlined text-4xl mb-2">folder_open</span>
-                                        <p>Caricamento documenti...</p>
-                                    </div>
-                                </div>
-                            ` : `
-                                <div class="text-center text-gray-500 py-8">
-                                    <span class="material-symbols-outlined text-4xl mb-2">folder_off</span>
-                                    <p>Nessuna cartella Google Drive configurata</p>
-                                    <button onclick="cantieriAdmin.editCantiere('${this.currentCantiere.id}')" 
-                                            class="mt-2 text-primary hover:text-primary/80 text-sm">
-                                        Configura ora
-                                    </button>
-                                </div>
-                            `}
+                        
+                        <div>
+                            <h3 class="font-semibold mb-2">Tasks (${c.tasks?.length || 0})</h3>
+                            ${this.renderTasksList(c.tasks)}
                         </div>
                     </div>
+                    
+                    ${c.drive_folder_id ? `
+                        <div class="mt-6">
+                            <h3 class="font-semibold mb-2">Documenti Google Drive</h3>
+                            <div id="drive-files" class="border rounded-lg p-4">
+                                Caricamento documenti...
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
             </div>
         `;
-
-        // Load Drive files if folder is configured
-        if (this.currentCantiere.drive_folder_id) {
-            this.loadDriveFiles();
+        
+        modal.classList.remove('hidden');
+        
+        if (c.drive_folder_id) {
+            this.loadDriveFiles(c.drive_folder_id);
         }
     }
 
-    renderTaskCard(task) {
-        const completedClass = task.completato ? 'bg-green-50 border-green-200' : 'bg-white';
-        const assignedTo = task.operatori_profiles?.full_name || 'Non assegnato';
-
+    renderTasksList(tasks) {
+        if (!tasks || tasks.length === 0) {
+            return '<p class="text-gray-500 text-sm">Nessun task</p>';
+        }
+        
         return `
-            <div class="${completedClass} border rounded-lg p-3">
-                <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                        <div class="flex items-center mb-1">
-                            <input type="checkbox" 
-                                   ${task.completato ? 'checked' : ''} 
-                                   onchange="cantieriAdmin.toggleTask('${task.id}')"
-                                   class="mr-2">
-                            <span class="font-medium ${task.completato ? 'line-through text-gray-500' : ''}">${task.descrizione}</span>
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <span class="material-symbols-outlined align-middle text-xs mr-1">person</span>
-                            ${assignedTo}
-                            <span class="mx-2">·</span>
-                            <span class="material-symbols-outlined align-middle text-xs mr-1">flag</span>
-                            ${task.priorita}
-                        </div>
+            <div class="space-y-2">
+                ${tasks.map(task => `
+                    <div class="flex items-center gap-2 p-2 bg-gray-50 rounded ${task.completato ? 'opacity-50' : ''}">
+                        <input type="checkbox" ${task.completato ? 'checked' : ''} 
+                               onchange="cantieriAdmin.toggleTask('${task.id}')">
+                        <span class="text-sm ${task.completato ? 'line-through' : ''}">${task.descrizione}</span>
+                        ${task.operatori_profiles?.nome ? `
+                            <span class="text-xs text-gray-500">(${task.operatori_profiles.nome})</span>
+                        ` : ''}
                     </div>
-                    <button onclick="cantieriAdmin.deleteTask('${task.id}')" 
-                            class="text-red-500 hover:text-red-700 text-sm">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    renderAssignmentCard(assignment) {
-        return `
-            <div class="bg-white border rounded-lg p-3">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <div class="font-medium">${assignment.operatori_profiles.full_name}</div>
-                        <div class="text-sm text-gray-600">${assignment.ruolo}</div>
-                    </div>
-                    <button onclick="cantieriAdmin.removeAssignment('${assignment.id}')" 
-                            class="text-red-500 hover:text-red-700 text-sm">
-                        <span class="material-symbols-outlined">person_remove</span>
-                    </button>
-                </div>
+                `).join('')}
             </div>
         `;
     }
 
     async toggleTask(taskId) {
-        const task = this.currentTasks.find(t => t.id === taskId);
-        if (!task) return;
-
         try {
-            const { error } = await this.supabase
+            const task = this.currentCantiere.tasks.find(t => t.id === taskId);
+            const { error } = await supabase
                 .from('cantiere_tasks')
                 .update({ completato: !task.completato })
                 .eq('id', taskId);
 
             if (error) throw error;
-
-            await this.loadTasks(this.currentCantiere.id);
-            this.renderCantiereDetail();
+            
+            task.completato = !task.completato;
+            this.renderDetailModal();
         } catch (error) {
-            console.error('Error toggling task:', error);
-            this.showError('Errore nell\'aggiornamento del task');
+            console.error('Errore aggiornamento task:', error);
+            alert('Errore nell\'aggiornamento del task');
         }
     }
 
-    async loadDriveFiles() {
-        if (!this.currentCantiere.drive_folder_id) return;
+    async loadDriveFiles(folderId) {
+        // Implementazione base - può essere estesa con Google Drive API
+        const container = document.getElementById('drive-files');
+        container.innerHTML = `
+            <div class="text-sm text-blue-600">
+                <a href="https://drive.google.com/drive/folders/${folderId}" target="_blank" class="hover:underline">
+                    📁 Apri cartella Google Drive
+                </a>
+            </div>
+        `;
+    }
 
-        try {
-            // Use Google Drive integration
-            if (window.driveIntegration) {
-                await window.driveIntegration.loadAndRenderFiles(
-                    this.currentCantiere.drive_folder_id, 
-                    'drive-files'
-                );
-            } else {
-                // Fallback placeholder
-                const driveContainer = document.getElementById('drive-files');
-                if (driveContainer) {
-                    driveContainer.innerHTML = `
-                        <div class="text-center text-gray-500 py-8 col-span-full">
-                            <span class="material-symbols-outlined text-4xl mb-2">cloud</span>
-                            <p>Integrazione Google Drive in caricamento...</p>
-                            <p class="text-sm mt-2">Folder ID: ${this.currentCantiere.drive_folder_id}</p>
-                        </div>
-                    `;
-                }
+    setupEventListeners() {
+        // Setup eventuali listener aggiuntivi
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('detail-modal')?.classList.add('hidden');
+                document.getElementById('create-modal')?.classList.add('hidden');
             }
-        } catch (error) {
-            console.error('Error loading Drive files:', error);
-        }
-    }
-
-    showTaskForm(task = null) {
-        const modal = document.getElementById('task-modal');
-        const form = document.getElementById('task-form');
-        
-        if (!modal || !form) return;
-
-        // Populate operator options
-        const operatoriOptions = this.operatori.map(op => 
-            `<option value="${op.user_id}">${op.full_name}</option>`
-        ).join('');
-
-        form.operatore_id.innerHTML = '<option value="">Seleziona operatore</option>' + operatoriOptions;
-
-        if (task) {
-            form.descrizione.value = task.descrizione;
-            form.categoria.value = task.categoria;
-            form.priorita.value = task.priorita;
-            form.operatore_id.value = task.assegnato_a || '';
-            form.note.value = task.note || '';
-        } else {
-            form.reset();
-        }
-
-        modal.classList.remove('hidden');
-    }
-
-    async saveTask() {
-        const form = document.getElementById('task-form');
-        const formData = new FormData(form);
-        
-        const taskData = {
-            cantiere_id: this.currentCantiere.id,
-            descrizione: formData.get('descrizione'),
-            categoria: formData.get('categoria'),
-            priorita: formData.get('priorita'),
-            assegnato_a: formData.get('operatore_id') || null,
-            note: formData.get('note')
-        };
-
-        try {
-            const { error } = await this.supabase
-                .from('cantiere_tasks')
-                .insert([taskData]);
-
-            if (error) throw error;
-
-            this.showSuccess('Task creato con successo');
-            this.closeModal('task-modal');
-            await this.loadTasks(this.currentCantiere.id);
-            this.renderCantiereDetail();
-        } catch (error) {
-            console.error('Error saving task:', error);
-            this.showError('Errore nel salvataggio del task');
-        }
-    }
-
-    async deleteTask(taskId) {
-        if (!confirm('Sei sicuro di voler eliminare questo task?')) return;
-
-        try {
-            const { error } = await this.supabase
-                .from('cantiere_tasks')
-                .delete()
-                .eq('id', taskId);
-
-            if (error) throw error;
-
-            this.showSuccess('Task eliminato con successo');
-            await this.loadTasks(this.currentCantiere.id);
-            this.renderCantiereDetail();
-        } catch (error) {
-            console.error('Error deleting task:', error);
-            this.showError('Errore nell\'eliminazione del task');
-        }
-    }
-
-    showAssignmentForm() {
-        const modal = document.getElementById('assignment-modal');
-        const form = document.getElementById('assignment-form');
-        
-        if (!modal || !form) return;
-
-        // Populate operator options (exclude already assigned)
-        const assignedOperatorIds = this.currentAssignments?.map(a => a.operatore_id) || [];
-        const availableOperatori = this.operatori.filter(op => !assignedOperatorIds.includes(op.user_id));
-        
-        const operatoriOptions = availableOperatori.map(op => 
-            `<option value="${op.user_id}">${op.full_name}</option>`
-        ).join('');
-
-        form.operatore_id.innerHTML = '<option value="">Seleziona operatore</option>' + operatoriOptions;
-
-        modal.classList.remove('hidden');
-    }
-
-    async saveAssignment() {
-        const form = document.getElementById('assignment-form');
-        const formData = new FormData(form);
-        
-        const assignmentData = {
-            cantiere_id: this.currentCantiere.id,
-            operatore_id: formData.get('operatore_id'),
-            ruolo: formData.get('ruolo')
-        };
-
-        try {
-            const { error } = await this.supabase
-                .from('cantieri_assegnazioni')
-                .insert([assignmentData]);
-
-            if (error) throw error;
-
-            this.showSuccess('Operatore assegnato con successo');
-            this.closeModal('assignment-modal');
-            await this.loadAssignments(this.currentCantiere.id);
-            this.renderCantiereDetail();
-        } catch (error) {
-            console.error('Error saving assignment:', error);
-            this.showError('Errore nell\'assegnazione dell\'operatore');
-        }
-    }
-
-    async removeAssignment(assignmentId) {
-        if (!confirm('Sei sicuro di voler rimuovere questa assegnazione?')) return;
-
-        try {
-            const { error } = await this.supabase
-                .from('cantieri_assegnazioni')
-                .delete()
-                .eq('id', assignmentId);
-
-            if (error) throw error;
-
-            this.showSuccess('Assegnazione rimossa con successo');
-            await this.loadAssignments(this.currentCantiere.id);
-            this.renderCantiereDetail();
-        } catch (error) {
-            console.error('Error removing assignment:', error);
-            this.showError('Errore nella rimozione dell\'assegnazione');
-        }
-    }
-
-    closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('hidden');
-        }
-    }
-
-    showSuccess(message) {
-        // Simple notification - you can replace with a better notification system
-        alert(message);
-    }
-
-    showError(message) {
-        // Simple notification - you can replace with a better notification system
-        alert('Errore: ' + message);
+        });
     }
 }
 
-// Initialize the admin panel when DOM is ready
-let cantieriAdmin;
+// Inizializzazione
 document.addEventListener('DOMContentLoaded', () => {
-    cantieriAdmin = new CantieriAdmin();
+    try {
+        let cantieriAdmin = new CantieriAdmin();
+        cantieriAdmin.init();
+    } catch (error) {
+        console.error('Errore inizializzazione:', error);
+        document.getElementById('cantieri-grid').innerHTML = `
+            <div class="col-span-full p-6 bg-red-50 border border-red-200 rounded-lg">
+                <h3 class="text-red-800 font-semibold mb-2">Errore di caricamento</h3>
+                <p class="text-red-600">${error.message}</p>
+                <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                    Ricarica Pagina
+                </button>
+            </div>
+        `;
+    }
 });

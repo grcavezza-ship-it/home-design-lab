@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="light" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Registrazione | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md mx-4">
+        <div class="bg-surface-container rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-primary mb-2">Home Design Lab</h1>
+                <h2 class="text-lg text-on-surface/80">Registrazione Admin</h2>
+            </div>
+
+            <form id="signup-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1">Nome Completo</label>
+                    <input type="text" name="full_name" required
+                           class="w-full px-3 py-2 border border-outline/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" name="email" required
+                           class="w-full px-3 py-2 border border-outline/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Password</label>
+                    <input type="password" name="password" required minlength="6"
+                           class="w-full px-3 py-2 border border-outline/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    <p class="text-xs text-gray-500 mt-1">Minimo 6 caratteri</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">Conferma Password</label>
+                    <input type="password" name="confirm_password" required
+                           class="w-full px-3 py-2 border border-outline/30 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                    Crea Account Admin
+                </button>
+            </form>
+
+            <div id="error-message" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm"></div>
+            <div id="success-message" class="hidden mt-4 p-3 bg-green-100 text-green-700 rounded-lg text-sm"></div>
+
+            <div class="mt-6 text-center text-sm text-gray-600">
+                Hai già un account? 
+                <a href="templates/login.html" class="text-primary hover:text-primary/80 font-medium">Accedi</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://amhqqszzxmrphisxlsnj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtaHFxc3p6eG1ycGhpc3hsc25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MDc1MjQsImV4cCI6MjA5MTQ4MzUyNH0.VubabSM4x4VrGF66a7lLVSDloUiVpdU_-Sofg5eYo4I';
+        
+        window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const fullName = formData.get('full_name')?.trim();
+            const email = formData.get('email')?.trim().toLowerCase();
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirm_password');
+            
+            const errorDiv = document.getElementById('error-message');
+            const successDiv = document.getElementById('success-message');
+            
+            errorDiv.classList.add('hidden');
+            successDiv.classList.add('hidden');
+            
+            // Validazione
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Le password non coincidono';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'La password deve essere di almeno 6 caratteri';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                // Registrazione con Supabase Auth
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: fullName,
+                            role: 'admin'
+                        }
+                    }
+                });
+                
+                if (authError) throw authError;
+                
+                console.log('Utente creato:', authData.user.id);
+                
+                // Attendi che il trigger crei il profilo (1 secondo)
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Prova a creare/aggiornare il profilo manualmente se il trigger fallisce
+                const { error: upsertError } = await supabase
+                    .from('profiles')
+                    .upsert({ 
+                        user_id: authData.user.id,
+                        email: email,
+                        full_name: fullName,
+                        role: 'admin'
+                    }, {
+                        onConflict: 'user_id'
+                    });
+                
+                if (upsertError) {
+                    console.warn('Errore upsert profilo:', upsertError);
+                    // Non bloccare la registrazione se il profilo fallisce
+                    // L'utente può essere creato anche senza profilo completo
+                } else {
+                    console.log('Profilo creato/aggiornato con successo');
+                }
+                
+                successDiv.textContent = 'Account admin creato con successo! Controlla la tua email per confermare l\'account, poi accedi.';
+                successDiv.classList.remove('hidden');
+                
+                // Reindirizza al login dopo 3 secondi
+                setTimeout(() => {
+                    window.location.href = 'templates/login.html';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Errore registrazione:', error);
+                errorDiv.textContent = error.message || 'Errore durante la registrazione. Riprova.';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
