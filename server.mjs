@@ -25,6 +25,14 @@ const app = express();
 const port = CONFIG.APP.PORT;
 const templatesDir = join(__dirname, 'templates');
 
+// Reindirizza il traffico dal dominio di Render al dominio personalizzato
+app.use((req, res, next) => {
+  if (req.hostname === 'home-design-lab.onrender.com') {
+    return res.redirect(301, 'https://www.homedesignlab.it' + req.originalUrl);
+  }
+  next();
+});
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
 // CORS con supporto per preflight
 app.use(cors({
