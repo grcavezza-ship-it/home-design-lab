@@ -220,10 +220,15 @@
 <div class="absolute inset-0 bg-gradient-to-l from-transparent via-surface/80 to-surface"></div>
 </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://amhqqszzxmrphisxlsnj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtaHFxc3p6eG1ycGhpc3hsc25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MDc1MjQsImV4cCI6MjA5MTQ4MzUyNH0.VubabSM4x4VrGF66a7lLVSDloUiVpdU_-Sofg5eYoI4';
+
 document.addEventListener('DOMContentLoaded', function() {
  var form = document.getElementById('site-login-form');
  var msg = document.getElementById('login-error-msg');
+ var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
  form.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -246,10 +251,15 @@ document.addEventListener('DOMContentLoaded', function() {
    body: JSON.stringify({ email: email, password: password })
   })
   .then(function(resp) { return resp.json().then(function(data) { return { ok: resp.ok, data: data }; }); })
-  .then(function(result) {
+  .then(async function(result) {
    if (!result.ok) {
     throw new Error(result.data.error || 'Credenziali non valide');
    }
+   // Imposta sessione Supabase nel browser per auth checks successivi
+   await supabase.auth.setSession({
+    access_token: result.data.token,
+    refresh_token: result.data.refresh_token
+   });
    localStorage.setItem('hdl_user_role', result.data.user.role);
    window.location.href = result.data.redirect || '/portale-cliente';
   })
