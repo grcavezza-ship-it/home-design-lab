@@ -87,15 +87,21 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen">
+<!-- Hamburger button for mobile -->
+<button id="mobile-menu-toggle" class="fixed top-5 left-4 z-[60] hidden items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low shadow-md border border-outline/10 text-on-surface hover:bg-surface-container transition-colors" aria-label="Apri menu">
+  <span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Mobile overlay backdrop -->
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden transition-opacity"></div>
 <!-- SideNavBar Dinamico -->
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
 <!-- TopAppBar (From JSON) -->
-<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-4 lg:px-10 h-20 transition-all">
 <div class="flex-1 flex items-center h-full">
 <span class="leading-none">Dashboard</span>
 </div>
 <div class="flex items-center gap-6 h-full">
-<div class="relative w-64 flex items-center">
+<div class="relative w-64 items-center hidden lg:flex">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
 <input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
 </div>
@@ -121,15 +127,15 @@
 </div>
 </header>
 <!-- Main Canvas -->
-<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<main class="lg:ml-64 pt-28 px-4 md:px-8 lg:px-12 pb-24 bg-surface min-h-screen">
 <div class="max-w-7xl mx-auto space-y-16">
 <!-- Hero Header -->
-<section class="flex justify-between items-end">
+<section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
 <div>
 <span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Panoramica Generale</span>
-<h2 class="font-headline text-5xl tracking-tight text-on-surface">Dashboard</h2>
+<h2 class="font-headline text-3xl md:text-5xl tracking-tight text-on-surface">Dashboard</h2>
 </div>
-<div class="text-right">
+<div class="text-right hidden md:block">
 <p class="font-body text-on-surface-variant text-sm max-w-xs">Panoramica tecnica delle attività correnti, avanzamento lavori e risorse condivise.</p>
 </div>
 </section>
@@ -328,6 +334,60 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'templates/login.html';
         });
     }
+
+    // Mobile sidebar toggle
+    var menuToggle = document.getElementById('mobile-menu-toggle');
+    var sidebar = document.getElementById('sidebar-menu');
+    var overlay = document.getElementById('mobile-sidebar-overlay');
+
+    function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+        menuToggle.classList.add('lg:hidden');
+        menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        if (window.innerWidth < 1024) menuToggle.classList.remove('lg:hidden');
+        menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function() {
+            var isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) closeSidebar();
+            else openSidebar();
+        });
+    }
+
+    if (overlay) {
+        overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Show hamburger on mobile, hide on desktop
+    function checkScreenSize() {
+        if (window.innerWidth < 1024) {
+            menuToggle.classList.remove('hidden');
+            menuToggle.classList.add('flex');
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+            menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+        } else {
+            menuToggle.classList.add('hidden');
+            menuToggle.classList.remove('flex');
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+        }
+    }
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
 });
 </script>
 
