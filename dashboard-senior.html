@@ -87,16 +87,15 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen">
-<!-- Hamburger button for mobile -->
-<button id="mobile-menu-toggle" class="fixed top-5 left-4 z-[60] hidden items-center justify-center w-10 h-10 rounded-lg bg-surface-container-low shadow-md border border-outline/10 text-on-surface hover:bg-surface-container transition-colors" aria-label="Apri menu">
-  <span class="material-symbols-outlined">menu</span>
-</button>
-<!-- Mobile overlay backdrop -->
-<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden transition-opacity"></div>
 <!-- SideNavBar Dinamico -->
 <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
+<!-- Mobile overlay backdrop -->
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
 <!-- TopAppBar (From JSON) -->
 <header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-4 lg:px-10 h-20 transition-all">
+<button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 -ml-1 rounded-lg text-on-surface hover:bg-surface-container transition-colors mr-2" aria-label="Apri menu">
+  <span class="material-symbols-outlined">menu</span>
+</button>
 <div class="flex-1 flex items-center h-full">
 <span class="leading-none">Dashboard</span>
 </div>
@@ -344,20 +343,19 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.remove('-translate-x-full');
         sidebar.classList.add('translate-x-0');
         overlay.classList.remove('hidden');
-        menuToggle.classList.add('lg:hidden');
-        menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
     }
 
     function closeSidebar() {
         sidebar.classList.add('-translate-x-full');
         sidebar.classList.remove('translate-x-0');
         overlay.classList.add('hidden');
-        if (window.innerWidth < 1024) menuToggle.classList.remove('lg:hidden');
-        menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
     }
 
     if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
             var isOpen = !sidebar.classList.contains('-translate-x-full');
             if (isOpen) closeSidebar();
             else openSidebar();
@@ -368,25 +366,17 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.addEventListener('click', closeSidebar);
     }
 
-    // Show hamburger on mobile, hide on desktop
+    // Reset su resize
     function checkScreenSize() {
-        if (window.innerWidth < 1024) {
-            menuToggle.classList.remove('hidden');
-            menuToggle.classList.add('flex');
-            sidebar.classList.add('-translate-x-full');
-            sidebar.classList.remove('translate-x-0');
-            overlay.classList.add('hidden');
-            menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
-        } else {
-            menuToggle.classList.add('hidden');
-            menuToggle.classList.remove('flex');
+        if (window.innerWidth >= 1024) {
             sidebar.classList.remove('-translate-x-full');
             sidebar.classList.remove('translate-x-0');
             overlay.classList.add('hidden');
+            if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+        } else {
+            closeSidebar();
         }
     }
-
-    checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
 });
 </script>
