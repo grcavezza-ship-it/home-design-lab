@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Blog | Home Design Lab</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://amhqqszzxmrphisxlsnj.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtaHFxc3p6eG1ycGhpc3hsc25qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MDc1MjQsImV4cCI6MjA5MTQ4MzUyNH0.VubabSM4x4VrGF66a7lLVSDloUiVpdU_-Sofg5eYoI4';
+window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+window.supabase = window.supabaseClient;</script>
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script>tailwind.config={theme:{extend:{colors:{primary:'#186C32',secondary:'#4CAF50',tertiary:'#D4BFA7','on-primary':'#fff',surface:'#fbf9f8','on-surface':'#1b1c1c',background:'#fbf9f8',outline:'#707a6e','surface-container':'#f0eded','surface-container-low':'#f6f3f2','surface-container-high':'#eae8e7','on-surface-variant':'#40493f'},fontFamily:{headline:['Noto Serif'],body:['Manrope'],label:['Manrope']}}}};</script>
