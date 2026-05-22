@@ -255,7 +255,7 @@
         logout:   handleLogout,                // ✅ Usa Supabase signOut
         isLoggedIn:  async function(){ return Boolean(await getStoredUser()); },
         hasRole:     async function(r){ var u=await getStoredUser(); return u?.role===r; },
-        isOperator:  async function(){ var u=await getStoredUser(); return ['senior','operator'].includes(u?.role); },
+        isOperator:  async function(){ var u=await getStoredUser(); return ['admin','senior','operator','architect'].includes(u?.role); },
         showNotification: showNotification,
         // 🆕 NUOVO: Usa authFetch da portal-config.js (gestisce automaticamente refresh)
         authFetch: async function(url, opts) {
