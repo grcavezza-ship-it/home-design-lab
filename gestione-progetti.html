@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestione Progetti | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#524431",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "outline-variant": "#bfc9bc",
+                        "surface-dim": "#dcd9d9",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-background": "#1b1c1c",
+                        "primary-container": "#186c32",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#98eba2",
+                        "on-tertiary-fixed": "#251a0a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-container": "#ead4bb",
+                        "primary-fixed-dim": "#87d992",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#f5dfc6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-surface": "#1b1c1c",
+                        "primary-fixed": "#a3f5ac",
+                        "surface-tint": "#196c32",
+                        "primary": "#005220",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#94f990",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        "background": "#fbf9f8",
+                        "secondary": "#006e1c",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "outline": "#707a6e",
+                        "inverse-primary": "#87d992"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif", "serif"],
+                        "display": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Noto Serif', serif; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+<!-- SideNavBar Dinamico -->
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<!-- TopAppBar (From JSON) -->
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<div class="flex-1 flex items-center h-full">
+<span class="leading-none">Gestione Progetti</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<div class="relative w-64 flex items-center">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Cerca progetti..." type="text"/>
+</div>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+<!-- Avatar Dropdown -->
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<!-- Dropdown Menu -->
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<div class="max-w-7xl mx-auto space-y-16">
+<!-- Hero Header -->
+<section class="flex justify-between items-end">
+<div>
+<span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Operativo</span>
+<h2 class="font-headline text-5xl tracking-tight text-on-surface">Progetti</h2>
+</div>
+<div class="text-right">
+<p class="font-body text-on-surface-variant text-sm max-w-xs">Gestione operativa dei progetti, sincronizzazione con Drive e monitoraggio avanzamento.</p>
+</div>
+</section>
+
+<!-- Drive Sync Section -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Drive Integration -->
+<div class="lg:col-span-4">
+<div class="bg-tertiary-fixed p-8 rounded-xl relative overflow-hidden">
+<span class="font-label uppercase tracking-wider text-tertiary-container text-[10px] font-bold mb-4 block">Workspace Condiviso</span>
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-2xl text-tertiary-container">add_to_drive</span>
+<h4 class="font-headline text-xl text-on-tertiary-fixed">Google Drive</h4>
+</div>
+<p class="font-body text-sm text-tertiary-container mb-6">Ogni cartella nella cartella root di Drive diventa automaticamente un progetto nel portale.</p>
+<button class="w-full bg-surface-container-lowest text-on-surface rounded-md py-3 text-xs font-bold tracking-widest uppercase hover:bg-surface transition-colors flex justify-center items-center gap-2" id="sync-drive-btn">
+<span class="material-symbols-outlined text-[16px]">sync</span>
+                            Sincronizza da Drive
+                        </button>
+<div class="mt-4 p-3 bg-white/30 rounded-md hidden" id="sync-result">
+<p class="text-xs text-tertiary-container font-medium" id="sync-message"></p>
+</div>
+<div class="mt-3 flex items-center gap-2 text-[10px] text-tertiary-container/70">
+<span class="material-symbols-outlined text-[14px]">auto_mode</span>
+                            Modalità automatica attiva
+                        </div>
+</div>
+</div>
+
+<!-- Right Column: Projects Grid -->
+<div class="lg:col-span-8">
+<div class="bg-surface-container-low p-8 rounded-xl border-l-4 border-primary">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline text-lg text-on-surface">Elenco Progetti</h4>
+<span class="text-xs font-label text-on-surface-variant" id="project-count">0 progetti</span>
+</div>
+<div id="projects-grid" class="space-y-3 max-h-96 overflow-y-auto">
+<!-- I progetti verranno inseriti qui dinamicamente -->
+<div class="p-8 bg-surface-container-high rounded-lg text-center" id="empty-state">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">architecture</span>
+<p class="text-sm text-on-surface-variant">Clicca "Sincronizza da Drive" per caricare i progetti</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+<!-- Auth & Initialization Script -->
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin', 'architect'],
+    defaultActiveMenu: 'progetti',
+    pageName: 'Gestione Progetti'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<!-- Google Drive Sync Script -->
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    // 🔍 VERIFICA INIZIALIZZAZIONE SUPABASE
+    console.log('[Drive Sync] Verifico inizializzazione Supabase...');
+    console.log('[Drive Sync] window.supabase:', typeof window.supabase);
+    console.log('[Drive Sync] window.supabase?.auth:', typeof window.supabase?.auth);
+    
+    // Attendi che Supabase sia pronto (max 5 secondi)
+    let attempts = 0;
+    while ((!window.supabase || !window.supabase.auth) && attempts < 50) {
+        console.log(`[Drive Sync] Attendo Supabase... tentativo ${attempts + 1}`);
+        await new Promise(r => setTimeout(r, 100));
+        attempts++;
+    }
+    
+    if (!window.supabase || !window.supabase.auth) {
+        console.error('[Drive Sync] ❌ Supabase non inizializzato dopo 5 secondi!');
+        alert('Errore: Client Supabase non inizializzato. Ricarica la pagina.');
+        return;
+    }
+    
+    console.log('[Drive Sync] ✅ Supabase pronto!');
+    
+    // 🔄 Carica progetti esistenti all'avvio
+    loadExistingProjects();
+    
+    const syncBtn = document.getElementById('sync-drive-btn');
+    const syncResult = document.getElementById('sync-result');
+    const syncMessage = document.getElementById('sync-message');
+    
+    // API Base URL - cambia se il server è su porta diversa
+    const isLiveServer = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '5500';
+    const API_BASE_URL = isLiveServer 
+        ? 'http://localhost:3000/api'  // Live Server mode → vai al Node server
+        : '/api';  // Same origin
+    
+    syncBtn.addEventListener('click', async () => {
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">sync</span> Sincronizzazione in corso...';
+        syncResult.classList.add('hidden');
+        
+        try {
+            // 🔄 OTTIENI SESSIONE FRESH DA SUPABASE (con auto-refresh token)
+            console.log('[Drive Sync] Chiamo getSession...');
+            const { data: sessionData, error: sessionError } = await window.supabase.auth.getSession();
+            console.log('[Drive Sync] Sessione:', sessionData, 'Errore:', sessionError);
+            
+            if (sessionError || !sessionData.session) {
+                console.error('[Drive Sync] Sessione non valida:', sessionError);
+                showResult('❌ Sessione scaduta. Effettua il login di nuovo.', 'error');
+                // Reindirizza al login dopo 2 secondi
+                setTimeout(() => {
+                    window.location.href = 'portale-cliente.html';
+                }, 2000);
+                return;
+            }
+            
+            const accessToken = sessionData.session.access_token;
+            console.log('[Drive Sync] Token ottenuto da Supabase session (auto-refreshed)');
+            console.log('[Drive Sync] Chiamo API:', `${API_BASE_URL}/drive/sync-folders`);
+            
+            // Chiama l'endpoint automatico con token fresco
+            const response = await fetch(`${API_BASE_URL}/drive/sync-folders`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            
+            console.log('[Drive Sync] Response status:', response.status);
+            console.log('[Drive Sync] Response ok:', response.ok);
+            
+            const data = await response.json();
+            console.log('[Drive Sync] Response data:', data);
+            
+            if (response.ok && data.success) {
+                showResult(`✅ ${data.message}\n📁 Cartelle scansionate: ${data.summary?.totalFolders || 0}\n✨ Nuovi progetti: ${data.summary?.created || 0}`, 'success');
+                
+                // Popola la griglia progetti con i risultati
+                populateProjectsGrid(data.existing || [], data.created || []);
+                
+                // NON ricaricare più la pagina - mostra i risultati direttamente
+                console.log('[Drive Sync] ✅ Sincronizzazione completata, progetti aggiornati nella griglia');
+            } else if (response.status === 401) {
+                // Token scaduto durante la chiamata, forza refresh sessione
+                console.log('[Drive Sync] Token 401, tentativo refresh...');
+                const { data: refreshData, error: refreshError } = await window.supabase.auth.refreshSession();
+                
+                if (refreshError || !refreshData.session) {
+                    showResult('❌ Sessione scaduta. Effettua il login di nuovo.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'portale-cliente.html';
+                    }, 2000);
+                } else {
+                    // Riprova con token refreshed
+                    const newToken = refreshData.session.access_token;
+                    const retryResponse = await fetch(`${API_BASE_URL}/drive/sync-folders`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${newToken}`
+                        }
+                    });
+                    
+                    const retryData = await retryResponse.json();
+                    if (retryResponse.ok && retryData.success) {
+                        showResult(`✅ ${retryData.message}\n📁 Cartelle scansionate: ${retryData.summary?.totalFolders || 0}\n✨ Nuovi progetti: ${retryData.summary?.created || 0}`, 'success');
+                        setTimeout(() => location.reload(), 3000);
+                    } else {
+                        showResult(`❌ ${retryData.error || 'Errore sincronizzazione dopo refresh'}`, 'error');
+                    }
+                }
+            } else {
+                showResult(`❌ ${data.error || data.message || 'Errore sincronizzazione'}`, 'error');
+            }
+        } catch (error) {
+            console.error('[Drive Sync] Errore:', error);
+            showResult('❌ Errore di connessione: ' + error.message, 'error');
+        } finally {
+            syncBtn.disabled = false;
+            syncBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">sync</span> Sincronizza da Drive';
+        }
+    });
+    
+    function showResult(message, type) {
+        syncResult.classList.remove('hidden');
+        syncMessage.textContent = message;
+        syncMessage.style.whiteSpace = 'pre-line';
+        syncResult.className = `mt-4 p-3 rounded-md text-xs ${type === 'error' ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'}`;
+    }
+    
+    // 🎨 FUNZIONE: Popola la griglia progetti
+    function populateProjectsGrid(existing, created) {
+        const grid = document.getElementById('projects-grid');
+        const countLabel = document.getElementById('project-count');
+        
+        // Combina progetti esistenti e creati
+        const allProjects = [...existing, ...created];
+        
+        // Aggiorna contatore
+        countLabel.textContent = `${allProjects.length} progetto${allProjects.length !== 1 ? 'i' : ''}`;
+        
+        if (allProjects.length === 0) {
+            grid.innerHTML = `
+                <div class="p-8 bg-surface-container-high rounded-lg text-center">
+                    <span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2">folder_open</span>
+                    <p class="text-sm text-on-surface-variant">Nessun progetto trovato</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Genera HTML per ogni progetto - CARD CLICCABILI
+        grid.innerHTML = allProjects.map(project => `
+            <a href="dettaglio-progetto.html?id=${project.projectId}" class="block bg-surface-container-high rounded-lg p-4 flex items-center gap-4 hover:bg-surface-container-highest transition-colors group border border-transparent hover:border-primary/30">
+                <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
+                    <span class="material-symbols-outlined text-primary">folder</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h5 class="font-body font-semibold text-on-surface text-sm truncate group-hover:text-primary transition-colors">${project.projectTitle || project.driveName}</h5>
+                    <p class="text-xs text-on-surface-variant flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[12px]">link</span>
+                        <span class="hover:text-primary truncate">Apri in Drive</span>
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-stone-400 group-hover:text-primary transition-colors">chevron_right</span>
+                    <span class="text-[10px] font-label uppercase tracking-wider px-2 py-1 rounded ${project.action === 'created' ? 'bg-primary/10 text-primary' : 'bg-tertiary/10 text-tertiary'}">
+                        ${project.action === 'created' ? 'Nuovo' : 'Esistente'}
+                    </span>
+                </div>
+            </a>
+        `).join('');
+        
+        console.log('[Drive Sync] ✅ Griglia progetti aggiornata con', allProjects.length, 'progetti');
+    }
+    
+    // 🔄 FUNZIONE: Carica progetti esistenti dal database
+    async function loadExistingProjects() {
+        console.log('[Drive Sync] Caricando progetti esistenti...');
+        
+        try {
+            const { data: projects, error } = await window.supabase
+            .from('projects')
+            .select('id, titolo, drive_folder_id, status, created_at')
+            .order('created_at', { ascending: false });
+        
+        if (error) {
+            console.error('[Drive Sync] Errore caricamento progetti:', error.message);
+            return;
+        }
+        
+        var filteredProjects = projects;
+        var role = window.currentUserRole || 'client';
+        var isRestricted = role === 'operator' || role === 'architect';
+        if (isRestricted && window.currentUserPermissions) {
+            var scope = window.currentUserPermissions.scope;
+            if (scope === 'assigned' && window.currentUserAssignedProjects && window.currentUserAssignedProjects.length > 0) {
+                filteredProjects = projects.filter(function(p) {
+                    return window.currentUserAssignedProjects.includes(p.titolo);
+                });
+                console.log('[Drive Sync] Filtro scope=assigned: mostrati', filteredProjects.length, 'progetti su', projects.length);
+            }
+        }
+        
+        if (filteredProjects && filteredProjects.length > 0) {
+                // Trasforma dati nel formato atteso da populateProjectsGrid
+                const formattedProjects = filteredProjects.map(p => ({
+                    projectId: p.id,
+                    projectTitle: p.titolo,
+                    driveFolderId: p.drive_folder_id,
+                    driveName: p.titolo,
+                    status: p.status,
+                    action: 'existing'
+                }));
+                
+                populateProjectsGrid(formattedProjects, []);
+                console.log('[Drive Sync] ✅ Caricati', filteredProjects.length, 'progetti');
+            } else {
+                console.log('[Drive Sync] Nessun progetto esistente nel database');
+            }
+        } catch (error) {
+            console.error('[Drive Sync] Errore loadExistingProjects:', error.message);
+        }
+    }
+    window.loadExistingProjects = loadExistingProjects;
+});
+</script>
+
+<!-- Avatar Dropdown Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+    
+    // Toggle dropdown
+    avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        avatarDropdown.classList.toggle('hidden');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+        avatarDropdown.classList.add('hidden');
+    });
+    
+    // Logout functionality
+    dropdownLogout.addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.clear();
+        alert('Logout effettuato con successo.');
+        window.location.href = '/login';
+    });
+});
+</script>
+
+</body></html>

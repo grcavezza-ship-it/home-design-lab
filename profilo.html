@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Il Mio Profilo | Home Design Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: {
+        extend: {
+            "colors": {
+                "surface-container": "#f0eded","on-error-container": "#93000a","tertiary": "#524431",
+                "on-secondary": "#ffffff","tertiary-fixed-dim": "#d8c3ab","outline-variant": "#bfc9bc",
+                "surface-dim": "#dcd9d9","error-container": "#ffdad6","secondary-container": "#91f78e",
+                "surface-variant": "#e4e2e1","on-secondary-fixed-variant": "#005313","on-background": "#1b1c1c",
+                "primary-container": "#186c32","surface": "#fbf9f8","surface-container-lowest": "#ffffff",
+                "on-tertiary": "#ffffff","on-primary-fixed-variant": "#005321","on-secondary-container": "#00731e",
+                "inverse-surface": "#303030","on-primary-container": "#98eba2","on-tertiary-fixed": "#251a0a",
+                "surface-container-low": "#f6f3f2","on-tertiary-container": "#ead4bb","primary-fixed-dim": "#87d992",
+                "tertiary-container": "#6b5b47","inverse-on-surface": "#f3f0f0","on-error": "#ffffff",
+                "tertiary-fixed": "#f5dfc6","on-primary": "#ffffff","surface-container-high": "#eae8e7",
+                "secondary-fixed-dim": "#78dc77","on-surface": "#1b1c1c","primary-fixed": "#a3f5ac",
+                "surface-tint": "#196c32","primary": "#005220","error": "#ba1a1a",
+                "secondary-fixed": "#94f990","surface-container-highest": "#e4e2e1",
+                "on-surface-variant": "#40493f","background": "#fbf9f8","secondary": "#006e1c",
+                "on-secondary-fixed": "#002204","surface-bright": "#fbf9f8","on-primary-fixed": "#002109",
+                "on-tertiary-fixed-variant": "#534432","outline": "#707a6e","inverse-primary": "#87d992"
+            },
+            borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+            fontFamily: { headline: ["Noto Serif", "serif"], display: ["Noto Serif", "serif"], body: ["Manrope", "sans-serif"], label: ["Manrope", "sans-serif"] }
+        }
+    }
+}
+</script>
+<style>.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }</style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-10 h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+<div class="flex-1 flex items-center h-full">
+<span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none">Il Mio Profilo</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">settings</span> Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors"><span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+</div>
+</div>
+</div>
+</header>
+<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<div class="max-w-4xl mx-auto space-y-10">
+<section class="flex justify-between items-end">
+<div>
+<span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Gestione Account</span>
+<h2 class="font-headline text-5xl tracking-tight text-on-surface">Il Mio Profilo</h2>
+</div>
+</section>
+
+<form id="profile-form" class="space-y-8">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<div class="flex flex-col items-center mb-8">
+<div class="relative">
+<button type="button" id="profile-avatar-btn" class="w-28 h-28 rounded-full overflow-hidden border-4 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 group">
+<img id="profile-avatar-img" alt="Foto Profilo" class="w-full h-full object-cover hidden"/>
+<div id="profile-avatar-initials" class="w-full h-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary text-3xl font-bold font-headline">--</div>
+</button>
+<input type="file" id="avatar-upload-input" accept="image/*" class="hidden"/>
+<button type="button" id="upload-avatar-btn" class="absolute bottom-0 right-0 w-9 h-9 bg-white dark:bg-stone-800 rounded-full shadow-md border border-stone-200 dark:border-stone-700 flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[18px]">photo_camera</span></button>
+</div>
+<p class="text-sm text-on-surface-variant mt-3">Clicca sulla fotocamera per cambiare foto</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Nome *</label>
+<input type="text" id="field-nome" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Il tuo nome"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Cognome *</label>
+<input type="text" id="field-cognome" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Il tuo cognome"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Email</label>
+<input type="email" id="field-email" readonly class="w-full bg-surface-variant/30 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface/60 cursor-not-allowed outline-none" placeholder="La tua email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Telefono *</label>
+<input type="text" id="field-telefono" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Il tuo numero di telefono"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Data di Nascita</label>
+<input type="date" id="field-data-nascita" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Luogo di Nascita</label>
+<input type="text" id="field-luogo-nascita" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Es. Roma, Milano, ..."/>
+</div>
+</div>
+</div>
+
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<h3 class="font-headline text-xl text-on-surface mb-6">Professione & Logistica</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Specializzazione</label>
+<input type="text" id="field-specializzazione" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Es. Architettura, Interior Design, ..."/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Iscrizione Albo / Matricola</label>
+<input type="text" id="field-iscrizione-albo" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="N. iscrizione albo"/>
+</div>
+</div>
+<div class="flex flex-wrap gap-8 mt-4">
+<label class="flex items-center gap-3 cursor-pointer">
+<input type="checkbox" id="field-auto-munito" class="w-4 h-4 accent-primary rounded"/>
+<span class="text-sm text-on-surface">Automunito</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer">
+<input type="checkbox" id="field-trasferte" class="w-4 h-4 accent-primary rounded"/>
+<span class="text-sm text-on-surface">Disponibile per trasferte</span>
+</label>
+</div>
+<div class="mt-6">
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Bio</label>
+<textarea id="field-bio" rows="3" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400 resize-none" placeholder="Parlaci di te..."></textarea>
+</div>
+</div>
+
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<h3 class="font-headline text-xl text-on-surface mb-6">Dati Fatturazione</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">P.IVA</label>
+<input type="text" id="field-piva" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Partita IVA"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Codice Fiscale</label>
+<input type="text" id="field-cf" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Codice Fiscale"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Indirizzo Fatturazione</label>
+<input type="text" id="field-indirizzo-fatturazione" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Via, n., CAP, Città"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Codice SDI</label>
+<input type="text" id="field-sdi" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="Codice SDI"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">PEC</label>
+<input type="email" id="field-pec" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none placeholder:text-stone-400" placeholder="La tua PEC"/>
+</div>
+</div>
+</div>
+
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<h3 class="font-headline text-xl text-on-surface mb-6">Documenti</h3>
+<p class="text-sm text-on-surface-variant mb-6">Carica documenti (CV, contratti, certificazioni, ecc.)</p>
+<div class="flex items-center gap-4 mb-6">
+<input type="file" id="doc-upload-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" class="flex-1 text-sm text-on-surface file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-label file:bg-primary file:text-on-primary hover:file:bg-primary-container hover:file:text-on-primary-fixed transition-colors"/>
+<button type="button" id="btn-upload-doc" class="bg-primary text-on-primary font-medium py-2.5 px-6 rounded-lg hover:bg-secondary transition-colors flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-[18px]">upload</span> Carica
+</button>
+</div>
+<div id="documenti-lista" class="space-y-2">
+<div class="text-center py-8 text-on-surface-variant font-label text-sm">Nessun documento caricato</div>
+</div>
+</div>
+
+<div class="flex justify-end pt-4">
+<button type="submit" id="btn-salva" class="bg-primary text-on-primary font-medium py-2.5 px-10 rounded-lg hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span> Salva Profilo
+</button>
+</div>
+</form>
+</div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'architect', 'operator', 'client'], defaultActiveMenu: null, pageName: 'Il Mio Profilo' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+var docs = [];
+
+document.addEventListener('DOMContentLoaded', async function() {
+    var avatarUploadInput = document.getElementById('avatar-upload-input');
+    var uploadAvatarBtn = document.getElementById('upload-avatar-btn');
+    var profileAvatarBtn = document.getElementById('profile-avatar-btn');
+    var profileAvatarImg = document.getElementById('profile-avatar-img');
+    var profileAvatarInitials = document.getElementById('profile-avatar-initials');
+    var profileForm = document.getElementById('profile-form');
+    var btnSalva = document.getElementById('btn-salva');
+    var docUploadInput = document.getElementById('doc-upload-input');
+    var btnUploadDoc = document.getElementById('btn-upload-doc');
+
+    uploadAvatarBtn.addEventListener('click', function() { avatarUploadInput.click(); });
+    profileAvatarBtn.addEventListener('click', function() { avatarUploadInput.click(); });
+
+    avatarUploadInput.addEventListener('change', async function(e) {
+        if (e.target.files.length > 0) await uploadAvatar(e.target.files[0]);
+    });
+
+    async function uploadAvatar(file) {
+        if (!window.supabase || !window.currentUser) return;
+        try {
+            var fileExt = file.name.split('.').pop();
+            var fileName = 'avatar_' + window.currentUser.id + '_' + Date.now() + '.' + fileExt;
+            var filePath = window.currentUser.id + '/' + fileName;
+            var { error: uploadError } = await window.supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
+            if (uploadError) throw uploadError;
+            var { data: { publicUrl } } = window.supabase.storage.from('avatars').getPublicUrl(filePath);
+            var { error: updateError } = await window.supabase.from('operatori_profiles').update({ avatar_url: publicUrl }).eq('user_id', window.currentUser.id);
+            if (updateError) throw updateError;
+            displayAvatar(publicUrl);
+            showNotification('Foto profilo aggiornata', 'success');
+        } catch (err) {
+            showNotification('Errore upload foto: ' + err.message, 'error');
+        }
+    }
+
+    function displayAvatar(url) {
+        if (url) {
+            profileAvatarImg.src = url;
+            profileAvatarImg.classList.remove('hidden');
+            profileAvatarInitials.classList.add('hidden');
+        } else {
+            profileAvatarImg.classList.add('hidden');
+            profileAvatarInitials.classList.remove('hidden');
+            var nome = document.getElementById('field-nome').value || '';
+            var cognome = document.getElementById('field-cognome').value || '';
+            profileAvatarInitials.textContent = (nome.charAt(0) + cognome.charAt(0)).toUpperCase() || '--';
+        }
+    }
+
+    function gv(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+    function sv(id, v) { var el = document.getElementById(id); if (el) el.value = v || ''; }
+    function gc(id) { var el = document.getElementById(id); return el ? el.checked : false; }
+    function sc(id, v) { var el = document.getElementById(id); if (el) el.checked = !!v; }
+
+    async function loadProfileData() {
+        if (!window.supabase || !window.currentUser) return;
+        try {
+            var { data, error } = await window.supabase.from('operatori_profiles').select('*').eq('user_id', window.currentUser.id).maybeSingle();
+            if (error) throw error;
+            if (data) {
+                sv('field-nome', data.nome); sv('field-cognome', data.cognome);
+                sv('field-email', data.email || window.currentUser.email); sv('field-telefono', data.telefono);
+                sv('field-data-nascita', data.data_nascita); sv('field-luogo-nascita', data.luogo_nascita);
+                sv('field-iscrizione-albo', data.iscrizione_albo);
+                sc('field-auto-munito', data.auto_munito); sc('field-trasferte', data.disponibilita_trasferte);
+                sv('field-bio', data.bio);
+                var df = data.dati_fatturazione || {};
+                sv('field-piva', df.piva); sv('field-cf', df.cf); sv('field-sdi', df.sdi);
+                sv('field-indirizzo-fatturazione', data.indirizzo_fatturazione); sv('field-pec', data.pec);
+                if (data.avatar_url) displayAvatar(data.avatar_url); else displayAvatar(null);
+            } else {
+                sv('field-email', window.currentUser.email || '');
+                displayAvatar(null);
+            }
+        } catch (err) { console.error('[Profilo] Errore caricamento:', err); }
+    }
+
+    async function saveProfileData(e) {
+        e.preventDefault();
+        if (!window.supabase || !window.currentUser) return;
+        btnSalva.disabled = true;
+        btnSalva.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Salvataggio...';
+        try {
+            var df = { piva: gv('field-piva'), cf: gv('field-cf'), sdi: gv('field-sdi') };
+            var { error } = await window.supabase.from('operatori_profiles').update({
+                nome: gv('field-nome'), cognome: gv('field-cognome'), telefono: gv('field-telefono'),
+                data_nascita: gv('field-data-nascita') || null, luogo_nascita: gv('field-luogo-nascita'),
+                iscrizione_albo: gv('field-iscrizione-albo'),
+                auto_munito: gc('field-auto-munito'), disponibilita_trasferte: gc('field-trasferte'),
+                indirizzo_fatturazione: gv('field-indirizzo-fatturazione'),
+                pec: gv('field-pec'), dati_fatturazione: df
+            }).eq('user_id', window.currentUser.id);
+            if (error) throw error;
+            if (window.currentUserProfile) {
+                window.currentUserProfile.nome = gv('field-nome');
+                window.currentUserProfile.cognome = gv('field-cognome');
+                window.currentUserProfile.telefono = gv('field-telefono');
+            }
+            showNotification('Profilo salvato con successo', 'success');
+        } catch (err) { showNotification('Errore: ' + err.message, 'error'); }
+        finally {
+            btnSalva.disabled = false;
+            btnSalva.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span> Salva Profilo';
+        }
+    }
+
+    async function loadDocuments() {
+        if (!window.supabase || !window.currentUser) return;
+        try {
+            var { data, error } = await window.supabase.from('operatori_documenti').select('*').eq('user_id', window.currentUser.id).order('created_at', { ascending: false });
+            if (error) docs = [];
+            else docs = data || [];
+            renderDocuments();
+        } catch (err) {
+            docs = [];
+            renderDocuments();
+        }
+    }
+
+    function renderDocuments() {
+        var container = document.getElementById('documenti-lista');
+        if (!container) return;
+        if (docs.length === 0) {
+            container.innerHTML = '<div class="text-center py-8 text-on-surface-variant font-label text-sm">Nessun documento caricato</div>';
+            return;
+        }
+        var html = '';
+        for (var i = 0; i < docs.length; i++) {
+            var d = docs[i];
+            var icon = 'description';
+            if (d.tipo && d.tipo.indexOf('pdf') !== -1) icon = 'picture_as_pdf';
+            else if (d.tipo && (d.tipo.indexOf('image') !== -1 || d.tipo.indexOf('png') !== -1 || d.tipo.indexOf('jpg') !== -1)) icon = 'image';
+            else if (d.tipo && (d.tipo.indexOf('excel') !== -1 || d.tipo.indexOf('xls') !== -1)) icon = 'table_chart';
+            else if (d.tipo && (d.tipo.indexOf('word') !== -1 || d.tipo.indexOf('doc') !== -1)) icon = 'article';
+            html +=
+                '<div class="flex items-center justify-between p-3 bg-surface-container-low rounded-lg group">' +
+                    '<div class="flex items-center gap-3 min-w-0">' +
+                        '<span class="material-symbols-outlined text-primary flex-shrink-0">' + icon + '</span>' +
+                        '<div class="min-w-0">' +
+                            '<p class="text-sm font-label text-on-surface truncate">' + (d.nome_file || d.titolo || 'Documento') + '</p>' +
+                            '<p class="text-xs text-on-surface-variant">' + formatFileSize(d.dimensione) + ' &middot; ' + formatDate(d.created_at) + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="flex items-center gap-2 flex-shrink-0">' +
+                        (d.url ? '<a href="' + d.url + '" target="_blank" class="text-primary hover:text-primary-container transition-colors p-1" title="Scarica"><span class="material-symbols-outlined text-[18px]">download</span></a>' : '') +
+                        '<button class="text-error hover:text-red-700 transition-colors p-1 doc-del-btn" data-id="' + d.id + '" title="Elimina"><span class="material-symbols-outlined text-[18px]">delete</span></button>' +
+                    '</div>' +
+                '</div>';
+        }
+        container.innerHTML = html;
+        var btns = container.querySelectorAll('.doc-del-btn');
+        for (var j = 0; j < btns.length; j++) {
+            btns[j].addEventListener('click', function() { deleteDocument(this.getAttribute('data-id')); });
+        }
+    }
+
+    async function uploadDocument(file) {
+        if (!window.supabase || !window.currentUser) return;
+        try {
+            var fileExt = file.name.split('.').pop();
+            var fileName = 'doc_' + window.currentUser.id + '_' + Date.now() + '.' + fileExt;
+            var filePath = window.currentUser.id + '/documenti/' + fileName;
+            var { error: uploadError } = await window.supabase.storage.from('operatori_documenti').upload(filePath, file);
+            if (uploadError) throw uploadError;
+            var { data: { publicUrl } } = window.supabase.storage.from('operatori_documenti').getPublicUrl(filePath);
+            var { error: insertError } = await window.supabase.from('operatori_documenti').insert({
+                user_id: window.currentUser.id, nome_file: file.name, url: publicUrl, tipo: file.type, dimensione: file.size
+            });
+            if (insertError) throw insertError;
+            showNotification('Documento caricato: ' + file.name, 'success');
+            docUploadInput.value = '';
+            await loadDocuments();
+        } catch (err) { showNotification('Errore upload: ' + err.message, 'error'); }
+    }
+
+    async function deleteDocument(id) {
+        if (!window.supabase) return;
+        if (!confirm('Eliminare questo documento?')) return;
+        try {
+            var doc = docs.find(function(d) { return d.id === id; });
+            if (doc && doc.url) {
+                var parts = doc.url.split('/operatori_documenti/');
+                if (parts.length > 1) {
+                    var storagePath = parts[1].split('?')[0];
+                    await window.supabase.storage.from('operatori_documenti').remove([storagePath]);
+                }
+            }
+            var { error } = await window.supabase.from('operatori_documenti').delete().eq('id', id);
+            if (error) throw error;
+            await loadDocuments();
+            showNotification('Documento eliminato', 'success');
+        } catch (err) { showNotification('Errore: ' + err.message, 'error'); }
+    }
+
+    btnUploadDoc.addEventListener('click', function() {
+        if (docUploadInput.files.length > 0) uploadDocument(docUploadInput.files[0]);
+        else showNotification('Seleziona un file da caricare', 'info');
+    });
+
+    profileForm.addEventListener('submit', saveProfileData);
+
+    function waitForInit() {
+        var attempts = 0;
+        function check() {
+            attempts++;
+            if (window.supabase && window.currentUser) {
+                loadProfileData(); loadDocuments(); setupAvatarDropdown();
+            } else if (attempts < 60) setTimeout(check, 100);
+        }
+        check();
+    }
+
+    function setupAvatarDropdown() {
+        var ab = document.getElementById('avatar-btn');
+        var ad = document.getElementById('avatar-dropdown');
+        var dl = document.getElementById('dropdown-logout');
+        if (ab) ab.addEventListener('click', function(e) { e.stopPropagation(); ad.classList.toggle('hidden'); });
+        document.addEventListener('click', function() { if (ad) ad.classList.add('hidden'); });
+        if (dl) dl.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (window.supabase) await window.supabase.auth.signOut();
+            localStorage.clear();
+            window.location.href = 'templates/login.html';
+        });
+    }
+
+    function formatDate(d) {
+        if (!d) return '';
+        var dt = new Date(d);
+        if (isNaN(dt.getTime())) return '';
+        return dt.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function formatFileSize(bytes) {
+        if (!bytes) return '';
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function showNotification(msg, type) {
+        var old = document.querySelector('.hdl-notification');
+        if (old) old.remove();
+        var colors = { error: '#b91c1c', success: '#166534', info: '#1e40af' };
+        var icons = { error: 'error', success: 'check_circle', info: 'info' };
+        var el = document.createElement('div');
+        el.className = 'hdl-notification';
+        el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+        el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + (icons[type] || 'info') + '</span><p style="flex:1">' + msg + '</p><button onclick="this.parentElement.remove()" style="margin-left:8px;opacity:.7"><span class="material-symbols-outlined" style="font-size:16px">close</span></button>';
+        document.body.appendChild(el);
+        setTimeout(function() { if (el.parentElement) el.remove(); }, 5000);
+    }
+
+    waitForInit();
+});
+</script>
+</body></html>

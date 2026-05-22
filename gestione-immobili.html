@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestione Immobili | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#524431",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "outline-variant": "#bfc9bc",
+                        "surface-dim": "#dcd9d9",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-background": "#1b1c1c",
+                        "primary-container": "#186c32",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#98eba2",
+                        "on-tertiary-fixed": "#251a0a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-container": "#ead4bb",
+                        "primary-fixed-dim": "#87d992",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#f5dfc6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-surface": "#1b1c1c",
+                        "primary-fixed": "#a3f5ac",
+                        "surface-tint": "#196c32",
+                        "primary": "#005220",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#94f990",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        "background": "#fbf9f8",
+                        "secondary": "#006e1c",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "outline": "#707a6e",
+                        "inverse-primary": "#87d992"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "display": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 relative min-h-screen pb-24">
+<!-- TopAppBar Master Shell -->
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<div class="flex-1 flex items-center h-full">
+<span class="leading-none">Portfolio Immobiliare</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<div class="relative w-64 flex items-center">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+<!-- Avatar Dropdown -->
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<!-- Dropdown Menu -->
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-32 px-10 max-w-7xl mx-auto">
+        <!-- Header Section -->
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-stone-800 mb-2">Portfolio Immobiliare</h1>
+                <p class="text-stone-600">Gestisci e visualizza tutti gli immobili disponibili</p>
+            </div>
+            <button onclick="window.location.href='creazione-immobile.html'" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined">add</span>
+                Nuovo Immobile
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-stone-600 mb-1">Totale Immobili</p>
+                        <p class="text-2xl font-bold text-stone-800" id="total-immobili">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600">home</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-stone-600 mb-1">Disponibili</p>
+                        <p class="text-2xl font-bold text-green-600" id="disponibili-immobili">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">check_circle</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-stone-600 mb-1">Venduti</p>
+                        <p class="text-2xl font-bold text-red-600" id="venduti-immobili">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-red-600">sell</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-stone-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-stone-600 mb-1">Valore Medio</p>
+                        <p class="text-2xl font-bold text-stone-800" id="valore-medio">€0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-purple-600">trending_up</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Immobili Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="immobili-grid">
+            <!-- Loading State -->
+            <div class="col-span-full text-center py-12">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-stone-100 rounded-full mb-4">
+                    <span class="material-symbols-outlined text-stone-400 text-2xl animate-spin">refresh</span>
+                </div>
+                <p class="text-stone-600">Caricamento immobili...</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin', 'operator', 'architect'],
+    defaultActiveMenu: 'immobili',
+    pageName: 'Gestione Immobili'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+    // Funzione per caricare gli immobili
+    window.loadImmobili = async function() {
+        try {
+            console.log('Caricamento immobili...');
+            
+            const res = await fetch('/api/gestione-immobili');
+            if (!res.ok) throw new Error('Errore caricamento');
+            const data = await res.json();
+            
+            console.log('Immobili caricati:', data);
+            renderImmobili(data || []);
+            updateStats(data || []);
+            
+        } catch (error) {
+            console.error('Errore loadImmobili:', error);
+            const grid = document.getElementById('immobili-grid');
+            if (grid) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+                            <span class="material-symbols-outlined text-red-600 text-2xl">error</span>
+                        </div>
+                        <p class="text-red-600">Errore nel caricamento degli immobili</p>
+                    </div>
+                `;
+            }
+        }
+    };
+
+    // Funzione per renderizzare gli immobili
+    window.renderImmobili = function(immobili) {
+        const grid = document.getElementById('immobili-grid');
+        if (!grid) return;
+        
+        if (!immobili || immobili.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-stone-100 rounded-full mb-4">
+                        <span class="material-symbols-outlined text-stone-400 text-2xl">home</span>
+                    </div>
+                    <p class="text-stone-600">Nessun immobile presente</p>
+                    <button onclick="window.location.href='creazione-immobile.html'" class="mt-4 bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center gap-2 mx-auto">
+                        <span class="material-symbols-outlined">add</span>
+                        Aggiungi il primo immobile
+                    </button>
+                </div>
+            `;
+            return;
+        }
+        
+        grid.innerHTML = immobili.map(immobile => {
+            const statoClass = immobile.stato_immobile === 'Disponibile' ? 'bg-green-100 text-green-800' : 
+                               immobile.stato_immobile === 'Venduto' ? 'bg-red-100 text-red-800' : 
+                               'bg-yellow-100 text-yellow-800';
+            
+            let primaImmagine = null;
+            if (immobile.immagini_urls) {
+                let urls = immobile.immagini_urls;
+                if (typeof urls === 'string') try { urls = JSON.parse(urls); } catch(e) {}
+                if (Array.isArray(urls) && urls.length > 0) primaImmagine = urls[0];
+            }
+            
+            const immagineHtml = primaImmagine
+                ? `<img src="${primaImmagine}" alt="${immobile.titolo || ''}" class="w-full h-full object-cover">`
+                : `<span class="material-symbols-outlined text-stone-400 text-4xl">home</span>`;
+            
+            const prezzo = immobile.prezzo_richiesta
+                ? Number(immobile.prezzo_richiesta).toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+                : null;
+            
+            return `
+                <div class="bg-white rounded-xl shadow-sm border border-stone-100 overflow-hidden hover:shadow-lg transition-shadow">
+                    <div onclick="window.location.href='creazione-immobile.html?id=${immobile.id}'" class="h-48 bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center overflow-hidden cursor-pointer">
+                        ${immagineHtml}
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-semibold text-stone-800">${immobile.titolo || 'Immobile senza titolo'}</h3>
+                            <span class="text-xs font-medium px-2 py-1 rounded-full ${statoClass}">
+                                ${immobile.stato_immobile || 'N/D'}
+                            </span>
+                        </div>
+                        <div class="space-y-2 text-sm text-stone-600">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">location_on</span>
+                                <span>${immobile.citta || 'N/D'}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">euro</span>
+                                <span class="font-semibold text-stone-800">€${prezzo || 'N/D'}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-base">straighten</span>
+                                <span>${immobile.superficie || 'N/D'} mq</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-100 flex justify-between items-center">
+                            <span class="text-xs text-stone-500">${immobile.tipologia || 'N/D'}</span>
+                            <button onclick="window.location.href='creazione-immobile.html?id=${immobile.id}'" class="text-primary hover:text-primary/80 text-sm font-medium">
+                                Modifica →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    };
+
+    // Funzione per aggiornare le statistiche
+    window.updateStats = function(immobili) {
+        const totalElement = document.getElementById('total-immobili');
+        const disponibiliElement = document.getElementById('disponibili-immobili');
+        const vendutiElement = document.getElementById('venduti-immobili');
+        const valoreMedioElement = document.getElementById('valore-medio');
+        
+        if (totalElement) totalElement.textContent = immobili.length;
+        
+        const disponibili = immobili.filter(i => i.stato_immobile === 'Disponibile').length;
+        if (disponibiliElement) disponibiliElement.textContent = disponibili;
+        
+        const venduti = immobili.filter(i => i.stato_immobile === 'Venduto').length;
+        if (vendutiElement) vendutiElement.textContent = venduti;
+        
+        const prezziValidi = immobili.filter(i => i.prezzo_richiesta);
+        const valoreMedio = prezziValidi.length > 0 
+            ? prezziValidi.reduce((sum, i) => sum + i.prezzo_richiesta, 0) / prezziValidi.length
+            : 0;
+        if (valoreMedioElement) valoreMedioElement.textContent = `€${Math.round(valoreMedio).toLocaleString('it-IT')}`;
+    };
+
+    // Inizializzazione quando Supabase è pronto
+    const checkSupabase = setInterval(() => {
+        if (window.supabase && typeof window.supabase.from === 'function') {
+            clearInterval(checkSupabase);
+            loadImmobili();
+        }
+    }, 100);
+</script>
+
+<!-- Avatar Dropdown Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+    
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            avatarDropdown.classList.toggle('hidden');
+        });
+    }
+    
+    document.addEventListener('click', function() {
+        if (avatarDropdown) avatarDropdown.classList.add('hidden');
+    });
+    
+    if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            alert('Logout effettuato con successo.');
+            window.location.href = '/login';
+        });
+    }
+});
+</script>
+</body>
+</html>

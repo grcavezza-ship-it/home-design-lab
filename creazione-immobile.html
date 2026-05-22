@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nuovo Immobile | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#524431",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "outline-variant": "#bfc9bc",
+                        "surface-dim": "#dcd9d9",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-background": "#1b1c1c",
+                        "primary-container": "#186c32",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#98eba2",
+                        "on-tertiary-fixed": "#251a0a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-container": "#ead4bb",
+                        "primary-fixed-dim": "#87d992",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#f5dfc6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-surface": "#1b1c1c",
+                        "primary-fixed": "#a3f5ac",
+                        "surface-tint": "#196c32",
+                        "primary": "#005220",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#94f990",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        "background": "#fbf9f8",
+                        "secondary": "#006e1c",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "outline": "#707a6e",
+                        "inverse-primary": "#87d992"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "display": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+</style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<main class="ml-64 flex-1 relative min-h-screen pb-24">
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<div class="flex-1 flex items-center h-full">
+<span class="leading-none" id="page-title-header">Nuovo Immobile</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<div class="relative w-64 flex items-center">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+</div>
+</div>
+</div>
+</header>
+
+<div class="pt-32 px-10 max-w-6xl mx-auto">
+        <div class="mb-12">
+        <span class="font-label uppercase text-[10px] tracking-[0.2em] text-primary font-bold mb-2 block">CMS / Gestione Immobiliare</span>
+        <h1 class="text-5xl font-bold tracking-tight mb-4 text-stone-800 dark:text-white">Scheda Immobile Portfolio</h1>
+        <p class="text-stone-500 max-w-2xl leading-relaxed">Inserisci le specifiche tecniche e i dettagli della proprietà. Mantieni gli standard Atelier per ogni inserimento.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-8 space-y-12">
+            <div id="ai-banner" class="bg-gradient-to-r from-stone-900 to-stone-800 rounded-2xl p-8 shadow-xl border border-stone-700 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden transition-all duration-500">
+                <div class="absolute -right-10 -top-10 opacity-5 pointer-events-none">
+                    <span class="material-symbols-outlined text-[150px]">auto_awesome</span>
+                </div>
+                <div class="flex items-center gap-5 z-10 flex-1">
+                    <div id="ai-icon-container" class="w-14 h-14 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center shrink-0 transition-all duration-500">
+                        <span id="ai-icon" class="material-symbols-outlined text-primary-fixed text-2xl">smart_toy</span>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-['Noto_Serif'] text-xl font-bold tracking-tight mb-1">Atelier AI Assistant</h3>
+                        <p id="ai-status-text" class="text-stone-400 text-sm leading-relaxed max-w-lg">Carica la presentazione (PDF/PPTX). L'IA leggerà il contenuto per compilare automaticamente la descrizione, estrarre i parametri e il nome della struttura.</p>
+                    </div>
+                </div>
+                <div class="relative z-10 shrink-0 w-full md:w-auto" id="ai-upload-container">
+                    <input type="file" id="ai-document-upload" accept=".pdf,.pptx" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <button class="w-full md:w-auto bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold tracking-wide transition-all flex items-center justify-center gap-3 shadow-lg shadow-primary/20">
+                        <span class="material-symbols-outlined text-[20px]">upload_file</span>
+                        Analizza Documento
+                    </button>
+                </div>
+            </div>
+
+            <section class="space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-primary"></span>
+                    <h3 class="text-xl font-bold tracking-tight text-stone-800 dark:text-white font-['Noto_Serif']">Identità & Narrativa</h3>
+                </div>
+                <div class="space-y-8">
+                    <div class="group">
+                        <label class="font-label uppercase text-[10px] tracking-widest text-stone-400 mb-2 block font-bold">Titolo della Proprietà</label>
+                        <input id="titolo" class="w-full bg-transparent border-b border-stone-200 focus:border-primary focus:border-b-2 py-4 px-0 outline-none transition-all text-xl font-['Noto_Serif'] italic" type="text" placeholder="es. L'Attico Orizzonte"/>
+                    </div>
+                    <div class="group">
+                        <label class="font-label uppercase text-[10px] tracking-widest text-stone-400 mb-2 block font-bold">Descrizione Architettonica</label>
+                        <textarea id="descrizione" class="w-full bg-transparent border-b border-stone-200 focus:border-primary focus:border-b-2 py-4 px-0 outline-none transition-all resize-none leading-relaxed" rows="4" placeholder="Descrivi l'integrazione del design e i materiali..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="space-y-6">
+                <div class="flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-primary"></span>
+                    <h3 class="text-xl font-bold tracking-tight text-stone-800 dark:text-white font-['Noto_Serif']">Portfolio Visuale</h3>
+                </div>
+                <div id="gallery-container" class="grid grid-cols-3 gap-4">
+                    <button id="gallery-add-btn" class="aspect-square flex flex-col items-center justify-center border-2 border-dashed border-stone-300 dark:border-stone-700 rounded-xl hover:border-primary/50 transition-colors bg-stone-50 dark:bg-stone-800/50 group relative">
+                        <input type="file" id="gallery-file-input" accept="image/*" multiple class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <span class="material-symbols-outlined text-3xl text-stone-400 mb-2 group-hover:text-primary transition-colors">add_a_photo</span>
+                        <span class="font-label uppercase text-[9px] tracking-widest font-bold text-stone-500">Carica Foto</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="space-y-6 pb-12">
+                <div class="flex items-center gap-4">
+                    <span class="w-8 h-[1px] bg-primary"></span>
+                    <h3 class="text-xl font-bold tracking-tight text-stone-800 dark:text-white font-['Noto_Serif']">Modulo Specifiche</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-8">
+                    <div class="bg-surface-variant/30 dark:bg-stone-800/50 p-6 rounded-xl border border-stone-100 dark:border-stone-700">
+                        <label class="font-label uppercase text-[10px] tracking-widest text-stone-500 mb-4 block font-bold">Tipologia Immobile</label>
+                        <select id="tipologia" class="w-full bg-transparent border-b border-stone-300 py-2 outline-none text-lg font-bold">
+                            <option value="Appartamento">Appartamento</option>
+                            <option value="Villa">Villa</option>
+                            <option value="Locale Commerciale">Locale Commerciale</option>
+                            <option value="Terreno">Terreno</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-rows-2 gap-4">
+                        <div class="bg-white dark:bg-stone-900 p-4 rounded-lg flex justify-between items-center shadow-sm border border-stone-100 dark:border-stone-700">
+                            <div>
+                                <span class="font-label uppercase text-[9px] tracking-widest text-stone-400 block mb-1 font-bold">Superficie Totale</span>
+                                <input type="number" id="superficie" class="text-lg font-bold border-none p-0 w-24 focus:ring-0 bg-transparent text-stone-800 dark:text-white" value="0"> <span class="text-xs opacity-50">m²</span>
+                            </div>
+                            <span class="material-symbols-outlined text-stone-300">straighten</span>
+                        </div>
+                        <div class="bg-white dark:bg-stone-900 p-4 rounded-lg flex justify-between items-center shadow-sm border border-stone-100 dark:border-stone-700">
+                            <div>
+                                <span class="font-label uppercase text-[9px] tracking-widest text-stone-400 block mb-1 font-bold">Località</span>
+                                <input type="text" id="citta" class="text-lg font-bold border-none p-0 w-full focus:ring-0 bg-transparent text-stone-800 dark:text-white" placeholder="Città...">
+                            </div>
+                            <span class="material-symbols-outlined text-stone-300">location_on</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="lg:col-span-4 space-y-8">
+            <div class="sticky top-32 space-y-8">
+                <div class="bg-white dark:bg-stone-900 p-8 rounded-xl shadow-[0px_20px_40px_rgba(27,28,28,0.06)] border border-stone-100 dark:border-stone-800">
+                    <h4 class="font-['Noto_Serif'] text-xl font-bold mb-6 italic text-primary">Status Mercato</h4>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="font-label uppercase text-[10px] tracking-widest text-stone-400 mb-3 block font-bold">Stato Trattativa</label>
+                            <select id="stato_immobile" class="w-full bg-stone-50 dark:bg-stone-800 border-none rounded-lg text-xs font-bold tracking-tight py-3 px-4 focus:ring-1 focus:ring-primary transition-all text-stone-700 dark:text-stone-300">
+                                <option value="Disponibile">DISPONIBILE</option>
+                                <option value="Opzionato">OPZIONATO</option>
+                                <option value="In Trattativa">IN TRATTATIVA</option>
+                                <option value="Venduto">VENDUTO / RISERVATO</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="font-label uppercase text-[10px] tracking-widest text-stone-400 mb-2 block font-bold">Valutazione Richiesta (€)</label>
+                            <div class="relative">
+                                <span class="absolute left-0 top-1/2 -translate-y-1/2 text-primary font-bold">€</span>
+                                <input id="prezzo_richiesta" class="w-full pl-6 pr-0 py-2 bg-transparent border-b border-stone-200 dark:border-stone-700 focus:border-primary outline-none font-bold text-2xl text-stone-800 dark:text-white" type="number" placeholder="0"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-8 border-t border-stone-100 dark:border-stone-800 space-y-4">
+                        <button id="btn-save" class="w-full bg-primary text-white py-4 rounded-lg font-bold tracking-tight shadow-lg hover:-translate-y-0.5 transition-all">
+                            Salva Proprietà
+                        </button>
+                        <button onclick="window.location.href='gestione-immobili.html'" class="w-full text-stone-400 text-[10px] font-bold tracking-widest uppercase hover:text-primary transition-colors">
+                            Annulla modifiche
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin', 'operator', 'architect'],
+    defaultActiveMenu: 'immobili',
+    pageName: 'Nuovo Immobile'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('id');
+    const isEditMode = !!editId;
+    let existingImageUrls = [];
+
+    const aiUploadInput = document.getElementById('ai-document-upload');
+    const aiBanner = document.getElementById('ai-banner');
+    const aiIcon = document.getElementById('ai-icon');
+    const aiIconContainer = document.getElementById('ai-icon-container');
+    const aiStatusText = document.getElementById('ai-status-text');
+    const aiUploadContainer = document.getElementById('ai-upload-container');
+
+    async function processUploadedFile(file) {
+        const fileName = file.name;
+
+        // Titolo dal nome del file (NON dall'IA)
+        let titleFromFile = fileName
+            .replace(/\._compressed\.pdf$/i, '')
+            .replace(/\.pdf$/i, '')
+            .replace(/[_]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toUpperCase();
+        document.getElementById('titolo').value = titleFromFile;
+
+        // 1. Stato di Caricamento (UI)
+        aiUploadContainer.style.display = 'none';
+        aiIcon.textContent = 'memory';
+        aiIcon.classList.add('animate-spin');
+        aiIconContainer.classList.remove('bg-primary/20', 'border-primary/30');
+        aiIconContainer.classList.add('bg-purple-500/20', 'border-purple-500/30');
+        aiIcon.classList.remove('text-primary-fixed');
+        aiIcon.classList.add('text-purple-400');
+        
+        aiStatusText.innerHTML = `Analisi di <span class="text-white">${fileName}</span> in corso...<br><span class="opacity-70 mt-1 block">Estrazione testo dal documento...</span>`;
+        aiBanner.classList.add('border-purple-500/50', 'shadow-purple-500/10');
+
+        // Deferisce l'elaborazione pesante per permettere al browser di renderizzare l'UI
+        setTimeout(async () => {
+        try {
+            let textContent = '';
+            let pdfDoc = null;
+
+            if (file.type === 'application/pdf') {
+                const arrayBuffer = await file.arrayBuffer();
+                pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                const maxPages = Math.min(pdfDoc.numPages, 20);
+                for (let i = 1; i <= maxPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const content = await page.getTextContent();
+                    const pageText = content.items.map(item => item.str).join(' ');
+                    textContent += pageText + '\n';
+                }
+            } else {
+                textContent = `Documento: ${fileName}`;
+            }
+
+            console.log("Testo estratto dal PDF, lunghezza:", textContent.length, "caratteri");
+            
+            aiStatusText.innerHTML = `Analisi di <span class="text-white">${fileName}</span> in corso...<br><span class="opacity-70 mt-1 block">Invio a DeepSeek per analisi...</span>`;
+
+            const { data, error } = await window.supabase.functions.invoke('analyze-property', {
+                body: { textContent },
+            });
+
+            console.log("Risposta ricevuta:", data, error);
+
+            if (error) throw error;
+
+            const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+
+            // Popolamento campi
+            // Forza il titolo dal nome del file (sovrascrive qualsiasi valore DeepSeek)
+            document.getElementById('titolo').value = titleFromFile || parsedData.titolo || parsedData.title || '';
+            
+            document.getElementById('descrizione').value = parsedData.descrizione || parsedData.description || '';
+            
+            let superficieVal = parsedData.superficie || parsedData.size_sq_m || parsedData.surface || parsedData.surface_area || parsedData.total_area;
+            if (!superficieVal || superficieVal === 0 || superficieVal === '0') {
+                superficieVal = null;
+                if (parsedData.room_sizes && Array.isArray(parsedData.room_sizes)) {
+                    const sum = parsedData.room_sizes.reduce((sum, val) => sum + (Number(val) || 0), 0);
+                    if (sum > 0) superficieVal = sum;
+                }
+            }
+            document.getElementById('superficie').value = (superficieVal && superficieVal > 0) ? superficieVal : '';
+            
+            document.getElementById('citta').value = parsedData.citta || parsedData.city || parsedData.localita || parsedData.location || parsedData.address || '';
+            
+            const prezzo = parseFloat(parsedData.prezzo_richiesta || parsedData.price || parsedData.prezzo || parsedData.asking_price || parsedData.costo);
+            document.getElementById('prezzo_richiesta').value = isNaN(prezzo) ? '' : prezzo;
+            
+            const tipologiaVal = parsedData.tipologia || parsedData.type || parsedData.tipology || parsedData.property_type || parsedData.category || '';
+            if (tipologiaVal) {
+                const select = document.getElementById('tipologia');
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value.toLowerCase().includes(tipologiaVal.toLowerCase())) {
+                        select.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Successo (UI)
+            aiIcon.classList.remove('animate-spin');
+            aiIcon.textContent = 'check_circle';
+            aiIconContainer.classList.remove('bg-purple-500/20', 'border-purple-500/30');
+            aiIconContainer.classList.add('bg-green-500/20', 'border-green-500/30');
+            aiIcon.classList.remove('text-purple-400');
+            aiIcon.classList.add('text-green-400');
+            
+            aiStatusText.innerHTML = `<strong class="text-green-400">Testo estratto con successo!</strong><br><span class="opacity-90 text-xs">Dati pre-compilati da DeepSeek.</span>`;
+            aiBanner.classList.remove('border-purple-500/50', 'shadow-purple-500/10');
+            aiBanner.classList.add('border-green-500/30');
+
+            // Animazione campi
+            const inputs = ['titolo', 'descrizione', 'superficie', 'citta', 'prezzo_richiesta', 'tipologia'];
+            inputs.forEach(id => {
+                const el = document.getElementById(id);
+                if(el && el.value) {
+                    el.classList.add('bg-green-50', 'dark:bg-green-900/20', 'transition-colors', 'duration-1000');
+                    setTimeout(() => el.classList.remove('bg-green-50', 'dark:bg-green-900/20'), 2000);
+                }
+            });
+
+            // Estrazione immagini dal PDF tramite rendering Canvas (solo se è un PDF)
+            if (pdfDoc) {
+                aiStatusText.innerHTML = `<strong class="text-green-400">Testo estratto con successo!</strong><br><span class="opacity-90 text-xs">Dati pre-compilati da DeepSeek.</span><br><span class="opacity-70 text-xs mt-1 block"><span class="inline-block w-4 h-4 border-2 border-green-400/50 border-t-transparent rounded-full animate-spin align-middle mr-2"></span>Estrazione immagini in corso...</span>`;
+                aiBanner.classList.remove('border-green-500/30');
+                aiBanner.classList.add('border-amber-500/30');
+
+                try {
+                    const images = await extractPagesAsImages(pdfDoc, 9);
+                    if (images.length > 0) {
+                        for (const imgFile of images) {
+                            galleryFiles.push(imgFile);
+                            addImageToGallery(imgFile);
+                        }
+                        aiStatusText.innerHTML = `<strong class="text-green-400">Analisi completata!</strong><br><span class="opacity-90 text-xs">Dati pre-compilati da DeepSeek.</span><br><span class="opacity-70 text-xs mt-1 block">${images.length} foto estratte dal PDF e aggiunte alla galleria.</span>`;
+                    } else {
+                        aiStatusText.innerHTML = `<strong class="text-green-400">Analisi completata!</strong><br><span class="opacity-90 text-xs">Dati pre-compilati da DeepSeek.</span><br><span class="opacity-50 text-xs mt-1 block">Nessuna foto estratta dal PDF.</span>`;
+                    }
+                } catch(e) {
+                    console.log('Estrazione immagini fallita:', e);
+                    aiStatusText.innerHTML = `<strong class="text-green-400">Testo estratto con successo!</strong><br><span class="opacity-90 text-xs">Dati pre-compilati da DeepSeek.</span><br><span class="opacity-50 text-xs mt-1 block">Impossibile estrarre le immagini dal PDF.</span>`;
+                }
+            }
+
+        } catch (err) {
+            console.error('Errore analisi AI:', err);
+            aiIcon.classList.remove('animate-spin');
+            aiIcon.textContent = 'error';
+            aiIconContainer.classList.remove('bg-purple-500/20', 'border-purple-500/30');
+            aiIconContainer.classList.add('bg-red-500/20', 'border-red-500/30');
+            aiIcon.classList.remove('text-purple-400');
+            aiIcon.classList.add('text-red-400');
+            aiStatusText.innerHTML = `<strong class="text-red-400">Errore di comunicazione col server</strong><br><span class="opacity-70 text-xs">${err.message || 'Controlla la console per dettagli.'}</span>`;
+        }
+        });
+    }
+
+    if (aiUploadInput) {
+        aiUploadInput.addEventListener('change', async function(e) {
+            if (e.target.files.length > 0) {
+                await processUploadedFile(e.target.files[0]);
+            }
+        });
+    }
+
+    // Drag & Drop sull'area di upload
+    aiUploadContainer.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        aiUploadContainer.style.border = '2px dashed #186c32';
+        aiUploadContainer.style.backgroundColor = 'rgba(24, 108, 50, 0.05)';
+        aiUploadContainer.style.borderRadius = '12px';
+    });
+
+    aiUploadContainer.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        aiUploadContainer.style.border = '';
+        aiUploadContainer.style.backgroundColor = '';
+        aiUploadContainer.style.borderRadius = '';
+    });
+
+    aiUploadContainer.addEventListener('drop', async function(e) {
+        e.preventDefault();
+        aiUploadContainer.style.border = '';
+        aiUploadContainer.style.backgroundColor = '';
+        aiUploadContainer.style.borderRadius = '';
+        if (e.dataTransfer.files.length > 0) {
+            await processUploadedFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    // Funzione helper per convertire file in base64
+    async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // Rimuovi il prefisso "data:application/pdf;base64,"
+                const base64 = reader.result.split(',')[1];
+                resolve(base64);
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    // 1. Gestione Dropdown Avatar
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+    
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            avatarDropdown.classList.toggle('hidden');
+        });
+    }
+    document.addEventListener('click', () => avatarDropdown?.classList.add('hidden'));
+
+    if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (window.supabase) await window.supabase.auth.signOut();
+            localStorage.clear();
+            window.location.href = '/login';
+        });
+    }
+
+    // 2. Caricamento Avatar Dinamico
+    async function loadDynamicAvatar() {
+        const avatarImg = document.getElementById('avatar-img');
+        if (!avatarImg) return;
+
+        try {
+            // Controlla prima se l'utente è nel localStorage (spesso usato da portal-init)
+            const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (localUser.avatar_url) {
+                avatarImg.src = localUser.avatar_url;
+                return;
+            }
+
+            // Se non c'è nel local, chiedi direttamente a Supabase
+            if (window.supabase) {
+                const { data: { user }, error } = await window.supabase.auth.getUser();
+                if (user && user.user_metadata && user.user_metadata.avatar_url) {
+                    avatarImg.src = user.user_metadata.avatar_url;
+                }
+            }
+        } catch (error) {
+            console.error('Errore nel caricamento avatar:', error);
+        }
+    }
+
+    async function waitForSupabaseReady(timeoutMs) {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+            if (window.supabase && window.supabase.auth) return window.supabase;
+            await new Promise(r => setTimeout(r, 100));
+        }
+        return null;
+    }
+
+    // 3. Galleria foto: stato globale e funzioni di gestione
+    let galleryFiles = [];
+
+    function addImageToGallery(file) {
+        const container = document.getElementById('gallery-container');
+        if (!container) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'aspect-square rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 relative group';
+            div.innerHTML = `
+                <img src="${e.target.result}" class="w-full h-full object-cover">
+                <button class="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm" onclick="removeGalleryImage(${galleryFiles.indexOf(file)},'new')">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            `;
+            container.insertBefore(div, container.lastElementChild);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    window.removeGalleryImage = function(index, type) {
+        if (type === 'existing') {
+            existingImageUrls.splice(index, 1);
+        } else if (type === 'new' && index >= 0 && index < galleryFiles.length) {
+            galleryFiles.splice(index, 1);
+        }
+        renderGallery();
+    }
+
+    function renderGallery() {
+        const container = document.getElementById('gallery-container');
+        if (!container) return;
+        const addBtn = container.lastElementChild;
+        container.innerHTML = '';
+
+        // Renderizza immagini esistenti (da DB)
+        existingImageUrls.forEach((url, idx) => {
+            const div = document.createElement('div');
+            div.className = 'aspect-square rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 relative group';
+            div.innerHTML = `
+                <img src="${url}" class="w-full h-full object-cover">
+                <button class="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm" onclick="removeGalleryImage(${idx},'existing')">
+                    <span class="material-symbols-outlined text-sm">close</span>
+                </button>
+            `;
+            container.appendChild(div);
+        });
+
+        // Renderizza nuovi file caricati
+        galleryFiles.forEach((file, idx) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const div = document.createElement('div');
+                div.className = 'aspect-square rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 relative group';
+                div.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover">
+                    <button class="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity text-sm" onclick="removeGalleryImage(${idx},'new')">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                `;
+                container.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        container.appendChild(addBtn);
+    }
+
+    // Gestione caricamento manuale foto
+    document.getElementById('gallery-file-input')?.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            for (const file of e.target.files) {
+                galleryFiles.push(file);
+                addImageToGallery(file);
+            }
+        }
+        e.target.value = '';
+    });
+
+    // 3b. Modalità Modifica: carica dati esistenti
+    (async () => {
+        const supabase = await waitForSupabaseReady(8000);
+        if (!supabase) return;
+
+        await loadDynamicAvatar();
+
+        supabase.auth.onAuthStateChange(async () => {
+            await loadDynamicAvatar();
+        });
+
+        if (isEditMode && editId) {
+            try {
+                const res = await fetch(`/api/gestione-immobili/${editId}`);
+                if (!res.ok) throw new Error('Immobile non trovato');
+                const data = await res.json();
+
+                // Cambia titolo pagina
+                document.getElementById('page-title-header').textContent = 'Modifica Immobile';
+                document.title = 'Modifica Immobile | Home Design Lab';
+
+                // Popola campi
+                document.getElementById('titolo').value = data.titolo || '';
+                document.getElementById('descrizione').value = data.descrizione || '';
+                document.getElementById('superficie').value = data.superficie || '';
+                document.getElementById('citta').value = data.citta || '';
+                document.getElementById('prezzo_richiesta').value = data.prezzo_richiesta || '';
+                if (data.tipologia) {
+                    const sel = document.getElementById('tipologia');
+                    for (let i = 0; i < sel.options.length; i++) {
+                        if (sel.options[i].value === data.tipologia) {
+                            sel.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                if (data.stato_immobile) {
+                    document.getElementById('stato_immobile').value = data.stato_immobile;
+                }
+
+                // Carica immagini esistenti
+                existingImageUrls = data.immagini_urls || [];
+                renderGallery();
+
+                // Nascondi banner AI in modifica
+                document.getElementById('ai-banner').style.display = 'none';
+
+                // Cambia testo bottone salva
+                document.getElementById('btn-save').textContent = 'Aggiorna Proprietà';
+
+            } catch (err) {
+                console.error('Errore caricamento immobile:', err);
+                alert('Errore nel caricamento dell\'immobile: ' + err.message);
+            }
+        }
+    })();
+
+    // 4. Estrazione immagini dal PDF tramite rendering Canvas (dalla pagina 2 in poi)
+    async function extractPagesAsImages(pdf, maxImages = 9) {
+        const extracted = [];
+        const startPage = Math.min(2, pdf.numPages);
+        const endPage = Math.min(pdf.numPages, startPage + maxImages - 1);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 2 });
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+
+            await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.85));
+            if (blob && blob.size > 5000) {
+                const file = new File([blob], `pagina_${i}.jpg`, { type: 'image/jpeg' });
+                extracted.push(file);
+            }
+        }
+        return extracted;
+    }
+
+    // 5. Logica di Salvataggio su Supabase
+    const btnSave = document.getElementById('btn-save');
+
+    if (btnSave) {
+        btnSave.addEventListener('click', async function() {
+            const originaleText = btnSave.innerHTML;
+            btnSave.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin mr-2"></span> Salvataggio in corso...';
+            btnSave.disabled = true;
+
+            try {
+                const titolo = document.getElementById('titolo').value;
+                const descrizione = document.getElementById('descrizione').value;
+                const tipologia = document.getElementById('tipologia').value;
+                const superficie = document.getElementById('superficie').value;
+                const citta = document.getElementById('citta').value;
+                const stato_immobile = document.getElementById('stato_immobile').value;
+                const prezzo_richiesta = document.getElementById('prezzo_richiesta').value;
+
+                if (!titolo) throw new Error("Il titolo è obbligatorio");
+
+                // Combina URL esistenti + nuovi upload
+                let imageUrls = [...existingImageUrls];
+
+                if (galleryFiles && galleryFiles.length > 0) {
+                    for (let i = 0; i < galleryFiles.length; i++) {
+                        const file = galleryFiles[i];
+                        const formData = new FormData();
+                        formData.append('image', file);
+
+                        const uploadRes = await fetch('/api/upload-immagine', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!uploadRes.ok) {
+                            const errData = await uploadRes.json().catch(() => ({}));
+                            throw new Error(errData.error || `Upload fallito (${uploadRes.status})`);
+                        }
+
+                        const { url } = await uploadRes.json();
+                        imageUrls.push(url);
+                    }
+                }
+
+                if (isEditMode && editId) {
+                    // MODIFICA: usa PUT
+                    const putRes = await fetch(`/api/gestione-immobili/${editId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            titolo,
+                            descrizione,
+                            tipologia,
+                            superficie: superficie || null,
+                            citta,
+                            stato_immobile,
+                            prezzo_richiesta: prezzo_richiesta ? parseFloat(prezzo_richiesta) : null,
+                            immagini_urls: imageUrls
+                        })
+                    });
+
+                    if (!putRes.ok) {
+                        const errData = await putRes.json().catch(() => ({}));
+                        throw new Error(errData.error || 'Aggiornamento fallito');
+                    }
+
+                    btnSave.innerHTML = '✅ Immobile Aggiornato!';
+                    btnSave.classList.replace('bg-primary', 'bg-green-600');
+
+                    setTimeout(() => {
+                        window.location.href = 'gestione-immobili.html';
+                    }, 1500);
+
+                } else {
+                    // CREAZIONE: usa INSERT
+                    const { error: dbError } = await window.supabase
+                        .from('immobili')
+                        .insert([{
+                            titolo: titolo,
+                            descrizione: descrizione,
+                            tipologia: tipologia,
+                            superficie: superficie || null,
+                            citta: citta,
+                            stato_immobile: stato_immobile,
+                            prezzo_richiesta: prezzo_richiesta ? parseFloat(prezzo_richiesta) : null,
+                            immagini_urls: imageUrls
+                        }]);
+
+                    if (dbError) throw dbError;
+
+                    btnSave.innerHTML = '✅ Immobile Salvato!';
+                    btnSave.classList.replace('bg-primary', 'bg-green-600');
+
+                    setTimeout(() => {
+                        window.location.href = 'gestione-immobili.html';
+                    }, 1500);
+                }
+
+            } catch (error) {
+                console.error('Errore durante il salvataggio:', error);
+                alert('Errore: ' + error.message);
+                btnSave.innerHTML = originaleText;
+                btnSave.disabled = false;
+            }
+        });
+    }
+
+    // 6. Pulsante Elimina (solo in modalità modifica)
+    if (isEditMode && editId) {
+        const sidebarCard = document.querySelector('.lg\\:col-span-4 .sticky .space-y-4');
+        if (sidebarCard) {
+            const deleteBtn = document.createElement('button');
+            deleteBtn.id = 'btn-delete';
+            deleteBtn.className = 'w-full bg-error text-white py-4 rounded-lg font-bold tracking-tight shadow-lg hover:-translate-y-0.5 transition-all mt-4';
+            deleteBtn.textContent = 'Elimina Immobile';
+            sidebarCard.appendChild(deleteBtn);
+
+            deleteBtn.addEventListener('click', async function() {
+                if (!confirm('Sei sicuro di voler eliminare questo immobile? L\'operazione è irreversibile.')) return;
+
+                const originaleText = deleteBtn.innerHTML;
+                deleteBtn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin mr-2"></span> Eliminazione...';
+                deleteBtn.disabled = true;
+
+                try {
+                    const delRes = await fetch(`/api/gestione-immobili/${editId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (!delRes.ok) {
+                        const errData = await delRes.json().catch(() => ({}));
+                        throw new Error(errData.error || 'Eliminazione fallita');
+                    }
+
+                    deleteBtn.innerHTML = '✅ Eliminato!';
+                    deleteBtn.classList.replace('bg-error', 'bg-green-600');
+
+                    setTimeout(() => {
+                        window.location.href = 'gestione-immobili.html';
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Errore eliminazione:', error);
+                    alert('Errore: ' + error.message);
+                    deleteBtn.innerHTML = originaleText;
+                    deleteBtn.disabled = false;
+                }
+            });
+        }
+    }
+
+});
+</script>
+</body>
+</html>

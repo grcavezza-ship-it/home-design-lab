@@ -127,7 +127,7 @@ router.post('/auth/login', async (req, res) => {
             displayName = [operatore.nome, operatore.cognome].filter(Boolean).join(' ') || displayName;
         }
     }
-    const redirectPath = role === 'client' ? '/portale-cliente' : '/operatore/dashboard';
+    const redirectPath = role === 'client' ? '/portale-cliente' : '/dashboard-senior.html';
 
     return res.json({
         token: data.session.access_token,
@@ -708,7 +708,7 @@ router.get('/operatore/portfolio', authenticate, requirePermission('portfolio'),
     try {
         const { data, error } = await getAdminClient()
             .from('projects')
-            .select('id, titolo, descrizione, categoria, immagini, stato, created_at')
+            .select('id, title, description, category, cover_image, location, status, is_public, created_at')
             .order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data || []);
@@ -717,12 +717,12 @@ router.get('/operatore/portfolio', authenticate, requirePermission('portfolio'),
 
 router.post('/operatore/portfolio', authenticate, requirePermission('portfolio'), async (req, res, next) => {
     try {
-        const { titolo, descrizione, categoria, immagini, client_id } = req.body;
-        if (!titolo || !client_id) return res.status(400).json({ error: 'titolo e client_id richiesti' });
+        const { title, description, category, cover_image, location, surface, duration, budget, is_public, client_id } = req.body;
+        if (!title || !client_id) return res.status(400).json({ error: 'title e client_id richiesti' });
 
         const { data, error } = await getAdminClient()
             .from('projects')
-            .insert({ titolo, descrizione, categoria, immagini, stato: 'bozza', client_id })
+            .insert({ title, description, category, cover_image, location, surface, duration, budget, is_public: Boolean(is_public), client_id })
             .select()
             .single();
         if (error) throw error;
@@ -1463,16 +1463,17 @@ router.post('/drive/sync-auto', authenticate, async (req, res, next) => {
                 // Controlla se esiste già un progetto con questo drive_folder_id
                 const { data: existing } = await admin
                     .from('projects')
-                    .select('id, titolo, drive_folder_id')
+                    .select('id, title, drive_folder_id')
                     .eq('drive_folder_id', folder.id)
                     .maybeSingle();
 
                 if (existing) {
-                    if (existing.titolo !== folder.name) {
+                    // Aggiorna se il nome è cambiato
+                    if (existing.title !== folder.name) {
                         const { data: updatedProject } = await admin
                             .from('projects')
                             .update({ 
-                                titolo: folder.name,
+                                title: folder.name,
                                 updated_at: new Date().toISOString()
                             })
                             .eq('id', existing.id)
@@ -1481,15 +1482,17 @@ router.post('/drive/sync-auto', authenticate, async (req, res, next) => {
                         updated.push(updatedProject);
                     }
                 } else {
+                    // Crea nuovo progetto
                     const { data: newProject, error: insertError } = await admin
                         .from('projects')
                         .insert({
-                            titolo: folder.name,
-                            descrizione: `Progetto sincronizzato da Google Drive`,
+                            title: folder.name,
+                            description: `Progetto sincronizzato da Google Drive`,
                             drive_folder_id: folder.id,
                             drive_folder_url: `https://drive.google.com/drive/folders/${folder.id}`,
-                            stato: 'attivo',
-                            categoria: 'drive-auto-sync',
+                            status: 'active',
+                            is_public: false,
+                            category: 'drive-auto-sync',
                             created_by: req.user.id
                         })
                         .select()

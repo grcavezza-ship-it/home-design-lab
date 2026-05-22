@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#f5dfc6",
+                        "surface-container": "#f0eded",
+                        "on-tertiary-fixed": "#251a0a",
+                        "inverse-primary": "#87d992",
+                        "surface": "#fbf9f8",
+                        "primary-container": "#186c32",
+                        "surface-bright": "#fbf9f8",
+                        "on-tertiary-container": "#ead4bb",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "on-primary-fixed": "#002109",
+                        "outline-variant": "#bfc9bc",
+                        "on-secondary-fixed-variant": "#005313",
+                        "primary": "#005220",
+                        "surface-variant": "#e4e2e1",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#303030",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-container": "#00731e",
+                        "secondary-fixed": "#94f990",
+                        "background": "#fbf9f8",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "on-surface-variant": "#40493f",
+                        "on-secondary-fixed": "#002204",
+                        "surface-tint": "#196c32",
+                        "surface-container-low": "#f6f3f2",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#524431",
+                        "primary-fixed-dim": "#87d992",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-error": "#ffffff",
+                        "secondary": "#006e1c",
+                        "on-surface": "#1b1c1c",
+                        "surface-container-high": "#eae8e7",
+                        "inverse-on-surface": "#f3f0f0",
+                        "secondary-container": "#91f78e",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#78dc77",
+                        "surface-container-highest": "#e4e2e1",
+                        "primary-fixed": "#a3f5ac",
+                        "on-background": "#1b1c1c",
+                        "outline": "#707a6e",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#6b5b47",
+                        "on-primary-container": "#98eba2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+    <script>
+        // Stato globale per editing
+        let isEditMode = false;
+        let currentEditingId = null;
+        let originalValues = {};
+
+        // Carica clienti dal database
+        async function loadClienti() {
+            try {
+                const { data: clienti, error } = await supabase
+                    .from('clienti_profiles')
+                    .select('*')
+                    .order('name', { ascending: true });
+
+                if (error) throw error;
+
+                renderClienti(clienti || []);
+
+            } catch (err) {
+                console.error('Errore caricamento clienti:', err);
+                showError('Errore nel caricamento dei clienti');
+            }
+        }
+
+        // Renderizza clienti nella tabella
+        async function renderClienti(clienti) {
+            const tbody = document.getElementById('clienti-tbody');
+            const emptyState = document.getElementById('empty-state');
+
+            if (!clienti || clienti.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            let html = '';
+            for (const cliente of clienti) {
+                // Conta progetti associati
+                const { data: progetti, error: progettiError } = await supabase
+                    .from('projects')
+                    .select('id')
+                    .eq('cliente_id', cliente.id);
+
+                const numProgetti = progettiError ? 0 : (progetti?.length || 0);
+
+                html += `
+                    <tr data-client-id="${cliente.id}" class="hover:bg-surface-container-low/50 transition-colors cursor-pointer" onclick="showDetail('${cliente.id}')">
+                        <td class="px-6 py-4">
+                            <div class="ragione-sociale font-medium text-on-surface">${cliente.name || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="email text-sm text-on-surface-variant">${cliente.email || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="telefono text-sm text-on-surface-variant">${cliente.phone || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">
+                                <span class="material-symbols-outlined text-[12px]">architecture</span>
+                                ${numProgetti} progetti
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="event.stopPropagation(); deleteClient('${cliente.id}')" class="text-slate-600 hover:text-slate-800 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        // Mostra dettaglio cliente
+        async function showDetail(clientId) {
+            try {
+                const { data: cliente, error } = await supabase
+                    .from('clienti_profiles')
+                    .select('*')
+                    .eq('id', clientId)
+                    .single();
+
+                if (error) throw error;
+
+                // Carica progetti associati
+                const { data: progetti, error: progettiError } = await supabase
+                    .from('projects')
+                    .select('id, titolo, status')
+                    .eq('cliente_id', clientId)
+                    .order('created_at', { ascending: false });
+
+                renderDetailPanel(cliente, progetti || []);
+
+            } catch (err) {
+                console.error('Errore caricamento dettaglio cliente:', err);
+                showError('Errore nel caricamento dei dettagli');
+            }
+        }
+
+        // Renderizza pannello dettaglio
+        function renderDetailPanel(cliente, progetti) {
+            const detailPanel = document.getElementById('detail-panel');
+            
+            detailPanel.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-xl font-headline font-bold text-on-surface mb-1">${cliente.name}</h2>
+                            <p class="text-sm text-on-surface-variant">Cliente</p>
+                        </div>
+                        <button id="edit-client-btn" onclick="toggleClientEdit('${cliente.id}')" class="px-3 py-1.5 bg-slate-700 text-white rounded-lg text-xs font-bold uppercase hover:bg-slate-800 transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[14px]">edit</span>
+                            Modifica
+                        </button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">mail</span>
+                            <div class="client-email text-sm text-on-surface">${cliente.email || '-'}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">phone</span>
+                            <div class="client-phone text-sm text-on-surface">${cliente.phone || '-'}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary">location_on</span>
+                            <div class="client-address text-sm text-on-surface">${cliente.address || '-'}</div>
+                        </div>
+                        <div class="pt-2">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Note</span>
+                            <div class="client-note text-sm text-on-surface mt-1">${cliente.notes || '-'}</div>
+                        </div>
+                    </div>
+
+                    ${progetti.length > 0 ? `
+                        <div class="border-t border-outline-variant/20 pt-4">
+                            <h3 class="text-sm font-bold uppercase tracking-widest text-outline mb-3">Progetti Associati</h3>
+                            <div class="space-y-2">
+                                ${progetti.map(progetto => `
+                                    <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
+                                        <a href="dettaglio-progetto.html?id=${progetto.id}" class="text-sm font-medium text-primary hover:text-primary/80">
+                                            ${progetto.titolo}
+                                        </a>
+                                        <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">
+                                            ${progetto.status}
+                                        </span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Toggle editing cliente
+        function toggleClientEdit(clientId) {
+            if (isEditMode) {
+                saveClientEdit();
+            } else {
+                startClientEdit(clientId);
+            }
+        }
+
+        // Inizia editing cliente
+        function startClientEdit(clientId) {
+            const elements = ['client-email', 'client-phone', 'client-address', 'client-note'];
+            
+            elements.forEach(elId => {
+                const element = document.querySelector(`.${elId}`);
+                if (element) {
+                    originalValues[elId] = element.textContent.trim();
+                    const currentValue = originalValues[elId];
+                    element.innerHTML = `<input type="text" class="w-full px-2 py-1 border border-cyan-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-cyan-50 text-sm" value="${currentValue}" />`;
+                    element.classList.add('ring-2', 'ring-cyan-500', 'bg-cyan-50');
+                }
+            });
+
+            currentEditingId = clientId;
+            isEditMode = true;
+            
+            const editBtn = document.getElementById('edit-client-btn');
+            editBtn.innerHTML = '<span class="material-symbols-outlined text-[14px]">save</span> Salva';
+            editBtn.className = 'px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-xs font-bold uppercase hover:bg-emerald-600 transition-colors flex items-center gap-1';
+        }
+
+        // Salva editing cliente
+        async function saveClientEdit() {
+            try {
+                const updateData = {
+                    email: document.querySelector('.client-email input')?.value,
+                    phone: document.querySelector('.client-phone input')?.value,
+                    address: document.querySelector('.client-address input')?.value,
+                    notes: document.querySelector('.client-note input')?.value
+                };
+
+                const { error } = await supabase
+                    .from('clienti_profiles')
+                    .update(updateData)
+                    .eq('id', currentEditingId);
+
+                if (error) throw error;
+
+                showNotification('Cliente aggiornato con successo!');
+                showDetail(currentEditingId); // Ricarica dettaglio
+                loadClienti(); // Aggiorna lista
+                isEditMode = false;
+                currentEditingId = null;
+
+            } catch (err) {
+                console.error('Errore salvataggio cliente:', err);
+                showNotification('Errore nel salvataggio');
+            }
+        }
+
+        // Mostra form nuovo cliente
+        function showAddClientForm() {
+            const detailPanel = document.getElementById('detail-panel');
+            
+            detailPanel.innerHTML = `
+                <div class="space-y-6">
+                    <h2 class="text-xl font-headline font-bold text-on-surface mb-4">Nuovo Cliente</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface mb-1">Nome/Ragione Sociale</label>
+                            <input type="text" id="new-client-name" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Inserisci nome..." />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface mb-1">Email</label>
+                            <input type="email" id="new-client-email" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="email@esempio.com" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface mb-1">Telefono</label>
+                            <input type="tel" id="new-client-phone" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="+39 012 345678" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-on-surface mb-1">Indirizzo</label>
+                            <input type="text" id="new-client-address" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Via Roma, 123" />
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="saveNewClient()" class="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-bold hover:opacity-90 transition-opacity">
+                            Salva Cliente
+                        </button>
+                        <button onclick="showDetail(null)" class="flex-1 bg-slate-700 text-white rounded-lg py-2.5 text-sm font-bold hover:bg-slate-800 transition-colors">
+                            Annulla
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Salva nuovo cliente
+        async function saveNewClient() {
+            try {
+                const clientData = {
+                    name: document.getElementById('new-client-name').value,
+                    email: document.getElementById('new-client-email').value,
+                    phone: document.getElementById('new-client-phone').value,
+                    address: document.getElementById('new-client-address').value,
+                    notes: ''
+                };
+
+                if (!clientData.name) {
+                    showNotification('Il nome è obbligatorio');
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('clienti_profiles')
+                    .insert([clientData])
+                    .select();
+
+                if (error) throw error;
+
+                showNotification('Cliente creato con successo!');
+                showDetail(null); // Pulisci pannello
+                loadClienti(); // Aggiorna lista
+
+            } catch (err) {
+                console.error('Errore creazione cliente:', err);
+                showNotification('Errore nella creazione del cliente');
+            }
+        }
+
+        // Elimina cliente
+        async function deleteClient(clientId) {
+            if (!confirm('Sei sicuro di voler eliminare questo cliente?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('clienti_profiles')
+                    .delete()
+                    .eq('id', clientId);
+
+                if (error) throw error;
+
+                showNotification('Cliente eliminato con successo!');
+                loadClienti(); // Aggiorna lista
+                showDetail(null); // Pulisci pannello
+
+            } catch (err) {
+                console.error('Errore eliminazione cliente:', err);
+                showNotification('Errore nell\'eliminazione del cliente');
+            }
+        }
+
+        // Mostra notifica
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-4 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+            notif.innerHTML = `<span class="material-symbols-outlined align-middle mr-2">check_circle</span>${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Carica clienti al caricamento pagina
+        document.addEventListener('DOMContentLoaded', loadClienti);
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .surface-shift-no-lines { border: none !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #eae8e7; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<nav id="sidebar-menu" class="bg-[#f6f3f2] dark:bg-stone-900 text-[#186C32] dark:text-[#4ade80] font-['Manrope'] font-medium uppercase tracking-widest text-[10px] h-screen w-64 fixed left-0 top-0 border-r-0 flex flex-col py-8 z-50">
+<div class="px-8 mb-12">
+<h1 class="font-['Noto_Serif'] text-2xl font-bold tracking-tighter text-[#186C32] dark:text-[#4ade80]">Atelier Studio</h1>
+<p class="text-stone-500 mt-1 capitalize tracking-normal text-xs">Gestione Clienti</p>
+</div>
+<div class="flex-1 space-y-2">
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-3 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="dashboard-senior.html">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-3 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="gestione-progetti.html">
+<span class="material-symbols-outlined">architecture</span>
+                Progetti
+            </a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-3 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="gestione-immobili.html">
+<span class="material-symbols-outlined">inventory_2</span>
+                Immobili
+            </a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-3 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="gestione-journal.html">
+<span class="material-symbols-outlined">menu_book</span>
+                Journal
+            </a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-3 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="gestione-team.html">
+<span class="material-symbols-outlined">groups</span>
+                Team
+            </a>
+<a class="text-[#186C32] dark:text-[#4ade80] font-bold bg-[#ffffff] dark:bg-stone-800 rounded-l-xl ml-4 pl-4 py-3 transition-all border-r-4 border-[#186C32] transition-all duration-300 flex items-center gap-4" href="gestione-clienti.html">
+<span class="material-symbols-outlined">handshake</span>
+                Clienti
+            </a>
+</div>
+<div class="px-8 mt-auto mb-8">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-md py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity">
+                Nuovo Progetto
+            </button>
+</div>
+<div class="space-y-2 border-t border-stone-200 dark:border-stone-800 pt-4">
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="#">
+<span class="material-symbols-outlined text-[18px]">add_to_drive</span>
+                Google Drive
+            </a>
+<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+                Impostazioni
+            </a>
+</div>
+</nav>
+<!-- TopAppBar Master Shell -->
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<div class="flex-1 flex items-center h-full">
+<span class="leading-none">Studio Management</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<div class="relative w-64 flex items-center">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+<!-- Avatar Dropdown -->
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwG2p67wXSg3yZM4v78cF44Jy6CevBMWdFF0Iz5N8ieMyH5aHUo-pzkZEUmp41WOLHPgXsQ7imCCLFj9R4ko2bUAUS4Sn0Td3fDI_UvP1-CfZcCw8Iu1b9rgxPHntL2Yx8nX4U9OV58lvBS91QSW8Kx5WWS0o_Biygd98KH8GqOPWwFa-zlQpnWUvVJVPcGQX0jAuL3_Y-DRMUSVRfevyEJumLQi1NusaNR6sgjpub3Vmt_cxFcZBUd5fAaAEftjRTCvpHWHkBTRA"/>
+</button>
+<!-- Dropdown Menu -->
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+</div>
+</div>
+</div>
+</header>
+
+<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<header class="flex justify-between items-end mb-12">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary block mb-2">Management Console</span>
+<h1 class="text-4xl font-headline font-bold text-on-surface tracking-tight">Customer Relations</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+<input class="pl-10 pr-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm w-72 focus:ring-1 focus:ring-primary" placeholder="Filter by name or project..." type="text"/>
+</div>
+</div>
+</header>
+<div class="grid grid-cols-12 gap-8">
+<div class="col-span-8 space-y-8">
+<div class="bg-surface-container-lowest rounded-xl p-1 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-variant/30">
+<th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Cliente</th>
+<th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Email</th>
+<th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Telefono</th>
+<th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Progetti</th>
+<th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline text-right">Azioni</th>
+</tr>
+</thead>
+<tbody id="clienti-tbody" class="divide-y divide-surface-variant/10">
+<!-- Clienti verranno caricati qui dinamicamente -->
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">The Library Annex</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-tertiary-fixed text-on-tertiary-fixed">PENDING</span>
+</td>
+<td class="px-6 py-5 text-right">
+<a class="text-primary text-xs font-bold uppercase tracking-wider hover:underline underline-offset-4" href="dettaglio-progetto.html?id=2">Manage</a>
+</td>
+</tr>
+<tr class="group hover:bg-surface-container-low/50 transition-colors">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-outline font-bold text-xs">MA</div>
+<div>
+<div class="text-sm font-bold">Marcus Aurelius</div>
+<div class="text-[11px] text-outline font-medium">emperor@stoic.org</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium">Stone Garden Villa</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container-highest text-on-surface-variant">ARCHIVED</span>
+</td>
+<td class="px-6 py-5 text-right">
+<a class="text-primary text-xs font-bold uppercase tracking-wider hover:underline underline-offset-4" href="dettaglio-progetto.html?id=3">Manage</a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="bg-tertiary text-on-tertiary rounded-xl p-8 flex justify-between items-center overflow-hidden relative">
+<div class="z-10">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-70 block mb-2">Action Required</span>
+<h3 class="text-2xl font-headline font-bold mb-4">You have 3 pending material approvals.</h3>
+<button class="bg-white text-tertiary px-6 py-2.5 rounded-lg text-sm font-bold shadow-md hover:bg-tertiary-fixed transition-colors">Review Approval Queue</button>
+</div>
+<div class="absolute right-0 top-0 w-1/3 h-full opacity-20 pointer-events-none">
+<div class="w-full h-full bg-gradient-to-l from-white/20 to-transparent"></div>
+</div>
+<span class="material-symbols-outlined text-9xl absolute -right-4 -bottom-4 opacity-10 rotate-12">architecture</span>
+</div>
+</div>
+<div class="col-span-4">
+<!-- Pannello Dettaglio Cliente -->
+<div id="detail-panel" class="bg-surface-container-lowest rounded-xl p-6 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+<div class="text-center text-on-surface-variant py-12">
+<span class="material-symbols-outlined text-4xl mb-2">person</span>
+<p class="text-sm">Seleziona un cliente per visualizzare i dettagli</p>
+</div>
+</div>
+
+<!-- Pulsante Aggiungi Cliente -->
+<div class="mt-6">
+<button id="add-client-btn" onclick="showAddClientForm()" class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-lg py-3 text-sm font-bold uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+Nuovo Cliente
+</button>
+</div>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 border-b border-surface-variant/20 group cursor-pointer hover:bg-surface-container-low rounded transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-fixed-dim/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<div class="text-xs font-bold">Draft_Blueprint_V4.pdf</div>
+<div class="text-[10px] text-outline">2.4 MB • Oct 12, 2023</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 text-sm">download</span>
+</div>
+<div class="flex items-center justify-between p-3 border-b border-surface-variant/20 group cursor-pointer hover:bg-surface-container-low rounded transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-fixed-dim/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div>
+<div class="text-xs font-bold">Site_Survey_Photos.zip</div>
+<div class="text-[10px] text-outline">45.8 MB • Oct 10, 2023</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 text-sm">download</span>
+</div>
+<div class="flex items-center justify-between p-3 border-b border-surface-variant/20 group cursor-pointer hover:bg-surface-container-low rounded transition-all">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-tertiary-fixed-dim/30 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">table_chart</span>
+</div>
+<div>
+<div class="text-xs font-bold">Material_Specifications.xlsx</div>
+<div class="text-[10px] text-outline">1.1 MB • Oct 08, 2023</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline opacity-0 group-hover:opacity-100 text-sm">download</span>
+</div>
+</div>
+<div class="mt-6 border-2 border-dashed border-outline-variant/30 rounded-xl p-8 text-center bg-surface-container-low/30 hover:bg-surface-container-low/60 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-3xl text-outline-variant group-hover:text-primary transition-colors">cloud_upload</span>
+<p class="text-xs font-bold text-outline mt-2">Drag files here to upload</p>
+<p class="text-[10px] text-outline/60 mt-1 uppercase tracking-tighter">Support: PDF, JPEG, DWG</p>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-surface-variant/20">
+<button class="w-full bg-surface-container-highest text-on-surface py-3 rounded-lg text-sm font-bold hover:bg-surface-variant transition-colors">
+                            Open Project Timeline
+                        </button>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-xl p-6">
+<div class="text-[10px] font-bold uppercase tracking-widest text-outline mb-4">Project Note</div>
+<p class="text-sm font-medium leading-relaxed italic text-on-surface-variant">
+                        "Client requested a pivot on the marble selection for the primary ensuite. Looking for Carrara alternatives with less dramatic veining."
+                    </p>
+<div class="mt-4 flex items-center gap-2">
+<img alt="Author" class="w-6 h-6 rounded-full object-cover" data-alt="professional woman in corporate attire looking confident with soft office background lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Vj7Wn68EheUJ3IIFNYKHQjHkjK0yBG_JAa3zBSt_qsogNEqU51nLska-ehHlAu3bL9z5PMyriU8OQPTwCWus9SvL1idsC1FP02BG6gfGZx1Ph8YHNgj8U87_SjiXQTUBWLVVVK7lDzJUpoyQ2ad0xqjeAF62VM9AI403U66ycxdLc0ExgnHrn6zUqp8kk49GXLJWgOXjmH2ryHWVd9Wm4Gk2VyAGlJepBDvpj7ADBx5kkfdwQi_xkaLRhLfFLU6XqWo8H4O7FiM"/>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">Sarah M. • 2 hrs ago</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin', 'operator'],
+    defaultActiveMenu: 'overview',
+    pageName: 'Gestione Clienti'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<!-- Avatar Dropdown Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+    
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            avatarDropdown.classList.toggle('hidden');
+        });
+    }
+    
+    document.addEventListener('click', function() {
+        if (avatarDropdown) avatarDropdown.classList.add('hidden');
+    });
+    
+    if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.clear();
+            alert('Logout effettuato con successo.');
+            window.location.href = '/login';
+        });
+    }
+});
+</script>
+</body></html>

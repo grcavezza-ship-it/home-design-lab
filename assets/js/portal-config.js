@@ -31,7 +31,7 @@ let PORTAL_CONFIG = {
     },
     
     // 🔗 URL di login
-    loginPage: '/login',
+    loginPage: 'templates/login.html',
     
     // Google API Configuration
     google: {

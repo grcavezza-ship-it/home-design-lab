@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Area Cliente | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#94f990",
+                    "on-primary-fixed": "#002109",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "on-tertiary-container": "#ead4bb",
+                    "secondary-container": "#91f78e",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#f0eded",
+                    "outline": "#707a6e",
+                    "on-surface-variant": "#40493f",
+                    "surface-tint": "#196c32",
+                    "on-tertiary-fixed": "#251a0a",
+                    "primary-container": "#186c32",
+                    "surface-dim": "#dcd9d9",
+                    "primary-fixed": "#a3f5ac",
+                    "inverse-primary": "#87d992",
+                    "surface-variant": "#e4e2e1",
+                    "on-secondary-container": "#00731e",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#bfc9bc",
+                    "on-primary-fixed-variant": "#005321",
+                    "on-error": "#ffffff",
+                    "on-background": "#1b1c1c",
+                    "surface-container-highest": "#e4e2e1",
+                    "tertiary-fixed": "#f5dfc6",
+                    "tertiary-container": "#6b5b47",
+                    "on-tertiary-fixed-variant": "#534432",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "background": "#fbf9f8",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-container-low": "#f6f3f2",
+                    "surface-container-high": "#eae8e7",
+                    "on-secondary-fixed": "#002204",
+                    "secondary": "#006e1c",
+                    "primary-fixed-dim": "#87d992",
+                    "tertiary": "#524431",
+                    "on-surface": "#1b1c1c",
+                    "surface": "#fbf9f8",
+                    "error": "#ba1a1a",
+                    "primary": "#005220",
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-primary-container": "#98eba2",
+                    "inverse-surface": "#303030",
+                    "surface-bright": "#fbf9f8",
+                    "secondary-fixed-dim": "#78dc77"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<main class="flex-grow md:ml-64 bg-background min-h-screen">
+<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
+<div class="flex-1 flex items-center h-full">
+</div>
+<div class="flex items-center gap-5 h-full">
+<span id="user-name" class="text-sm text-on-surface-variant hidden md:block"></span>
+<button class="p-2.5 text-on-surface-variant hover:bg-surface-container hover:bg-gray-100 rounded-full transition-all relative h-10 w-10 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</button>
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-high border-2 border-primary-container overflow-hidden hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User profile" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto space-y-12 pb-24">
+<section class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="w-8 h-[2px] bg-primary"></span>
+<span class="text-[11px] font-black uppercase tracking-[0.4em] text-primary">Area Riservata</span>
+</div>
+<h2 id="client-welcome" class="text-6xl font-headline text-on-surface tracking-tight">Benvenuto</h2>
+<p class="text-on-surface-variant max-w-2xl text-lg font-light leading-relaxed">Il tuo portale centralizzato per la supervisione dei progetti, il coordinamento tecnico e la gestione dei flussi documentali.</p>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div id="project-card" class="lg:col-span-8 bg-white rounded-2xl p-10 shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] relative overflow-hidden flex flex-col justify-between border border-outline-variant/20">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-12">
+<div>
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-2 block">Cantiere Attivo</span>
+<a id="project-title" class="text-4xl font-headline text-on-surface hover:text-primary transition-colors cursor-pointer" href="dettaglio-progetto.html">Nessun progetto</a>
+</div>
+<div id="project-status-badge" class="bg-primary/10 px-5 py-2 rounded-full border border-primary/20">
+<span id="project-status" class="text-[11px] font-black text-primary uppercase tracking-widest">--</span>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-12 py-4">
+<div class="relative flex items-center justify-center w-40 h-40">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-surface-container" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="8"></circle>
+<circle id="progress-circle" class="text-primary progress-circle" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-dasharray="282.7" stroke-dashoffset="282.7" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span id="progress-percent" class="text-4xl font-headline text-primary">0%</span>
+<span class="text-[8px] uppercase tracking-widest text-on-surface-variant font-black">Avanzamento</span>
+</div>
+</div>
+<div class="flex-grow space-y-6 w-full">
+<div id="project-phases" class="space-y-4">
+<div class="flex items-center gap-3 opacity-40">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+<div>
+<p class="text-xs font-bold text-on-surface">Caricamento in corso...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-6 pt-12 relative z-10">
+<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Kick-off</p>
+<p id="project-start" class="text-sm font-black text-on-surface">--</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Consegna</p>
+<p id="project-end" class="text-sm font-black text-on-surface">--</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Progetti Totali</p>
+<p id="project-count" class="text-sm font-black text-on-surface">0</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 bg-surface-container-low rounded-2xl p-8 flex flex-col border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8 pb-4 border-b border-outline-variant/20">
+<div>
+<h3 class="text-xl font-headline text-on-surface">Materiali per te</h3>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">Dallo staff Home Design Lab</p>
+</div>
+<span class="material-symbols-outlined text-primary">ios_share</span>
+</div>
+<div id="documents-list" class="space-y-5 flex-grow">
+<div class="flex items-center justify-center py-8">
+<p class="text-xs text-on-surface-variant">Nessun documento condiviso</p>
+</div>
+</div>
+<button class="mt-8 py-3 bg-white hover:bg-primary hover:text-white text-primary font-black text-[10px] uppercase tracking-[0.2em] rounded-lg transition-all border border-outline-variant/10 flex items-center justify-center gap-2 group shadow-sm">
+                    Tutti i file condivisi
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-container-high/40 rounded-2xl p-10 border-2 border-dashed border-outline-variant/40 flex flex-col items-center justify-center text-center group hover:border-primary/40 transition-all cursor-pointer relative overflow-hidden">
+<div class="absolute top-4 left-4">
+<span class="text-[9px] font-black uppercase tracking-widest text-primary/60">Area Caricamento Cliente</span>
+</div>
+<div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-primary shadow-xl group-hover:scale-110 transition-transform mb-6">
+<span class="material-symbols-outlined text-4xl">drive_folder_upload</span>
+</div>
+<h4 class="text-xl font-headline mb-3 text-on-surface">Condividi le tue Idee</h4>
+<p class="text-xs text-on-surface-variant max-w-xs mx-auto font-medium leading-relaxed mb-8">Trascina qui ispirazioni, foto di referenza o documenti tecnici per il team di progetto.</p>
+<form id="upload-form" class="w-full max-w-md mx-auto">
+<select id="upload-project" class="w-full mb-4 px-4 py-3 bg-white border border-outline-variant/30 rounded-lg text-xs font-bold" required>
+<option value="">Seleziona un progetto</option>
+</select>
+<input type="text" id="upload-title" placeholder="Descrizione del documento (opzionale)" class="w-full mb-4 px-4 py-3 bg-white border border-outline-variant/30 rounded-lg text-xs"/>
+<div class="flex gap-4 justify-center">
+<label class="px-6 py-2.5 bg-white border border-outline-variant/30 text-[10px] uppercase tracking-widest font-black rounded-lg hover:bg-surface-container transition-all shadow-sm flex items-center gap-2 cursor-pointer">
+<span class="material-symbols-outlined text-sm">upload</span> Scegli file
+<input type="file" id="upload-file" class="hidden" required/>
+</label>
+<button type="submit" class="px-6 py-2.5 bg-primary text-on-primary border-none text-[10px] uppercase tracking-widest font-black rounded-lg hover:bg-primary/90 transition-all shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">send</span> Invia
+</button>
+</div>
+</form>
+<div id="upload-status" class="mt-4 text-xs text-center font-medium hidden"></div>
+<p class="mt-6 text-[10px] text-on-surface-variant font-bold italic">Formati supportati: JPG, PNG, PDF, DWG (Max 150MB)</p>
+</div>
+<div class="bg-white rounded-2xl p-10 shadow-sm border border-outline-variant/10 flex flex-col">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h4 class="text-xl font-headline">Concept &amp; Moodboard</h4>
+<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1">Direzione Creativa</p>
+</div>
+<a class="text-[11px] uppercase tracking-widest text-primary font-black border-b border-primary/20" href="#">Gallery</a>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="aspect-square rounded-xl overflow-hidden relative group cursor-zoom-in border border-outline-variant/10">
+<img alt="Moodboard" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCezpLrJ3vHR6kSauggNlGfUgnbmFofD1CdD1qw799uNikyulKyZTm77oE1jPPQbt7tL1CCajrLK4I0WrCyZYlnHlt1QUoXWBpo-XnK7x1LrFoKBtrZf_Fw_0Gxb5Os09zC20ryhxVm7YL3yfKbYQUQzQxMZWKNx2wD4gddEX256REkffejeUQq16zv-0x3xx4Q6xM1ZmkVkwkpGpJApHAZfwFpTSH_YNiDpiWOVRWl4gUeDgMOdVNHDcbyk704R2mjuVlFlV8jis"/>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">add_circle</span>
+</div>
+</div>
+<div class="aspect-square rounded-xl overflow-hidden relative group cursor-zoom-in border border-outline-variant/10">
+<img alt="Moodboard" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9NaPz0Rsne3jOodQmCkXR6R4xpE2OHkZd4xQg6L2TBQF1V092OJuHAkBANWQ9rBc3DcrDyWaaDpDFrPB_moQ_sczvRlLUL7Fna9ZV5O8O4MFmJ8dORhKuP_SnuXat8_vIZgc4Kn6KkjdiYo4ej_uwdQMbrQ9aUm40TbVvSkKL_nk4d3Ot52HBjp0tPt5jTFL7H5jlL5QMv9ZdQ7e5EnZR5e7vvfMxtt3buopLE9U7G8AmpR3qCrDIYAdfb-8apYA_-luaxGjWIII"/>
+<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-3xl">add_circle</span>
+</div>
+</div>
+<div class="aspect-square rounded-xl bg-surface-container-low flex flex-col items-center justify-center group cursor-pointer hover:bg-surface-container transition-colors border-2 border-dashed border-outline-variant/30">
+<span class="material-symbols-outlined text-primary mb-1">add</span>
+<span class="text-[9px] uppercase tracking-tighter text-on-surface-variant font-black">Nuovo Concept</span>
+</div>
+</div>
+<div class="mt-auto p-5 bg-tertiary-fixed/40 text-on-tertiary-fixed rounded-xl flex items-start gap-4 border border-tertiary-fixed-dim/30">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+<p class="text-[11px] leading-relaxed font-medium"><strong>Nota dell'Architetto:</strong> I materiali e le finiture vengono aggiornati in base all'avanzamento del progetto. Resta sintonizzato per novità.</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-12 py-10 text-center border-t border-outline-variant/10">
+<p class="text-[10px] uppercase tracking-[0.5em] text-on-surface-variant font-bold">&copy; 2024 Home Design Lab &bull; Private Client Infrastructure &bull; All Rights Reserved</p>
+</footer>
+</div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['client'],
+    defaultActiveMenu: 'overview',
+    pageName: 'Dashboard Cliente'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+
+    avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        avatarDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        avatarDropdown.classList.add('hidden');
+    });
+
+    dropdownLogout.addEventListener('click', async function(e) {
+        e.preventDefault();
+        try {
+            if (window.supabase) await window.supabase.auth.signOut();
+        } catch(_) {}
+        localStorage.clear();
+        window.location.href = '/login';
+    });
+});
+
+async function loadClientDashboard() {
+    try {
+        if (!window.supabase || !window.supabase.auth || typeof window.supabase.auth.getSession !== 'function') {
+            setTimeout(loadClientDashboard, 300);
+            return;
+        }
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (!session) {
+            setTimeout(loadClientDashboard, 500);
+            return;
+        }
+
+        const res = await fetch('/api/cliente/dashboard', {
+            headers: { 'Authorization': 'Bearer ' + session.access_token }
+        });
+        const data = await res.json();
+        if (!data) return;
+
+        if (data.client) {
+            document.getElementById('client-welcome').textContent = 'Benvenuto, ' + data.client.legal_name;
+        }
+
+        if (data.projects && data.projects.length > 0) {
+            const p = data.projects[0];
+            const titleEl = document.getElementById('project-title');
+            titleEl.textContent = p.titolo || p.title || 'Progetto';
+            titleEl.href = 'dettaglio-progetto.html?id=' + p.id;
+
+            document.getElementById('project-status').textContent = ((p.status || p.stato || 'attivo')).toUpperCase();
+            document.getElementById('project-count').textContent = data.projects.length;
+
+            if (p.created_at) {
+                document.getElementById('project-start').textContent = new Date(p.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+            if (p.data_consegna || p.end_date) {
+                document.getElementById('project-end').textContent = new Date(p.data_consegna || p.end_date).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+
+            let progress = 0;
+            if (p.avanzamento) progress = p.avanzamento;
+            else if (p.status === 'completato' || p.stato === 'completato') progress = 100;
+            else if (p.status === 'in_esecuzione') progress = 50;
+            else if (p.status === 'esecutivo') progress = 25;
+            else if (p.status === 'consegna') progress = 85;
+            else progress = 10;
+
+            const offset = 282.7 - (282.7 * progress / 100);
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+            document.getElementById('progress-percent').textContent = progress + '%';
+
+            const phasesEl = document.getElementById('project-phases');
+            phasesEl.innerHTML = '';
+            const phases = [
+                { label: 'Concept & Design', done: progress >= 25, date: progress >= 25 ? 'Completato' : '--' },
+                { label: 'Sviluppo Esecutivo', done: progress >= 50, date: progress >= 50 ? 'Completato' : (progress >= 25 ? 'In Corso' : '--') },
+                { label: 'Realizzazione', done: progress >= 85, date: progress >= 85 ? 'Completato' : (progress >= 50 ? 'In Corso' : '--') },
+                { label: 'Collaudo & Consegna', done: progress >= 100, date: progress >= 100 ? 'Completato' : (progress >= 85 ? 'In Corso' : '--') }
+            ];
+            phases.forEach(function(ph) {
+                var icon = ph.done ? 'verified' : (ph.date === 'In Corso' ? 'pending' : 'schedule');
+                var opacity = ph.done ? '' : (ph.date === 'In Corso' ? '' : 'opacity-40');
+                var color = ph.done ? 'text-primary' : 'text-on-surface-variant';
+                var dateColor = ph.done ? 'text-on-surface-variant' : (ph.date === 'In Corso' ? 'text-primary font-bold' : 'text-on-surface-variant');
+                phasesEl.innerHTML += '<div class="flex items-center gap-3 ' + opacity + '">' +
+                    '<span class="material-symbols-outlined ' + color + ' text-xl">' + icon + '</span>' +
+                    '<div><p class="text-xs font-bold text-on-surface">' + ph.label + '</p>' +
+                    '<p class="text-[10px] ' + dateColor + ' uppercase">' + ph.date + '</p></div></div>';
+            });
+        }
+
+        if (data.documents && data.documents.length > 0) {
+            var listEl = document.getElementById('documents-list');
+            listEl.innerHTML = '';
+            data.documents.forEach(function(doc) {
+                var icon = 'description';
+                if (doc.mime_type) {
+                    if (doc.mime_type.includes('image')) icon = 'image';
+                    else if (doc.mime_type.includes('pdf')) icon = 'picture_as_pdf';
+                    else if (doc.mime_type.includes('dwg') || doc.mime_type.includes('cad')) icon = 'architecture';
+                    else if (doc.mime_type.includes('video')) icon = 'movie';
+                    else if (doc.mime_type.includes('zip') || doc.mime_type.includes('rar')) icon = 'folder_zip';
+                }
+                var size = doc.size_bytes ? (doc.size_bytes / 1024 / 1024).toFixed(1) + ' MB' : '';
+                var date = doc.created_at ? new Date(doc.created_at).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }) : '';
+                listEl.innerHTML += '<div class="flex items-center gap-4 group cursor-pointer p-3 hover:bg-white rounded-xl transition-all border border-transparent hover:border-outline-variant/20">' +
+                    '<div class="w-12 h-12 flex items-center justify-center bg-white rounded-lg text-primary shadow-sm group-hover:bg-primary group-hover:text-on-primary transition-all">' +
+                    '<span class="material-symbols-outlined">' + icon + '</span></div>' +
+                    '<div class="flex-grow"><p class="text-xs font-black text-on-surface uppercase tracking-tight">' + (doc.title || 'Documento') + '</p>' +
+                    '<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">' + date + (size ? ' &bull; ' + size : '') + '</p></div>' +
+                    '<span class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity">download</span></div>';
+            });
+        }
+    } catch (err) {
+        console.error('[Area Cliente] Errore caricamento dashboard:', err);
+    }
+}
+
+async function loadProjectsForUpload() {
+    try {
+        if (!window.supabase || !window.supabase.auth || typeof window.supabase.auth.getSession !== 'function') {
+            setTimeout(loadProjectsForUpload, 300); return;
+        }
+        const select = document.getElementById('upload-project');
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (!session) { setTimeout(loadProjectsForUpload, 500); return; }
+        const res = await fetch('/api/cliente/dashboard', {
+            headers: { 'Authorization': 'Bearer ' + session.access_token }
+        });
+        const data = await res.json();
+        if (data.projects) {
+            select.innerHTML = '<option value="">Seleziona un progetto</option>';
+            data.projects.forEach(function(p) {
+                select.innerHTML += '<option value="' + p.id + '">' + (p.titolo || p.title || 'Progetto') + '</option>';
+            });
+        }
+    } catch(_) {}
+}
+
+document.getElementById('upload-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const statusEl = document.getElementById('upload-status');
+    const projectId = document.getElementById('upload-project').value;
+    const title = document.getElementById('upload-title').value;
+    const fileInput = document.getElementById('upload-file');
+    const file = fileInput.files[0];
+
+    if (!projectId || !file) {
+        statusEl.textContent = 'Seleziona un progetto e un file.';
+        statusEl.className = 'mt-4 text-xs text-center font-medium text-error';
+        statusEl.classList.remove('hidden');
+        return;
+    }
+
+    try {
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (!session) { statusEl.textContent = 'Devi aver effettuato il login.'; statusEl.className = 'mt-4 text-xs text-center font-medium text-error'; statusEl.classList.remove('hidden'); return; }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('projectId', projectId);
+        if (title) formData.append('title', title);
+
+        const res = await fetch('/api/cliente/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + session.access_token },
+            body: formData
+        });
+
+        if (res.ok) {
+            statusEl.textContent = 'File caricato con successo!';
+            statusEl.className = 'mt-4 text-xs text-center font-medium text-primary';
+            statusEl.classList.remove('hidden');
+            fileInput.value = '';
+            document.getElementById('upload-title').value = '';
+            setTimeout(function() { statusEl.classList.add('hidden'); }, 5000);
+        } else {
+            const errData = await res.json();
+            statusEl.textContent = 'Errore: ' + (errData.error || 'Upload fallito');
+            statusEl.className = 'mt-4 text-xs text-center font-medium text-error';
+            statusEl.classList.remove('hidden');
+        }
+    } catch(err) {
+        statusEl.textContent = 'Errore di connessione.';
+        statusEl.className = 'mt-4 text-xs text-center font-medium text-error';
+        statusEl.classList.remove('hidden');
+    }
+});
+
+loadClientDashboard();
+loadProjectsForUpload();
+</script>
+</body></html>

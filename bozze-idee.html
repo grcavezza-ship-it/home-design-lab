@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bozze e Idee | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed": "#94f990",
+                    "on-primary-fixed": "#002109",
+                    "on-primary": "#ffffff",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "on-tertiary-container": "#ead4bb",
+                    "secondary-container": "#91f78e",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#f0eded",
+                    "outline": "#707a6e",
+                    "on-surface-variant": "#40493f",
+                    "surface-tint": "#196c32",
+                    "on-tertiary-fixed": "#251a0a",
+                    "primary-container": "#186c32",
+                    "surface-dim": "#dcd9d9",
+                    "primary-fixed": "#a3f5ac",
+                    "inverse-primary": "#87d992",
+                    "surface-variant": "#e4e2e1",
+                    "on-secondary-container": "#00731e",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#bfc9bc",
+                    "on-primary-fixed-variant": "#005321",
+                    "on-error": "#ffffff",
+                    "on-background": "#1b1c1c",
+                    "surface-container-highest": "#e4e2e1",
+                    "tertiary-fixed": "#f5dfc6",
+                    "tertiary-container": "#6b5b47",
+                    "on-tertiary-fixed-variant": "#534432",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "background": "#fbf9f8",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-container-low": "#f6f3f2",
+                    "surface-container-high": "#eae8e7",
+                    "on-secondary-fixed": "#002204",
+                    "secondary": "#006e1c",
+                    "primary-fixed-dim": "#87d992",
+                    "tertiary": "#524431",
+                    "on-surface": "#1b1c1c",
+                    "surface": "#fbf9f8",
+                    "error": "#ba1a1a",
+                    "primary": "#005220",
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-primary-container": "#98eba2",
+                    "inverse-surface": "#303030",
+                    "surface-bright": "#fbf9f8",
+                    "secondary-fixed-dim": "#78dc77"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<main class="flex-grow md:ml-64 bg-background min-h-screen">
+<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
+<div class="flex-1 flex items-center h-full">
+</div>
+<div class="flex items-center gap-5 h-full">
+<span id="user-name" class="text-sm text-on-surface-variant hidden md:block"></span>
+<button class="p-2.5 text-on-surface-variant hover:bg-surface-container hover:bg-gray-100 rounded-full transition-all relative h-10 w-10 flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</button>
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-high border-2 border-primary-container overflow-hidden hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User profile" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+</div>
+</div>
+</div>
+</header>
+<div class="p-8 max-w-7xl mx-auto space-y-12 pb-24">
+<section class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="w-8 h-[2px] bg-primary"></span>
+<span class="text-[11px] font-black uppercase tracking-[0.4em] text-primary">Creatività</span>
+</div>
+<h2 class="text-6xl font-headline text-on-surface tracking-tight">Bozze & Idee</h2>
+<p class="text-on-surface-variant max-w-2xl text-lg font-light leading-relaxed">Raccogli e condividi ispirazioni, appunti e concept per il tuo progetto.</p>
+</section>
+<div id="project-selector" class="hidden bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/10">
+<label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-3 block">Seleziona Progetto</label>
+<select id="project-select" class="w-full max-w-md px-4 py-3 bg-surface-container-low border border-outline-variant/30 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/30"></select>
+</div>
+<div id="no-projects" class="hidden bg-white rounded-2xl p-12 shadow-sm border border-outline-variant/10 text-center">
+<span class="material-symbols-outlined text-5xl text-outline-variant mb-4">folder_off</span>
+<p class="text-sm text-on-surface-variant font-medium mb-2">Nessun progetto disponibile</p>
+<p class="text-[10px] text-on-surface-variant">I progetti a cui sei associato appariranno qui.</p>
+</div>
+<div id="drive-setup-area" class="hidden bg-amber-50 border border-amber-200 rounded-2xl p-8 text-center">
+<span class="material-symbols-outlined text-4xl text-amber-600 mb-3">drive_folder_upload</span>
+<h3 class="text-xl font-headline text-on-surface mb-2">Cartelle Drive non configurate</h3>
+<p class="text-sm text-on-surface-variant mb-6 max-w-lg mx-auto">Chiedi al tuo operatore di configurare le cartelle Drive per questo progetto.</p>
+</div>
+<div id="content-area" class="hidden">
+<div class="bg-white rounded-2xl shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] border border-outline-variant/20 overflow-hidden">
+<div class="flex border-b border-outline-variant/20">
+<button id="tab-bozze" class="flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest transition-all border-b-2 border-primary text-primary">Bozze e Idee</button>
+<button id="tab-moodboard" class="flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest transition-all border-b-2 border-transparent text-on-surface-variant hover:text-on-surface">Moodboard</button>
+</div>
+<div class="p-8">
+<div id="tab-bozze-content">
+<div id="bozze-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+<div id="bozze-empty" class="hidden text-center py-16">
+<span class="material-symbols-outlined text-5xl text-outline-variant mb-4">edit_note</span>
+<p class="text-sm text-on-surface-variant font-medium">Nessuna bozza o idea</p>
+<p class="text-[10px] text-on-surface-variant mt-1">I file caricati su Drive nella cartella Bozze_e_Idee appariranno qui.</p>
+</div>
+<div id="bozze-loader" class="hidden text-center py-16">
+<div class="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+<p class="text-xs text-on-surface-variant mt-3 font-medium">Caricamento bozze...</p>
+</div>
+</div>
+<div id="tab-moodboard-content" class="hidden">
+<div id="moodboard-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+<div id="moodboard-empty" class="hidden text-center py-16">
+<span class="material-symbols-outlined text-5xl text-outline-variant mb-4">collections</span>
+<p class="text-sm text-on-surface-variant font-medium">Nessuna immagine nella moodboard</p>
+<p class="text-[10px] text-on-surface-variant mt-1">Le immagini caricate su Drive nella cartella Moodboard appariranno qui.</p>
+</div>
+<div id="moodboard-loader" class="hidden text-center py-16">
+<div class="inline-block w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+<p class="text-xs text-on-surface-variant mt-3 font-medium">Caricamento moodboard...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-12 py-10 text-center border-t border-outline-variant/10">
+<p class="text-[10px] uppercase tracking-[0.5em] text-on-surface-variant font-bold">&copy; 2024 Home Design Lab &bull; Private Client Infrastructure &bull; All Rights Reserved</p>
+</footer>
+</div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['client'],
+    defaultActiveMenu: 'bozze',
+    pageName: 'Bozze e Idee'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+var projectsData = [];
+var selectedProjectId = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarBtn = document.getElementById('avatar-btn');
+    const avatarDropdown = document.getElementById('avatar-dropdown');
+    const dropdownLogout = document.getElementById('dropdown-logout');
+
+    avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        avatarDropdown.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', function() {
+        avatarDropdown.classList.add('hidden');
+    });
+
+    dropdownLogout.addEventListener('click', async function(e) {
+        e.preventDefault();
+        try {
+            if (window.supabase) await window.supabase.auth.signOut();
+        } catch(_) {}
+        localStorage.clear();
+        window.location.href = '/login';
+    });
+
+    document.getElementById('project-select').addEventListener('change', function(e) {
+        selectedProjectId = e.target.value;
+        loadProjectContent(selectedProjectId);
+    });
+
+    document.getElementById('tab-bozze').addEventListener('click', function() {
+        switchTab('bozze');
+    });
+
+    document.getElementById('tab-moodboard').addEventListener('click', function() {
+        switchTab('moodboard');
+    });
+
+    document.getElementById('btn-setup-drive').addEventListener('click', setupDriveFolders);
+
+    loadClientData();
+});
+
+function switchTab(tab) {
+    var tabBozze = document.getElementById('tab-bozze');
+    var tabMood = document.getElementById('tab-moodboard');
+    var contentBozze = document.getElementById('tab-bozze-content');
+    var contentMood = document.getElementById('tab-moodboard-content');
+
+    tabBozze.className = 'flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest transition-all border-b-2 ' + (tab === 'bozze' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface');
+    tabMood.className = 'flex-1 px-6 py-4 text-sm font-black uppercase tracking-widest transition-all border-b-2 ' + (tab === 'moodboard' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface');
+
+    contentBozze.classList.toggle('hidden', tab !== 'bozze');
+    contentMood.classList.toggle('hidden', tab !== 'moodboard');
+}
+
+async function loadClientData() {
+    try {
+        if (!window.supabase || !window.supabase.auth || typeof window.supabase.auth.getSession !== 'function') {
+            setTimeout(loadClientData, 300);
+            return;
+        }
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (!session) {
+            setTimeout(loadClientData, 500);
+            return;
+        }
+
+        const res = await fetch('/api/cliente/dashboard', {
+            headers: { 'Authorization': 'Bearer ' + session.access_token }
+        });
+        const data = await res.json();
+        if (!data || !data.client) {
+            document.getElementById('no-projects').classList.remove('hidden');
+            return;
+        }
+
+        projectsData = data.projects || [];
+
+        if (projectsData.length === 0) {
+            document.getElementById('no-projects').classList.remove('hidden');
+            return;
+        }
+
+        var select = document.getElementById('project-select');
+        select.innerHTML = '';
+        projectsData.forEach(function(p) {
+            var opt = document.createElement('option');
+            opt.value = p.id;
+            opt.textContent = p.titolo || p.title || 'Progetto #' + p.id;
+            select.appendChild(opt);
+        });
+
+        document.getElementById('project-selector').classList.remove('hidden');
+        selectedProjectId = projectsData[0].id;
+        loadProjectContent(selectedProjectId);
+
+    } catch (err) {
+        console.error('[Bozze] Errore:', err);
+    }
+}
+
+function loadProjectContent(projectId) {
+    var project = projectsData.find(function(p) { return p.id == projectId; });
+    if (!project) return;
+
+    var drive = project.dettagli && project.dettagli.drive ? project.dettagli.drive : (project.drive || {});
+    var hasDrive = drive.bozze_id || drive.moodboard_id;
+
+    if (!hasDrive) {
+        document.getElementById('content-area').classList.add('hidden');
+        document.getElementById('drive-setup-area').classList.remove('hidden');
+    } else {
+        document.getElementById('drive-setup-area').classList.add('hidden');
+        document.getElementById('content-area').classList.remove('hidden');
+        loadBozze(drive.bozze_id);
+        loadMoodboard(drive.moodboard_id);
+    }
+}
+
+async function loadDriveFiles(folderId) {
+    if (!folderId) return [];
+    try {
+        const res = await fetch('/api/drive/files/' + folderId);
+        if (!res.ok) throw new Error('Errore server Drive');
+        const data = await res.json();
+        return data.files || [];
+    } catch (err) {
+        console.error('[Drive] Errore caricamento cartella ' + folderId + ':', err);
+        return [];
+    }
+}
+
+async function loadBozze(folderId) {
+    var loader = document.getElementById('bozze-loader');
+    var grid = document.getElementById('bozze-grid');
+    var empty = document.getElementById('bozze-empty');
+
+    loader.classList.remove('hidden');
+    grid.classList.add('hidden');
+    empty.classList.add('hidden');
+
+    var files = folderId ? await loadDriveFiles(folderId) : [];
+
+    loader.classList.add('hidden');
+
+    if (!files.length) {
+        empty.classList.remove('hidden');
+        return;
+    }
+
+    grid.classList.remove('hidden');
+    grid.innerHTML = files.map(renderBozzaCard).join('');
+}
+
+async function loadMoodboard(folderId) {
+    var loader = document.getElementById('moodboard-loader');
+    var grid = document.getElementById('moodboard-grid');
+    var empty = document.getElementById('moodboard-empty');
+
+    loader.classList.remove('hidden');
+    grid.classList.add('hidden');
+    empty.classList.add('hidden');
+
+    var files = folderId ? await loadDriveFiles(folderId) : [];
+
+    loader.classList.add('hidden');
+
+    var imageFiles = files.filter(function(f) {
+        var mt = f.mimeType || f.mime_type || '';
+        return mt.includes('image');
+    });
+
+    if (!imageFiles.length) {
+        empty.classList.remove('hidden');
+        return;
+    }
+
+    grid.classList.remove('hidden');
+    grid.innerHTML = imageFiles.map(renderMoodboardImage).join('');
+}
+
+function renderBozzaCard(file) {
+    var name = file.name || 'Documento';
+    var mt = file.mimeType || file.mime_type || '';
+    var icon = 'description';
+    var cat = 'Bozza';
+    var catBg = 'bg-stone-100 text-stone-600 border-stone-200';
+    var iconBg = 'bg-stone-100 text-stone-600';
+
+    if (mt.includes('image')) {
+        icon = 'image';
+        cat = 'Riferimento';
+        catBg = 'bg-sky-100 text-sky-800 border-sky-200/50';
+        iconBg = 'bg-sky-50 text-sky-600';
+    } else if (mt.includes('pdf')) {
+        icon = 'picture_as_pdf';
+        cat = 'Documento';
+        catBg = 'bg-red-100 text-red-800 border-red-200/50';
+        iconBg = 'bg-red-50 text-red-600';
+    }
+
+    var date = file.modifiedTime || file.createdTime || '';
+    var dateStr = date ? new Date(date).toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' }) : '';
+    var link = file.webViewLink || file.webContentLink || '#';
+
+    return '<div class="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/20 hover:shadow-md transition-all group">' +
+        '<div class="flex items-start justify-between mb-5">' +
+        '<div class="w-12 h-12 flex items-center justify-center ' + iconBg + ' rounded-xl">' +
+        '<span class="material-symbols-outlined text-2xl">' + icon + '</span></div>' +
+        '<span class="' + catBg + ' text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border">' + cat + '</span></div>' +
+        '<h4 class="text-lg font-headline text-on-surface mb-2 truncate">' + name + '</h4>' +
+        '<p class="text-xs text-on-surface-variant leading-relaxed mb-4 line-clamp-2">File caricato su Google Drive</p>' +
+        '<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">' +
+        '<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">' + dateStr + '</span>' +
+        '<a href="' + link + '" target="_blank" class="p-1.5 text-on-surface-variant hover:text-primary transition-colors">' +
+        '<span class="material-symbols-outlined text-sm">open_in_new</span></a></div></div>';
+}
+
+function renderMoodboardImage(file) {
+    var imgUrl = file.thumbnailLink || file.webContentLink || file.webViewLink || '';
+    var name = file.name || 'Immagine';
+    var link = file.webViewLink || file.webContentLink || '#';
+
+    return '<a href="' + link + '" target="_blank" class="aspect-square rounded-xl overflow-hidden relative group cursor-zoom-in border border-outline-variant/10 block">' +
+        '<img alt="' + name + '" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="' + imgUrl + '"/>' +
+        '<div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">' +
+        '<span class="material-symbols-outlined text-white text-3xl">add_circle</span></div></a>';
+}
+</script>
+</body></html>

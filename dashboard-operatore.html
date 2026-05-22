@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Operatore | Home Design Lab</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#524431",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "outline-variant": "#bfc9bc",
+                        "surface-dim": "#dcd9d9",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-background": "#1b1c1c",
+                        "primary-container": "#186c32",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#98eba2",
+                        "on-tertiary-fixed": "#251a0a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-container": "#ead4bb",
+                        "primary-fixed-dim": "#87d992",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#f5dfc6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-surface": "#1b1c1c",
+                        "primary-fixed": "#a3f5ac",
+                        "surface-tint": "#196c32",
+                        "primary": "#005220",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#94f990",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        "background": "#fbf9f8",
+                        "secondary": "#006e1c",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "outline": "#707a6e",
+                        "inverse-primary": "#87d992"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif", "serif"],
+                        "display": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-10 h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+<div class="flex-1 flex items-center h-full">
+<span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none">Studio Management</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</button>
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center h-10 w-10 rounded-xl bg-surface-container overflow-hidden border border-outline-variant/20 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span> Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+</div>
+</div>
+</div>
+</header>
+<main class="ml-64 pt-20 min-h-screen bg-surface">
+<div class="p-10 max-w-7xl mx-auto flex flex-col gap-12">
+<div class="flex flex-col items-start">
+<span class="font-label text-[11px] uppercase tracking-[0.2em] text-primary font-semibold mb-3">Operator View</span>
+<h2 class="font-headline text-5xl tracking-tight text-on-surface">Execution Board</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-surface-container-low rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<span class="font-label text-sm text-on-surface-variant mb-2 block relative z-10">Progetti Assegnati</span>
+<div class="font-headline text-6xl tracking-tighter text-on-surface relative z-10" id="stats-progetti-count">--</div>
+</div>
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-surface-container-low rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+<span class="font-label text-sm text-on-surface-variant mb-2 block relative z-10">In Esecuzione</span>
+<div class="font-headline text-6xl tracking-tighter text-primary relative z-10" id="stats-in-esecuzione">--</div>
+</div>
+<div class="bg-tertiary rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.08)] relative overflow-hidden flex flex-col justify-between group">
+<span class="font-label text-sm text-tertiary-fixed mb-2 block relative z-10">Prossima Scadenza</span>
+<div class="relative z-10 mt-4" id="stats-next-deadline">
+<div class="font-headline text-2xl text-on-tertiary mb-1" id="stats-next-title">--</div>
+<div class="font-label text-sm text-tertiary-fixed-dim" id="stats-next-date">--</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-8">
+<div class="flex justify-between items-end mb-8">
+<h3 class="font-headline text-2xl text-on-surface">Progetti Attivi</h3>
+<a href="gestione-progetti.html" class="font-label text-sm text-primary border-b-2 border-tertiary-fixed-dim pb-1 hover:text-primary-container hover:bg-gray-100 px-2 py-1 rounded transition-colors">Vedi tutti</a>
+</div>
+<div id="projects-list-container" class="flex flex-col gap-4">
+</div>
+</div>
+</div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['operator', 'senior', 'admin', 'architect'],
+    defaultActiveMenu: 'dashboard',
+    pageName: 'Dashboard Operatore'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+function formatDate(dateStr) {
+    if (!dateStr) return null;
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return null;
+    var opts = { day: 'numeric', month: 'short' };
+    return d.toLocaleDateString('it-IT', opts);
+}
+
+function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    var now = new Date();
+    now.setHours(0,0,0,0);
+    var d = new Date(dateStr);
+    d.setHours(0,0,0,0);
+    var diff = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+    return diff;
+}
+
+async function loadDashboardData() {
+    await new Promise(function(resolve) {
+        var check = function() {
+            if (window.currentUserRole && window.supabase) { resolve(); }
+            else { setTimeout(check, 100); }
+        };
+        check();
+    });
+
+    var role = window.currentUserRole || 'client';
+    var isRestricted = role === 'operator' || role === 'architect';
+    var assignedTitles = [];
+
+    if (isRestricted && window.currentUserPermissions) {
+        var scope = window.currentUserPermissions.scope;
+        if (scope === 'assigned' && window.currentUserAssignedProjects && window.currentUserAssignedProjects.length > 0) {
+            assignedTitles = window.currentUserAssignedProjects;
+        }
+    }
+
+    var { data: projects, error } = await window.supabase
+        .from('projects')
+        .select('id, titolo, status, drive_folder_id, avanzamento, data_consegna')
+        .order('created_at', { ascending: false });
+
+    if (error) { console.error('[Dashboard] Errore caricamento progetti:', error.message); return; }
+
+    if (assignedTitles.length > 0) {
+        projects = projects.filter(function(p) { return assignedTitles.includes(p.titolo); });
+    }
+
+    var progettiCount = document.getElementById('stats-progetti-count');
+    if (progettiCount) progettiCount.textContent = String(projects.length).padStart(2, '0');
+
+    var inEsecuzione = projects.filter(function(p) { return p.status === 'active' || p.status === 'on_hold' || p.status === 'attivo'; });
+    var inEsecEl = document.getElementById('stats-in-esecuzione');
+    if (inEsecEl) inEsecEl.textContent = String(inEsecuzione.length).padStart(2, '0');
+
+    var nextTitle = document.getElementById('stats-next-title');
+    var nextDate = document.getElementById('stats-next-date');
+
+    var withDeadline = projects.filter(function(p) { return p.data_consegna; });
+    if (withDeadline.length > 0) {
+        withDeadline.sort(function(a, b) { return new Date(a.data_consegna) - new Date(b.data_consegna); });
+        var nearest = withDeadline[0];
+        if (nextTitle) nextTitle.textContent = nearest.titolo;
+        var days = daysUntil(nearest.data_consegna);
+        var formatted = formatDate(nearest.data_consegna);
+        if (days !== null && days <= 0) {
+            if (nextDate) nextDate.textContent = 'Scaduto il ' + formatted;
+        } else if (days !== null && days <= 7) {
+            if (nextDate) nextDate.textContent = 'Tra ' + days + ' giorni (' + formatted + ')';
+        } else if (days !== null) {
+            if (nextDate) nextDate.textContent = 'Consegna: ' + formatted;
+        }
+    } else if (projects.length > 0) {
+        if (nextTitle) nextTitle.textContent = projects[0].titolo;
+        if (nextDate) nextDate.textContent = 'Nessuna scadenza impostata';
+    }
+
+    var container = document.getElementById('projects-list-container');
+    if (!container) return;
+    container.innerHTML = '';
+    if (projects.length === 0) {
+        container.innerHTML = '<div class="text-center py-12 text-on-surface-variant font-label text-sm">Nessun progetto assegnato</div>';
+        return;
+    }
+
+    var iconSet = ['domain', 'park', 'balcony', 'apartment', 'villa', 'cottage', 'roofing', 'deck', 'grass', 'architecture'];
+    var statusColors = {
+        active: { bg: 'bg-surface-container-low', text: 'text-on-surface-variant', label: 'In Corso' },
+        attivo: { bg: 'bg-surface-container-low', text: 'text-on-surface-variant', label: 'In Corso' },
+        on_hold: { bg: 'bg-tertiary/10', text: 'text-tertiary', label: 'In Attesa' },
+        completed: { bg: 'bg-surface-container', text: 'text-outline', label: 'Completato' },
+        draft: { bg: 'bg-surface-container-high', text: 'text-outline', label: 'Bozza' },
+        archived: { bg: 'bg-surface-container', text: 'text-outline', label: 'Archiviato' }
+    };
+
+    projects.forEach(function(p, idx) {
+        var icon = iconSet[idx % iconSet.length];
+        var sc = statusColors[p.status] || statusColors.active;
+        var projectId = p.id ? String(p.id) : '';
+        var projectTitle = p.titolo || 'Progetto';
+        var progress = (typeof p.avanzamento === 'number') ? p.avanzamento : 0;
+        var progressBg = (progress >= 100) ? 'bg-outline-variant' : 'bg-primary';
+
+        var row = document.createElement('div');
+        row.className = 'bg-surface-container-lowest rounded-xl p-6 shadow-[0px_10px_30px_rgba(27,28,28,0.03)] flex flex-col md:flex-row md:items-center justify-between gap-6 hover:-translate-y-1 transition-transform duration-300';
+        if (p.status === 'archived') row.classList.add('opacity-75');
+
+        row.innerHTML =
+            '<div class="flex items-center gap-6 md:w-1/3">' +
+                '<div class="h-12 w-12 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">' +
+                    '<span class="material-symbols-outlined">' + icon + '</span>' +
+                '</div>' +
+                '<div>' +
+                    '<a href="dettaglio-progetto.html?id=' + projectId + '" class="font-headline text-lg text-on-surface leading-tight hover:text-primary transition-colors">' + projectTitle + '</a>' +
+                    '<p class="font-label text-sm text-on-surface-variant mt-1">' + projectId.substring(0, 8) + '</p>' +
+                '</div>' +
+            '</div>' +
+            '<div class="flex-1 max-w-md">' +
+                '<div class="flex justify-between font-label text-xs text-on-surface-variant mb-2">' +
+                    '<span>Avanzamento</span>' +
+                    '<span class="font-bold text-on-surface">' + progress + '%</span>' +
+                '</div>' +
+                '<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">' +
+                    '<div class="h-full ' + progressBg + ' rounded-full relative" style="width:' + progress + '%">' +
+                        '<div class="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-white/20 to-transparent"></div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="flex items-center gap-3 md:w-1/6 justify-end">' +
+                '<span class="px-3 py-1 ' + sc.bg + ' ' + sc.text + ' rounded-md font-label text-xs tracking-wider uppercase">' + sc.label + '</span>' +
+                (p.drive_folder_id
+                    ? '<a href="https://drive.google.com/drive/folders/' + p.drive_folder_id + '" target="_blank" class="h-10 w-10 rounded-md bg-surface-container-highest flex items-center justify-center text-primary hover:bg-surface-dim hover:bg-gray-100 transition-colors group" title="Apri in Google Drive"><span class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">add_to_drive</span></a>'
+                    : '') +
+            '</div>';
+
+        container.appendChild(row);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboardData();
+
+    var avatarBtn = document.getElementById('avatar-btn');
+    var avatarDropdown = document.getElementById('avatar-dropdown');
+    var dropdownLogout = document.getElementById('dropdown-logout');
+
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            avatarDropdown.classList.toggle('hidden');
+        });
+    }
+
+    document.addEventListener('click', function() {
+        if (avatarDropdown) avatarDropdown.classList.add('hidden');
+    });
+
+    if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (window.supabase) {
+                await window.supabase.auth.signOut();
+            }
+            localStorage.clear();
+            window.location.href = 'templates/login.html';
+        });
+    }
+});
+</script>
+</body></html>

@@ -135,7 +135,7 @@
         } else if (window.supabase) {
             await window.supabase.auth.signOut();
         }
-        window.location.href = '/login';
+        window.location.href = 'templates/login.html';
     }
 
     async function guardProtectedPage() {
@@ -152,7 +152,7 @@
         // Verifica sessione con Supabase
         var user = await getStoredUser();
         if (!user) { 
-            window.location.replace('/login'); 
+            window.location.replace('templates/login.html'); 
             return; 
         }
         
@@ -255,7 +255,7 @@
         logout:   handleLogout,                // ✅ Usa Supabase signOut
         isLoggedIn:  async function(){ return Boolean(await getStoredUser()); },
         hasRole:     async function(r){ var u=await getStoredUser(); return u?.role===r; },
-        isOperator:  async function(){ var u=await getStoredUser(); return ['admin','senior','operator','architect'].includes(u?.role); },
+        isOperator:  async function(){ var u=await getStoredUser(); return ['senior','operator'].includes(u?.role); },
         showNotification: showNotification,
         // 🆕 NUOVO: Usa authFetch da portal-config.js (gestisce automaticamente refresh)
         authFetch: async function(url, opts) {
@@ -266,7 +266,7 @@
             opts = opts||{};
             var token = await getToken();
             if (!token) { 
-                window.location.replace('/login');
+                window.location.replace('templates/login.html');
                 throw new Error('Sessione scaduta'); 
             }
             var headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{}, {Authorization:'Bearer '+token});

@@ -1,134 +1,128 @@
 <!DOCTYPE html>
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
-<meta name="description" content="Portfolio progetti - Home Design Lab. Esplora i nostri lavori di architettura, interior design e ristrutturazione."/>
-<meta name="keywords" content="architettura, interior design, progettazione, ristrutturazione, Napoli, Home Design Lab"/>
-<meta name="robots" content="index, follow"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="Home Design Lab"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<link rel="canonical" href="https://www.homedesignlab.it/portfolio.html"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Portfolio | Home Design Lab</title>
+<meta name="description" content="Home Design Lab - Portfolio di progetti di architettura e interior design."/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
- tailwind.config = {
- darkMode: "class",
- theme: {
- extend: {
- "colors": {
- "on-secondary-fixed-variant": "#005313",
- "on-secondary-fixed": "#002204",
- "on-secondary": "#ffffff",
- "tertiary-fixed-dim": "#d8c3ab",
- "tertiary": "#524431",
- "surface-tint": "#196c32",
- "surface-container-high": "#eae8e7",
- "on-background": "#1b1c1c",
- "on-primary-fixed": "#002109",
- "secondary-fixed-dim": "#78dc77",
- "on-primary-container": "#98eba2",
- "tertiary-container": "#6b5b47",
- "inverse-on-surface": "#f3f0f0",
- "surface-variant": "#e4e2e1",
- "on-tertiary-container": "#ead4bb",
- "on-secondary-container": "#00731e",
- "secondary-container": "#91f78e",
- "outline": "#707a6e",
- "on-tertiary": "#ffffff",
- "surface": "#fbf9f8",
- "error-container": "#ffdad6",
- "on-surface-variant": "#40493f",
- "outline-variant": "#bfc9bc",
- "background": "#fbf9f8",
- "surface-container-highest": "#e4e2e1",
- "error": "#ba1a1a",
- "surface-container": "#f0eded",
- "surface-dim": "#dcd9d9",
- "surface-container-low": "#f6f3f2",
- "primary-container": "#186c32",
- "on-error": "#ffffff",
- "on-error-container": "#93000a",
- "on-surface": "#1b1c1c",
- "tertiary-fixed": "#f5dfc6",
- "surface-bright": "#fbf9f8",
- "on-primary": "#ffffff",
- "primary": "#196c32",
- "secondary": "#2e7d32",
- "outline": "#727772",
- "surface-container-lowest": "#ffffff"
- },
- "borderRadius": {
- "DEFAULT": "0.125rem",
- "lg": "0.25rem",
- "xl": "0.5rem",
- "full": "0.75rem"
- },
- "fontFamily": {
- "headline": ["Noto Serif"],
- "body": ["Manrope"],
- "label": ["Manrope"]
- }
- },
- },
- }
- </script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-fixed-variant": "#005313",
+                    "on-secondary-fixed": "#002204",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "tertiary": "#524431",
+                    "surface-tint": "#196c32",
+                    "surface-container-high": "#eae8e7",
+                    "on-background": "#1b1c1c",
+                    "on-primary-fixed": "#002109",
+                    "secondary-fixed-dim": "#78dc77",
+                    "on-primary-container": "#98eba2",
+                    "tertiary-container": "#6b5b47",
+                    "inverse-on-surface": "#f3f0f0",
+                    "surface-variant": "#e4e2e1",
+                    "on-tertiary-container": "#ead4bb",
+                    "on-secondary-container": "#00731e",
+                    "secondary-container": "#91f78e",
+                    "outline": "#707a6e",
+                    "on-tertiary": "#ffffff",
+                    "surface": "#fbf9f8",
+                    "error-container": "#ffdad6",
+                    "on-surface-variant": "#40493f",
+                    "outline-variant": "#bfc9bc",
+                    "background": "#fbf9f8",
+                    "surface-container-highest": "#e4e2e1",
+                    "error": "#ba1a1a",
+                    "surface-container": "#f0eded",
+                    "surface-dim": "#dcd9d9",
+                    "surface-container-low": "#f6f3f2",
+                    "primary-container": "#186c32",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1b1c1c",
+                    "tertiary-fixed": "#f5dfc6",
+                    "surface-bright": "#fbf9f8",
+                    "on-primary": "#ffffff",
+                    "primary": "#196c32",
+                    "secondary": "#2e7d32",
+                    "outline": "#727772",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
 <style>
- body { font-family: 'Manrope', sans-serif; }
- .font-serif { font-family: 'Noto Serif', serif; }
- .material-symbols-outlined {
- font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
- }
- .text-vertical {
- writing-mode: vertical-rl;
- text-orientation: mixed;
- }
- .serif-italic { font-family: 'Noto Serif', serif; font-style: italic; }
- .no-scrollbar::-webkit-scrollbar { display: none; }
- </style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .serif-italic { font-family: 'Noto Serif', serif; font-style: italic; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 <meta name="description" content="Home Design Lab - Portfolio di progetti di architettura e interior design."/>
 <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
-<body class="select-none bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary">
-
+<body class="bg-surface text-on-surface antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- Navigation Bar Unificata -->
 <nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
- <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
- <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
- <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
- </a>
- <div class="hidden md:flex items-center gap-8">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
- <a class="text-primary font-bold border-b-2 border-primary pb-1" href="portfolio.html">Progetti</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- <div class="flex items-center gap-4">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
- <span class="material-symbols-outlined text-lg">person</span>
- Area Riservata
- </a>
- <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
- <span class="material-symbols-outlined text-2xl">menu</span>
- </button>
- </div>
- </div>
- <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
- <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
- <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="portfolio.html">Progetti</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- </div>
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+        <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+            <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="text-primary font-bold border-b-2 border-primary pb-1" href="portfolio.html">Progetti</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Area Riservata
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
+        <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="portfolio.html">Progetti</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+    </div>
 </nav>
 <main class="min-h-screen">
-
+<!-- Hero Section -->
 <section class="max-w-7xl mx-auto px-8 py-24 md:py-32">
 <div class="max-w-3xl">
 <span class="font-label uppercase tracking-[0.2em] text-primary font-bold text-[10px] mb-6 block">Archivio Lavori</span>
@@ -136,7 +130,7 @@
 <p class="text-lg text-on-surface-variant max-w-xl font-body leading-relaxed opacity-80">Una selezione di rifugi residenziali e punti di riferimento commerciali, ingegnerizzati con precisione nel nostro laboratorio e realizzati con un'eleganza materica senza tempo.</p>
 </div>
 </section>
-
+<!-- Filters Section (Technical Grid Alignment) -->
 <section class="max-w-7xl mx-auto px-8 mb-16">
 <div class="flex flex-wrap items-center gap-2" data-site-portfolio-filters>
 <button type="button" data-portfolio-filter="all" class="px-6 py-2 rounded-full bg-primary text-on-primary font-medium text-xs tracking-wider transition-all">TUTTI</button>
@@ -144,16 +138,16 @@
 <button type="button" data-portfolio-filter="commerciale" class="px-6 py-2 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface-variant font-medium text-xs tracking-wider transition-all">Commerciale</button>
 </div>
 </section>
-
+<!-- Technical Portfolio Grid (Editorial/Masonry Mix) -->
 <section class="max-w-7xl mx-auto px-8 pb-32">
 <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-8" data-portfolio-grid>
-
+<!-- I progetti verranno caricati dinamicamente tramite JavaScript -->
 <div class="col-span-full text-center py-16">
 <p class="text-on-surface-variant text-lg max-w-2xl mx-auto leading-relaxed">Il nostro archivio progetti è in fase di aggiornamento. Stiamo selezionando e ottimizzando le tavole tecniche, i dettagli dei sistemi domotici KNX e i servizi fotografici delle nostre ultime realizzazioni residenziali e commerciali.</p>
 </div>
 </div>
 </section>
-
+<!-- Contact CTA -->
 <section class="max-w-7xl mx-auto px-8 mb-32">
 <div class="bg-tertiary text-on-tertiary rounded-xl p-12 md:p-24 flex flex-col md:flex-row justify-between items-center gap-12 relative overflow-hidden">
 <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
@@ -164,13 +158,13 @@
 <div class="relative z-10">
 <a class="group px-12 py-6 bg-primary text-on-primary rounded-full font-bold flex items-center gap-3 hover:bg-secondary transition-all duration-300 uppercase tracking-widest text-xs" href="contatti.html">
 <span class="material-symbols-outlined">east</span>
- Contattaci
- </a>
+                Contattaci
+            </a>
 </div>
 </div>
 </section>
 </main>
-
+<!-- Footer -->
 <div id="public-footer-root"></div>
 <script src="assets/js/dynamic-site.js"></script>
 <script defer src="assets/js/site.js"></script>

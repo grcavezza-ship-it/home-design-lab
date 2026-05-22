@@ -2,168 +2,162 @@
 
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
-<meta name="description" content="Collection - Home Design Lab. Immobili di prestigio e proprietà esclusive selezionate dal nostro team a Napoli e provincia."/>
-<meta name="keywords" content="architettura, interior design, progettazione, ristrutturazione, Napoli, Home Design Lab"/>
-<meta name="robots" content="index, follow"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="Home Design Lab"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<link rel="canonical" href="https://www.homedesignlab.it/collection.html"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Collection | Home Design Lab</title>
 <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+<meta name="description" content="Home Design Lab Collection - Immobili di prestigio e proprietà esclusive selezionate dal nostro team."/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
- tailwind.config = {
- darkMode: "class",
- theme: {
- extend: {
- colors: {
- "primary": "#186C32",
- "secondary": "#4CAF50",
- "accent": "#D4BFA7",
- "on-secondary-fixed-variant": "#005313",
- "on-secondary-fixed": "#002204",
- "on-secondary": "#ffffff",
- "tertiary-fixed-dim": "#d8c3ab",
- "tertiary": "#524431",
- "surface-tint": "#186C32",
- "surface-container-high": "#eae8e7",
- "on-background": "#1b1c1c",
- "on-primary-fixed": "#002109",
- "secondary-fixed-dim": "#78dc77",
- "on-primary-container": "#98eba2",
- "tertiary-container": "#6b5b47",
- "inverse-on-surface": "#f3f0f0",
- "surface-variant": "#e4e2e1",
- "on-tertiary-container": "#ead4bb",
- "on-secondary-container": "#00731e",
- "secondary-container": "#91f78e",
- "outline": "#707a6e",
- "on-tertiary": "#ffffff",
- "surface": "#fbf9f8",
- "error-container": "#ffdad6",
- "on-surface-variant": "#40493f",
- "outline-variant": "#bfc9bc",
- "background": "#fbf9f8",
- "surface-container-highest": "#e4e2e1",
- "error": "#ba1a1a",
- "surface-container": "#f0eded",
- "surface-dim": "#dcd9d9",
- "surface-container-low": "#f6f3f2",
- "primary-container": "#186c32",
- "on-error": "#ffffff",
- "on-error-container": "#93000a",
- "on-surface": "#1b1c1c",
- "tertiary-fixed": "#f5dfc6",
- "surface-bright": "#fbf9f8",
- "on-primary": "#ffffff",
- "inverse-surface": "#303030",
- "on-tertiary-fixed": "#251a0a",
- "on-tertiary-fixed-variant": "#534432",
- "inverse-primary": "#87d992",
- "secondary-fixed": "#94f990",
- "on-primary-fixed-variant": "#005321",
- "primary-fixed-dim": "#87d992",
- "surface-container-lowest": "#ffffff",
- "primary-fixed": "#a3f5ac"
- },
- borderRadius: {
- "DEFAULT": "0px",
- "lg": "0px",
- "xl": "0px",
- "full": "9999px"
- },
- fontFamily: {
- "headline": ["Noto Serif", "serif"],
- "body": ["Manrope", "sans-serif"],
- "label": ["Manrope", "sans-serif"]
- }
- },
- },
- }
- </script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "accent": "#D4BFA7",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-secondary-fixed": "#002204",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "tertiary": "#524431",
+                        "surface-tint": "#186C32",
+                        "surface-container-high": "#eae8e7",
+                        "on-background": "#1b1c1c",
+                        "on-primary-fixed": "#002109",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-primary-container": "#98eba2",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "surface-variant": "#e4e2e1",
+                        "on-tertiary-container": "#ead4bb",
+                        "on-secondary-container": "#00731e",
+                        "secondary-container": "#91f78e",
+                        "outline": "#707a6e",
+                        "on-tertiary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#40493f",
+                        "outline-variant": "#bfc9bc",
+                        "background": "#fbf9f8",
+                        "surface-container-highest": "#e4e2e1",
+                        "error": "#ba1a1a",
+                        "surface-container": "#f0eded",
+                        "surface-dim": "#dcd9d9",
+                        "surface-container-low": "#f6f3f2",
+                        "primary-container": "#186c32",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#1b1c1c",
+                        "tertiary-fixed": "#f5dfc6",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#303030",
+                        "on-tertiary-fixed": "#251a0a",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "inverse-primary": "#87d992",
+                        "secondary-fixed": "#94f990",
+                        "on-primary-fixed-variant": "#005321",
+                        "primary-fixed-dim": "#87d992",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#a3f5ac"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    fontFamily: {
+                        "headline": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                },
+            },
+        }
+    </script>
 <style>
- body { font-family: 'Manrope', sans-serif; }
- .font-serif { font-family: 'Noto Serif', serif; }
- .material-symbols-outlined {
- font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
- }
- </style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
 </head>
-<body class="select-none bg-surface text-on-surface selection:bg-accent selection:text-primary">
-
+<body class="bg-surface text-on-surface selection:bg-accent selection:text-primary">
+<!-- Navigation Bar Unificata -->
 <nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
- <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
- <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
- <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
- </a>
- <div class="hidden md:flex items-center gap-8">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="text-primary font-bold border-b-2 border-primary pb-1" href="collection.html">Collection</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- <div class="flex items-center gap-4">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
- <span class="material-symbols-outlined text-lg">person</span>
- Area Riservata
- </a>
- <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
- <span class="material-symbols-outlined text-2xl">menu</span>
- </button>
- </div>
- </div>
- <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
- <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="collection.html">Collection</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- </div>
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+        <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+            <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="text-primary font-bold border-b-2 border-primary pb-1" href="collection.html">Collection</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Area Riservata
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
+        <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="collection.html">Collection</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="journal.html">Journal</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+    </div>
 </nav>
 <main class="max-w-7xl mx-auto px-8 py-24">
-
+<!-- Hero Section -->
 <section class="mb-32 flex flex-col md:flex-row items-start gap-16">
 <div class="flex-1 pt-8">
 <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-6 block">Immobili Selezionati</span>
 <h1 class="text-6xl md:text-8xl font-serif italic tracking-tighter leading-[0.9] mb-10 text-primary">
- Home Design <br/> Collection
- </h1>
+                    Home Design <br/> Collection
+                </h1>
 <p class="max-w-md text-lg text-on-surface-variant font-light leading-relaxed mb-12">
- Un portfolio selezionato di propriet� di prestigio ristrutturate, dove l'integrit� architettonica storica incontra gli standard contemporanei del lusso abitativo.
- </p>
+                    Un portfolio selezionato di proprietà di prestigio ristrutturate, dove l'integrità architettonica storica incontra gli standard contemporanei del lusso abitativo.
+                </p>
 <div class="flex items-center gap-4 group cursor-pointer">
 <div class="h-px w-12 bg-accent group-hover:w-20 transition-all duration-500"></div>
 <span class="text-[10px] font-bold uppercase tracking-[0.3em]">Esplora il Portfolio</span>
 </div>
 </div>
 <div class="flex-1 w-full aspect-[4/5] bg-surface-container-low relative overflow-hidden">
-<img class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80" alt="Villa moderna"/>
+<img class="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000 scale-105 hover:scale-100" data-alt="Modern architectural villa" src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80"/>
 <div class="absolute bottom-12 left-12">
 <span class="bg-primary text-on-primary px-6 py-2 text-[10px] font-bold tracking-[0.3em] uppercase">Ultima Uscita</span>
 </div>
 </div>
 </section>
-
+<!-- Property Grid -->
 <section class="mb-32">
 <div class="flex justify-between items-end mb-16 border-b border-outline-variant/20 pb-8">
 <div>
 <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-2 block">La Nostra Selezione</span>
-<h3 class="text-5xl font-serif italic text-primary">Propriet� Disponibili</h3>
+<h3 class="text-5xl font-serif italic text-primary">Proprietà Disponibili</h3>
 </div>
 </div>
 <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
 <div class="col-span-full text-center py-16 text-on-surface-variant">
 <span class="material-symbols-outlined text-4xl mb-4 block">real_estate_agent</span>
-<p class="text-lg">Caricamento propriet�...</p>
+<p class="text-lg">Caricamento proprietà...</p>
 </div>
 </div>
 </section>
@@ -172,37 +166,37 @@
 <script src="assets/js/public-footer.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
- var grid = document.getElementById('collection-grid');
- if (!grid) return;
- fetch('/api/immobili')
- .then(function(r) { return r.json(); })
- .then(function(data) {
- if (!data || data.length === 0) {
- grid.innerHTML = '<div class="col-span-full text-center py-16 text-on-surface-variant"><span class="material-symbols-outlined text-4xl mb-4 block">real_estate_agent</span><p class="text-lg">Nessuna propriet� disponibile al momento.</p></div>';
- return;
- }
- grid.innerHTML = data.map(function(p) {
- var imgs = p.immagini_urls || [];
- var img = imgs.length > 0 ? imgs[0] : '';
- var price = p.prezzo_richiesta ? new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(p.prezzo_richiesta) : '';
- var badge = p.stato_immobile === 'disponibile' ? '<span class="bg-white/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary">Disponibile</span>' : '<span class="bg-accent/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white">' + (p.stato_immobile || '') + '</span>';
- var location = p.citta || '';
- return '<a href="dettaglio-immobile.html?id=' + p.id + '" class="group block">' +
- '<div class="aspect-[4/5] overflow-hidden mb-8 relative border border-outline-variant/20">' +
- (img ? '<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]" src="' + img + '" alt="' + (p.titolo || '') + '"/>' : '<div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center"><span class="material-symbols-outlined text-6xl text-primary/30">image</span></div>') +
- '<div class="absolute top-6 right-6">' + badge + '</div>' +
- '</div>' +
- '<div class="flex justify-between items-start border-b border-outline-variant/20 pb-4 mb-2">' +
- '<h4 class="text-2xl font-serif italic text-primary">' + (p.titolo || 'Propriet�') + '</h4>' +
- (price ? '<p class="text-lg font-serif">' + price + '</p>' : '') +
- '</div>' +
- (location ? '<p class="text-[10px] uppercase tracking-widest text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-sm">location_on</span> ' + location + '</p>' : '') +
- '</a>';
- }).join('');
- })
- .catch(function() {
- grid.innerHTML = '<div class="col-span-full text-center py-16 text-on-surface-variant"><p class="text-lg">Errore nel caricamento delle propriet�.</p></div>';
- });
+    var grid = document.getElementById('collection-grid');
+    if (!grid) return;
+    fetch('/api/immobili')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data || data.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-16 text-on-surface-variant"><span class="material-symbols-outlined text-4xl mb-4 block">real_estate_agent</span><p class="text-lg">Nessuna proprietà disponibile al momento.</p></div>';
+                return;
+            }
+            grid.innerHTML = data.map(function(p) {
+                var imgs = p.immagini_urls || [];
+                var img = imgs.length > 0 ? imgs[0] : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80';
+                var price = p.prezzo_richiesta ? new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(p.prezzo_richiesta) : '';
+                var badge = p.stato_immobile === 'disponibile' ? '<span class="bg-white/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary">Disponibile</span>' : '<span class="bg-accent/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white">' + (p.stato_immobile || '') + '</span>';
+                var location = p.citta || '';
+                return '<a href="dettaglio-immobile.html?id=' + p.id + '" class="group block">' +
+                    '<div class="aspect-[4/5] overflow-hidden mb-8 relative border border-outline-variant/20">' +
+                    '<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]" src="' + img + '" alt="' + (p.titolo || '') + '"/>' +
+                    '<div class="absolute top-6 right-6">' + badge + '</div>' +
+                    '</div>' +
+                    '<div class="flex justify-between items-start border-b border-outline-variant/20 pb-4 mb-2">' +
+                    '<h4 class="text-2xl font-serif italic text-primary">' + (p.titolo || 'Proprietà') + '</h4>' +
+                    (price ? '<p class="text-lg font-serif">' + price + '</p>' : '') +
+                    '</div>' +
+                    (location ? '<p class="text-[10px] uppercase tracking-widest text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-sm">location_on</span> ' + location + '</p>' : '') +
+                    '</a>';
+            }).join('');
+        })
+        .catch(function() {
+            grid.innerHTML = '<div class="col-span-full text-center py-16 text-on-surface-variant"><p class="text-lg">Errore nel caricamento delle proprietà.</p></div>';
+        });
 });
 </script>
 </body></html>

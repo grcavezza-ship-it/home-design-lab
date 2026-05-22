@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Portal | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+     tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#186C32",
+                    "secondary": "#4CAF50",
+                    "tertiary": "#D4BFA7",
+                    "on-primary": "#ffffff",
+                    "surface": "#fbf9f8",
+                    "on-surface": "#1b1c1c",
+                    "background": "#fbf9f8",
+                    "outline": "#707a6e",
+                    "surface-container": "#f0eded",
+                    "surface-container-low": "#f6f3f2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+   </script>
+<style>
+    body { font-family: 'Manrope', sans-serif; }
+    .font-serif { font-family: 'Noto Serif', serif; }
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+</style>
+</head>
+<body class="bg-surface text-on-surface">
+    <!-- Header -->
+    <header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline/30">
+        <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+            <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+                <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-8 w-auto">
+            </a>
+            <div class="flex items-center gap-6">
+                <span id="user-email" class="text-sm text-on-surface/70"></span>
+                <button id="logout-btn" class="text-sm text-red-600 hover:text-red-700 font-medium">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-8 py-12">
+        <!-- Page Title -->
+        <div class="mb-12">
+            <h1 class="font-headline text-4xl md:text-5xl tracking-tight mb-4">Admin Portal</h1>
+            <p class="text-on-surface/70 text-lg">Gestione completa del sistema Home Design Lab</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="bg-surface-container p-6 rounded-xl border border-outline/20">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="material-symbols-outlined text-2xl text-primary">people</span>
+                    <span class="text-xs text-on-surface/50 font-label uppercase tracking-wider">Operatori</span>
+                </div>
+                <p id="operators-count" class="text-3xl font-bold text-primary">0</p>
+            </div>
+            <div class="bg-surface-container p-6 rounded-xl border border-outline/20">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="material-symbols-outlined text-2xl text-primary">person</span>
+                    <span class="text-xs text-on-surface/50 font-label uppercase tracking-wider">Clienti</span>
+                </div>
+                <p id="clients-count" class="text-3xl font-bold text-primary">0</p>
+            </div>
+            <div class="bg-surface-container p-6 rounded-xl border border-outline/20">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="material-symbols-outlined text-2xl text-primary">architecture</span>
+                    <span class="text-xs text-on-surface/50 font-label uppercase tracking-wider">Progetti</span>
+                </div>
+                <p id="projects-count" class="text-3xl font-bold text-primary">0</p>
+            </div>
+            <div class="bg-surface-container p-6 rounded-xl border border-outline/20">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="material-symbols-outlined text-2xl text-primary">home</span>
+                    <span class="text-xs text-on-surface/50 font-label uppercase tracking-wider">Immobili</span>
+                </div>
+                <p id="properties-count" class="text-3xl font-bold text-primary">0</p>
+            </div>
+        </div>
+
+        <!-- Management Section -->
+        <div class="bg-surface-container rounded-xl border border-outline/20 p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="font-headline text-2xl">Gestione Operatori</h2>
+                <button id="add-operator-btn" class="bg-primary text-on-primary px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-secondary transition-colors">
+                    Aggiungi Operatore
+                </button>
+            </div>
+
+            <!-- Operators Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-outline/30">
+                            <th class="text-left py-3 px-4 text-sm font-label uppercase tracking-wider text-on-surface/50">Nome</th>
+                            <th class="text-left py-3 px-4 text-sm font-label uppercase tracking-wider text-on-surface/50">Email</th>
+                            <th class="text-left py-3 px-4 text-sm font-label uppercase tracking-wider text-on-surface/50">Ruolo</th>
+                            <th class="text-left py-3 px-4 text-sm font-label uppercase tracking-wider text-on-surface/50">Stato</th>
+                            <th class="text-left py-3 px-4 text-sm font-label uppercase tracking-wider text-on-surface/50">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="operators-table">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Other Sections (Collapsed by default) -->
+        <div class="mt-8 space-y-6">
+            <!-- Clients Section -->
+            <div class="bg-surface-container rounded-xl border border-outline/20 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-headline text-2xl">Gestione Clienti</h2>
+                    <button class="bg-primary text-on-primary px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-secondary transition-colors">
+                        Aggiungi Cliente
+                    </button>
+                </div>
+                <div class="text-center py-8 text-on-surface/50">
+                    <span class="material-symbols-outlined text-4xl mb-2">person</span>
+                    <p>Funzionalità in sviluppo</p>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="bg-surface-container rounded-xl border border-outline/20 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-headline text-2xl">Gestione Progetti</h2>
+                    <button class="bg-primary text-on-primary px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-secondary transition-colors">
+                        Aggiungi Progetto
+                    </button>
+                </div>
+                <div class="text-center py-8 text-on-surface/50">
+                    <span class="material-symbols-outlined text-4xl mb-2">architecture</span>
+                    <p>Funzionalità in sviluppo</p>
+                </div>
+            </div>
+
+            <!-- Properties Section -->
+            <div class="bg-surface-container rounded-xl border border-outline/20 p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="font-headline text-2xl">Gestione Immobili</h2>
+                    <button class="bg-primary text-on-primary px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-secondary transition-colors">
+                        Aggiungi Immobile
+                    </button>
+                </div>
+                <div class="text-center py-8 text-on-surface/50">
+                    <span class="material-symbols-outlined text-4xl mb-2">home</span>
+                    <p>Funzionalità in sviluppo</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-surface rounded-xl max-w-md w-full p-8">
+            <h3 id="modal-title" class="font-headline text-xl mb-6">Aggiungi Operatore</h3>
+            <form id="modal-form" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-label uppercase tracking-wider text-primary mb-2">Nome Completo</label>
+                    <input type="text" id="operator-name" class="w-full bg-transparent border-b border-outline/50 focus:border-primary transition-colors py-2 focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-label uppercase tracking-wider text-primary mb-2">Email</label>
+                    <input type="email" id="operator-email" class="w-full bg-transparent border-b border-outline/50 focus:border-primary transition-colors py-2 focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-label uppercase tracking-wider text-primary mb-2">Password</label>
+                    <input type="password" id="operator-password" class="w-full bg-transparent border-b border-outline/50 focus:border-primary transition-colors py-2 focus:outline-none" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-label uppercase tracking-wider text-primary mb-2">Ruolo</label>
+                    <select id="operator-role" class="w-full bg-transparent border-b border-outline/50 focus:border-primary transition-colors py-2 focus:outline-none">
+                        <option value="operator">Operatore</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="bg-primary text-on-primary px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-secondary transition-colors">
+                        Salva
+                    </button>
+                    <button type="button" onclick="closeModal()" class="bg-surface-container text-on-surface px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-surface-container-low transition-colors">
+                        Annulla
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Supabase Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Admin Script -->
+    <script>
+        (function() {
+            // Configurazione Supabase
+            const SUPABASE_URL = 'https://fjwcgawzjfhqzjgztfgg.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqd2NnYXd6amZocXpqZ3p0ZmdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjk1NzQ0MzgsImV4cCI6MjA0NTE1MDQzOH0.qvJn-sxLr3J2i0X3xO1JdYk3m-7kXKzR0eF1bH2q0M';
+
+            // Inizializzazione Supabase
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // Stato
+            let currentUser = null;
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            setupEventListeners();
+            await loadData();
+        });
+
+        // Verifica autenticazione
+        async function checkAuth() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                
+                if (error || !session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = session.user;
+                document.getElementById('user-email').textContent = currentUser.email;
+                
+                // Verifica ruolo admin
+                const { data: profile, error: profileError } = await supabase
+                    .from('operatori_profiles')
+                    .select('role')
+                    .eq('user_id', currentUser.id)
+                    .single();
+
+                if (profileError || !profile || profile.role !== 'admin') {
+                    await supabase.auth.signOut();
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+            } catch (error) {
+                console.error('Errore autenticazione:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', async () => {
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+            });
+
+            // Add operator
+            const addOperatorBtn = document.getElementById('add-operator-btn');
+            console.log('Pulsante aggiungi operatore trovato:', addOperatorBtn);
+            
+            if (addOperatorBtn) {
+                addOperatorBtn.addEventListener('click', () => {
+                    console.log('Pulsante aggiungi operatore cliccato!');
+                    showModal();
+                });
+                
+                // Test click
+                addOperatorBtn.addEventListener('click', () => {
+                    console.log('Click test pulsante funzionante!');
+                });
+            } else {
+                console.error('Pulsante aggiungi operatore non trovato!');
+            }
+
+            // Modal close
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target.id === 'modal') {
+                    closeModal();
+                }
+            });
+
+            // Form submission
+            document.getElementById('modal-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await addOperator();
+            });
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                // Load counts
+                const { count: operatorsCount } = await supabase
+                    .from('operatori_profiles')
+                    .select('*', { count: 'exact', head: true });
+
+                const { count: clientsCount } = await supabase
+                    .from('clienti_profiles')
+                    .select('*', { count: 'exact', head: true });
+
+                const { count: projectsCount } = await supabase
+                    .from('projects')
+                    .select('*', { count: 'exact', head: true });
+
+                const { count: propertiesCount } = await supabase
+                    .from('properties')
+                    .select('*', { count: 'exact', head: true });
+
+                // Update UI
+                document.getElementById('operators-count').textContent = operatorsCount || 0;
+                document.getElementById('clients-count').textContent = clientsCount || 0;
+                document.getElementById('projects-count').textContent = projectsCount || 0;
+                document.getElementById('properties-count').textContent = propertiesCount || 0;
+
+                // Load operators
+                await loadOperators();
+
+            } catch (error) {
+                console.error('Errore caricamento dati:', error);
+            }
+        }
+
+        // Load operators
+        async function loadOperators() {
+            try {
+                const { data: operators, error } = await supabase
+                    .from('operatori_profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Errore caricamento operatori:', error);
+                    return;
+                }
+
+                renderOperatorsTable(operators || []);
+
+            } catch (error) {
+                console.error('Errore caricamento operatori:', error);
+            }
+        }
+
+        // Render operators table
+        function renderOperatorsTable(operators) {
+            const tbody = document.getElementById('operators-table');
+            
+            if (operators.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-on-surface/50">
+                            Nessun operatore trovato
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = operators.map(op => `
+                <tr class="border-b border-outline/20">
+                    <td class="py-4 px-4 text-sm">${op.full_name || 'N/D'}</td>
+                    <td class="py-4 px-4 text-sm">${op.email || 'N/D'}</td>
+                    <td class="py-4 px-4 text-sm">
+                        <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs font-label">
+                            ${op.role || 'N/D'}
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-sm">
+                        <span class="px-2 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-label">
+                            Attivo
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-sm">
+                        <button class="text-primary hover:text-secondary mr-2" onclick="editOperator('${op.id}')">Modifica</button>
+                        <button class="text-red-600 hover:text-red-700" onclick="deleteOperator('${op.id}')">Elimina</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Modal functions
+        function showModal() {
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('modal-form').reset();
+        }
+
+        // Add operator
+        async function addOperator() {
+            try {
+                console.log('Inizio aggiunta operatore...');
+                
+                const name = document.getElementById('operator-name').value;
+                const email = document.getElementById('operator-email').value;
+                const password = document.getElementById('operator-password').value;
+                const role = document.getElementById('operator-role').value;
+
+                console.log('Dati form:', { name, email, password: '***', role });
+
+                if (!name || !email || !password) {
+                    alert('Compila tutti i campi obbligatori');
+                    return;
+                }
+
+                // Create auth user
+                console.log('Creazione utente auth...');
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            full_name: name,
+                            role: role
+                        }
+                    }
+                });
+
+                console.log('Risposta auth:', { authData, authError });
+
+                if (authError) {
+                    console.error('Errore creazione utente:', authError);
+                    alert('Errore durante la creazione dell\'utente: ' + authError.message);
+                    return;
+                }
+
+                if (!authData.user) {
+                    console.error('Nessun utente creato');
+                    alert('Errore: nessun utente creato');
+                    return;
+                }
+
+                // Create profile
+                console.log('Creazione profilo...');
+                const { error: profileError } = await supabase
+                    .from('operatori_profiles')
+                    .insert({
+                        user_id: authData.user.id,
+                        full_name: name,
+                        email: email,
+                        role: role,
+                        created_at: new Date().toISOString()
+                    });
+
+                console.log('Risposta profilo:', { profileError });
+
+                if (profileError) {
+                    console.error('Errore creazione profilo:', profileError);
+                    alert('Errore durante la creazione del profilo: ' + profileError.message);
+                    return;
+                }
+
+                alert('Operatore creato con successo!');
+                closeModal();
+                await loadData();
+
+            } catch (error) {
+                console.error('Errore aggiunta operatore:', error);
+                alert('Errore durante la creazione dell\'operatore: ' + error.message);
+            }
+        }
+
+        // Placeholder functions
+        function editOperator(id) {
+            alert('Funzionalità di modifica in sviluppo');
+        }
+
+        function deleteOperator(id) {
+            if (confirm('Sei sicuro di voler eliminare questo operatore?')) {
+                alert('Funzionalità di eliminazione in sviluppo');
+            }
+        }
+        })();
+    </script>
+</body>
+</html>

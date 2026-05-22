@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestione Journal | Home Design Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+    darkMode: "class",
+    theme: { extend: {
+        "colors": {
+            "surface-container": "#f0eded","on-error-container": "#93000a","tertiary": "#524431",
+            "on-secondary": "#ffffff","tertiary-fixed-dim": "#d8c3ab","outline-variant": "#bfc9bc",
+            "surface-dim": "#dcd9d9","error-container": "#ffdad6","secondary-container": "#91f78e",
+            "surface-variant": "#e4e2e1","on-secondary-fixed-variant": "#005313","on-background": "#1b1c1c",
+            "primary-container": "#186c32","surface": "#fbf9f8","surface-container-lowest": "#ffffff",
+            "on-tertiary": "#ffffff","on-primary-fixed-variant": "#005321","on-secondary-container": "#00731e",
+            "inverse-surface": "#303030","on-primary-container": "#98eba2","on-tertiary-fixed": "#251a0a",
+            "surface-container-low": "#f6f3f2","on-tertiary-container": "#ead4bb","primary-fixed-dim": "#87d992",
+            "tertiary-container": "#6b5b47","inverse-on-surface": "#f3f0f0","on-error": "#ffffff",
+            "tertiary-fixed": "#f5dfc6","on-primary": "#ffffff","surface-container-high": "#eae8e7",
+            "secondary-fixed-dim": "#78dc77","on-surface": "#1b1c1c","primary-fixed": "#a3f5ac",
+            "surface-tint": "#196c32","primary": "#005220","error": "#ba1a1a",
+            "secondary-fixed": "#94f990","surface-container-highest": "#e4e2e1",
+            "on-surface-variant": "#40493f","background": "#fbf9f8","secondary": "#006e1c",
+            "on-secondary-fixed": "#002204","surface-bright": "#fbf9f8","on-primary-fixed": "#002109",
+            "on-tertiary-fixed-variant": "#534432","outline": "#707a6e","inverse-primary": "#87d992"
+        },
+        fontFamily: { headline: ["Noto Serif", "serif"], body: ["Manrope", "sans-serif"], label: ["Manrope", "sans-serif"] }
+    }}
+}
+</script>
+<style>
+.material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+#editor-view { display: none; }
+#list-view { display: block; }
+#edit-body:empty:before { content: attr(data-placeholder); color: #9ca3af; pointer-events: none; }
+#edit-body:focus { outline: none; border-color: #005220; }
+#edit-body img { max-width: 100%; border-radius: 0.5rem; margin: 1rem 0; display: block; }
+#edit-body blockquote { border-left: 3px solid #005220; padding-left: 1rem; margin: 1rem 0; font-style: italic; color: #40493f; }
+#edit-body h2 { font-size: 1.5rem; font-family: 'Noto Serif', serif; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+#edit-body h3 { font-size: 1.25rem; font-family: 'Noto Serif', serif; margin-top: 1.25rem; margin-bottom: 0.25rem; }
+#edit-body ul, #edit-body ol { padding-left: 1.5rem; margin: 0.75rem 0; }
+#edit-body li { margin-bottom: 0.25rem; }
+#edit-body a { color: #005220; text-decoration: underline; }
+#cover-dropzone.drag-over { border-color: #005220; background: #f0f7f0; }
+</style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] flex flex-col py-8 z-50"></nav>
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 backdrop-blur-xl flex justify-between items-center px-10 h-20 border-b border-stone-200/30">
+    <div class="flex-1 flex items-center h-full">
+        <span class="font-headline italic text-lg text-primary leading-none" id="header-title">Gestione Journal</span>
+    </div>
+    <div class="flex items-center gap-6 h-full">
+        <button class="text-stone-400 hover:opacity-70 transition-opacity"><span class="material-symbols-outlined">notifications</span></button>
+        <div class="relative" id="avatar-dropdown-container">
+            <button id="avatar-btn" class="w-10 h-10 rounded-xl overflow-hidden border border-stone-200 aspect-square"><img id="avatar-img" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/></button>
+            <div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 z-50">
+                <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-stone-100"><span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+                <div class="border-t my-1"></div>
+                <a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10"><span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ─── LISTA ARTICOLI ─── -->
+<main id="list-view" class="ml-64 pt-28 px-10 pb-24 bg-surface min-h-screen">
+<div class="max-w-5xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="font-headline text-4xl font-bold text-on-surface">Journal / Blog</h1>
+            <p class="text-on-surface-variant mt-1">Gestisci gli articoli del blog pubblico</p>
+        </div>
+        <button onclick="openEditor()" class="flex items-center gap-2 bg-primary text-on-primary px-5 py-3 rounded-lg font-label text-sm font-bold hover:opacity-90 transition shadow-sm">
+            <span class="material-symbols-outlined text-base">add</span> Nuovo Articolo
+        </button>
+    </div>
+    <div id="posts-list" class="space-y-3">
+        <div class="text-center py-16 text-on-surface-variant">
+            <span class="material-symbols-outlined text-5xl mb-4 block">article</span>
+            <p>Caricamento articoli...</p>
+        </div>
+    </div>
+</div>
+</main>
+
+<!-- ─── EDITOR A PAGINA INTERA ─── -->
+<main id="editor-view" class="ml-64 pt-28 px-10 pb-24 bg-surface min-h-screen">
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <button onclick="closeEditor()" class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <h1 class="font-headline text-3xl font-bold text-on-surface" id="editor-title-heading">Nuovo Articolo</h1>
+        </div>
+        <div class="flex items-center gap-3" id="editor-status-bar">
+            <span id="editor-status-badge" class="px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700">Bozza</span>
+            <button onclick="saveDraft()" class="px-5 py-2.5 border border-outline/30 rounded-lg text-sm font-bold hover:bg-surface-container transition">Salva Bozza</button>
+            <button onclick="publishArticle()" class="px-5 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition shadow-sm flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">publish</span> Pubblica
+            </button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-6">
+            <div>
+                <input id="edit-title" class="w-full bg-transparent border-none outline-none text-4xl font-headline font-bold text-on-surface placeholder-on-surface-variant/50 p-0" placeholder="Titolo dell'articolo..."/>
+                <div class="h-px bg-outline/20 mt-2"></div>
+            </div>
+            <div>
+                <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant mb-1">Slug</label>
+                <input id="edit-slug" class="w-full bg-surface-container-low border border-outline/30 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary" placeholder="titolo-articolo"/>
+            </div>
+            <div>
+                <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant mb-1">Estratto</label>
+                <textarea id="edit-excerpt" rows="3" class="w-full bg-surface-container-low border border-outline/30 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-primary resize-none" placeholder="Breve descrizione per l'anteprima nel journal..."></textarea>
+            </div>
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-xs font-label uppercase tracking-widest text-on-surface-variant">Contenuto</label>
+                    <div class="flex items-center gap-1 bg-surface-container-low rounded-lg p-1 border border-outline/20 flex-wrap">
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition font-bold" onclick="execCmd('bold')" title="Grassetto">B</button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition italic" onclick="execCmd('italic')" title="Corsivo">I</button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition underline" onclick="execCmd('underline')" title="Sottolineato">U</button>
+                        <span class="w-px h-5 bg-outline/20 mx-1"></span>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('formatBlock','h2')" title="Titolo">H2</button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('formatBlock','h3')" title="Sottotitolo">H3</button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('formatBlock','p')" title="Paragrafo">¶</button>
+                        <span class="w-px h-5 bg-outline/20 mx-1"></span>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('insertUnorderedList')" title="Elenco puntato"><span class="material-symbols-outlined text-[16px]">format_list_bulleted</span></button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('insertOrderedList')" title="Elenco numerato"><span class="material-symbols-outlined text-[16px]">format_list_numbered</span></button>
+                        <span class="w-px h-5 bg-outline/20 mx-1"></span>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="insertEditorImage()" title="Inserisci immagine"><span class="material-symbols-outlined text-[16px]">image</span></button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('createLink')" title="Inserisci link"><span class="material-symbols-outlined text-[16px]">link</span></button>
+                        <button type="button" class="toolbar-btn px-2.5 py-1.5 rounded text-sm hover:bg-surface transition" onclick="execCmd('formatBlock','blockquote')" title="Citazione"><span class="material-symbols-outlined text-[16px]">format_quote</span></button>
+                    </div>
+                    <span class="text-xs text-on-surface-variant" id="reading-time"></span>
+                </div>
+                <div id="edit-body" contenteditable="true" class="w-full bg-surface-container-low border border-outline/30 rounded-xl px-5 py-4 min-h-[400px] max-h-[600px] overflow-y-auto leading-relaxed text-sm" data-placeholder="Scrivi il tuo articolo qui..."></div>
+                <p class="text-xs text-on-surface-variant mt-1">Scrivi normalmente. Usa i bottoni per formattare grassetto, corsivo, titoli, elenchi.</p>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline/10">
+                <h3 class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4">Immagine di Copertina</h3>
+                <div id="cover-dropzone" class="aspect-[16/9] border-2 border-dashed border-outline/40 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-primary/40 hover:bg-surface-container transition-all relative overflow-hidden" onclick="document.getElementById('cover-upload-input').click()">
+                    <div id="cover-placeholder" class="flex flex-col items-center justify-center text-on-surface-variant p-6 text-center">
+                        <span class="material-symbols-outlined text-5xl block mb-3 opacity-60" style="font-variation-settings:'FILL'0,'wght'200,'GRAD'0,'opsz'48">photo_camera</span>
+                        <span class="text-sm font-medium">Carica qui la copertina</span>
+                        <span class="text-xs text-on-surface-variant/60 block mt-1">oppure trascina un'immagine</span>
+                    </div>
+                    <img id="cover-img" class="w-full h-full object-cover hidden absolute inset-0" src="" alt="Copertina"/>
+                    <button id="cover-remove-btn" class="absolute top-2 right-2 w-7 h-7 bg-black/50 text-white rounded-full flex items-center justify-center hidden hover:bg-black/70 transition-colors z-10" onclick="event.stopPropagation();removeCover()" title="Rimuovi"><span class="material-symbols-outlined text-sm">close</span></button>
+                </div>
+                <input type="file" id="cover-upload-input" accept="image/*" class="hidden"/>
+                <input type="hidden" id="edit-cover"/>
+                <p class="text-xs text-on-surface-variant mt-2 text-center">Formati supportati: JPG, PNG, WebP</p>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline/10">
+                <h3 class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4">Categoria</h3>
+                <select id="edit-category" class="w-full bg-surface border border-outline/30 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-primary">
+                    <option value="">Nessuna categoria</option>
+                    <option value="Interior Trends">Interior Trends</option>
+                    <option value="Construction Pills">Construction Pills</option>
+                    <option value="Local Regulations">Normative</option>
+                    <option value="Sustainability">Sostenibilità</option>
+                    <option value="Material Science">Material Science</option>
+                    <option value="Case Studies">Case Studies</option>
+                </select>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline/10">
+                <h3 class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4">Stato</h3>
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium" id="editor-status-label">Bozza</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="edit-publish-toggle" class="sr-only peer"/>
+                        <div class="w-11 h-6 bg-outline/40 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                    </label>
+                </div>
+                <p class="text-xs text-on-surface-variant mt-2">Attiva per pubblicare immediatamente</p>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-6 border border-outline/10">
+                <h3 class="text-xs font-label uppercase tracking-widest text-on-surface-variant mb-4">Azioni</h3>
+                <div class="space-y-3">
+                    <button onclick="saveDraft()" class="w-full py-2.5 border border-outline/30 rounded-lg text-sm font-bold hover:bg-surface transition">Salva Bozza</button>
+                    <button onclick="publishArticle()" class="w-full py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition shadow-sm flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">publish</span> Pubblica
+                    </button>
+                    <button onclick="previewArticle()" class="w-full py-2.5 bg-surface-container-high text-on-surface rounded-lg text-sm font-bold hover:bg-surface-container-highest transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">visibility</span> Anteprima
+                    </button>
+                    <button onclick="deleteCurrentArticle()" class="w-full py-2.5 text-error rounded-lg text-sm font-bold hover:bg-error-container/10 transition flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">delete</span> Elimina
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+<div id="preview-modal" class="hidden fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onclick="closePreviewModal()">
+    <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-y-auto p-8 shadow-2xl" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="font-headline text-xl">Anteprima</h2>
+            <button onclick="closePreviewModal()" class="text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
+        </div>
+        <div id="preview-body" class="prose prose-stone max-w-none"></div>
+    </div>
+</div>
+
+<input type="hidden" id="edit-id"/>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect'], defaultActiveMenu: 'journal', pageName: 'Gestione Journal' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+var currentPosts = [];
+var editingId = null;
+var coverUploading = false;
+
+function slugify(str) {
+    return str.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'').replace(/-+/g,'-');
+}
+
+function execCmd(cmd, arg) {
+    document.getElementById('edit-body').focus();
+    if (cmd === 'createLink') {
+        var url = prompt('Inserisci URL:');
+        if (url) document.execCommand(cmd, false, url);
+        return;
+    }
+    if (cmd === 'formatBlock') {
+        document.execCommand(cmd, false, '<' + arg + '>');
+        return;
+    }
+    document.execCommand(cmd, false, arg || null);
+}
+
+function insertEditorImage() {
+    var url = prompt('URL immagine da inserire:');
+    if (url) {
+        document.getElementById('edit-body').focus();
+        document.execCommand('insertHTML', false, '<img src="' + url + '" alt="" style="max-width:100%;border-radius:8px;margin:1rem 0"/>');
+    }
+}
+
+// ─── COVER UPLOAD ───
+var coverDropzone = document.getElementById('cover-dropzone');
+var coverUploadInput = document.getElementById('cover-upload-input');
+
+coverDropzone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('drag-over');
+});
+coverDropzone.addEventListener('dragleave', function() {
+    this.classList.remove('drag-over');
+});
+coverDropzone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('drag-over');
+    if (e.dataTransfer.files.length > 0) uploadCover(e.dataTransfer.files[0]);
+});
+
+coverUploadInput.addEventListener('change', function() {
+    if (this.files.length > 0) uploadCover(this.files[0]);
+});
+
+async function uploadCover(file) {
+    if (!file) return;
+    coverUploading = true;
+    document.querySelector('#cover-placeholder span:first-child').textContent = 'cloud_upload';
+    document.querySelector('#cover-placeholder .text-sm').textContent = 'Caricamento...';
+
+    try {
+        var token = (await window.supabase.auth.getSession()).data.session?.access_token;
+        var formData = new FormData();
+        formData.append('file', file);
+
+        var r = await fetch('/api/upload-cover', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+        });
+        if (!r.ok) { var errBody; try { errBody = await r.json(); } catch(e) { errBody = {}; } throw new Error(errBody.message || 'HTTP ' + r.status); }
+        var result = await r.json();
+
+        document.getElementById('edit-cover').value = result.url;
+        document.getElementById('cover-img').src = result.url;
+        document.getElementById('cover-img').classList.remove('hidden');
+        document.getElementById('cover-placeholder').classList.add('hidden');
+        document.getElementById('cover-remove-btn').classList.remove('hidden');
+        coverUploading = false;
+    } catch(e) {
+        coverUploading = false;
+        document.querySelector('#cover-placeholder span:first-child').textContent = 'photo_camera';
+        document.querySelector('#cover-placeholder .text-sm').textContent = 'Carica qui la copertina';
+        showToast('Errore upload: ' + e.message, 'error');
+    }
+}
+
+function removeCover() {
+    document.getElementById('edit-cover').value = '';
+    document.getElementById('cover-img').classList.add('hidden');
+    document.getElementById('cover-img').src = '';
+    document.getElementById('cover-placeholder').classList.remove('hidden');
+    document.getElementById('cover-remove-btn').classList.add('hidden');
+    document.querySelector('#cover-placeholder span:first-child').textContent = 'photo_camera';
+    document.querySelector('#cover-placeholder .text-sm').textContent = 'Carica qui la copertina';
+}
+
+// ─── LIST VIEW ───
+function renderPosts(posts) {
+    var list = document.getElementById('posts-list');
+    if (!posts || !posts.length) { list.innerHTML = '<div class="text-center py-16 text-on-surface-variant"><span class="material-symbols-outlined text-5xl mb-4 block">article</span><p>Nessun articolo. Clicca "Nuovo Articolo" per iniziare.</p></div>'; return; }
+    list.innerHTML = posts.map(function(p) {
+        var badge = p.status === 'published'
+            ? '<span class="px-2 py-0.5 rounded text-xs bg-green-100 text-green-700 font-bold">Pubblicato</span>'
+            : '<span class="px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-700 font-bold">Bozza</span>';
+        var data = p.published_at || p.created_at || '';
+        var dataFmt = data ? new Date(data).toLocaleDateString('it-IT') : '';
+        return '<div class="flex items-center justify-between bg-surface-container-low rounded-xl px-5 py-4 border border-outline/10 hover:border-primary/20 transition">'
+            + '<div class="flex items-center gap-4 min-w-0">' + badge
+            + '<div class="min-w-0"><p class="font-semibold text-sm truncate">' + (p.title || 'Senza titolo') + '</p>'
+            + '<p class="text-xs text-on-surface-variant mt-0.5">' + (p.category || '') + (dataFmt ? ' · ' + dataFmt : '') + '</p></div></div>'
+            + '<div class="flex gap-2 flex-shrink-0">'
+            + '<button onclick="openEditor(' + p.id + ')" class="p-2 rounded-lg hover:bg-surface-container-high transition" title="Modifica"><span class="material-symbols-outlined text-sm">edit</span></button>'
+            + '<button onclick="deletePost(' + p.id + ')" class="p-2 rounded-lg hover:bg-red-50 text-red-500 transition" title="Elimina"><span class="material-symbols-outlined text-sm">delete</span></button>'
+            + '</div></div>';
+    }).join('');
+}
+
+async function loadPosts() {
+    try {
+        var token = (await window.supabase.auth.getSession()).data.session?.access_token;
+        if (!token) return;
+        var r = await fetch('/api/operatore/blog', { headers: { 'Authorization': 'Bearer ' + token } });
+        var data = await r.json();
+        currentPosts = Array.isArray(data) ? data : [];
+        renderPosts(currentPosts);
+    } catch(e) {}
+}
+
+// ─── EDITOR ───
+function openEditor(id) {
+    editingId = id || null;
+    document.getElementById('list-view').style.display = 'none';
+    document.getElementById('editor-view').style.display = 'block';
+    document.getElementById('header-title').textContent = id ? 'Modifica Articolo' : 'Nuovo Articolo';
+    document.getElementById('editor-title-heading').textContent = id ? 'Modifica Articolo' : 'Nuovo Articolo';
+
+    document.getElementById('edit-id').value = id || '';
+    document.getElementById('edit-title').value = '';
+    document.getElementById('edit-slug').value = '';
+    document.getElementById('edit-excerpt').value = '';
+    document.getElementById('edit-body').innerHTML = '';
+    document.getElementById('edit-cover').value = '';
+    document.getElementById('edit-category').value = '';
+    document.getElementById('edit-publish-toggle').checked = false;
+    removeCover();
+    setStatusBadge(false);
+
+    if (id) {
+        var post = currentPosts.find(function(p) { return p.id === id; });
+        if (post) {
+            document.getElementById('edit-title').value = post.title || '';
+            document.getElementById('edit-slug').value = post.slug || String(post.id);
+            document.getElementById('edit-excerpt').value = post.excerpt || '';
+
+            var htmlContent = '';
+            if (typeof post.body === 'string') htmlContent = post.body;
+            else if (post.body && post.body.content) htmlContent = post.body.content;
+            document.getElementById('edit-body').innerHTML = htmlContent || '';
+
+            if (post.cover_image) {
+                document.getElementById('edit-cover').value = post.cover_image;
+                document.getElementById('cover-img').src = post.cover_image;
+                document.getElementById('cover-img').classList.remove('hidden');
+                document.getElementById('cover-placeholder').classList.add('hidden');
+                document.getElementById('cover-remove-btn').classList.remove('hidden');
+            }
+            document.getElementById('edit-category').value = post.category || '';
+            var isPub = post.status === 'published';
+            document.getElementById('edit-publish-toggle').checked = isPub;
+            setStatusBadge(isPub);
+        }
+    } else {
+        setTimeout(function() { document.getElementById('edit-title').focus(); }, 100);
+    }
+    updateReadingTime();
+}
+
+function setStatusBadge(published) {
+    var badge = document.getElementById('editor-status-badge');
+    var label = document.getElementById('editor-status-label');
+    if (published) {
+        badge.textContent = 'Pubblicato';
+        badge.className = 'px-3 py-1.5 rounded-full text-xs font-bold bg-green-100 text-green-700';
+        label.textContent = 'Pubblicato';
+    } else {
+        badge.textContent = 'Bozza';
+        badge.className = 'px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700';
+        label.textContent = 'Bozza';
+    }
+}
+
+function closeEditor() {
+    if (document.getElementById('edit-title').value.trim() || document.getElementById('edit-body').innerText.trim()) {
+        if (!confirm('Tornare alla lista? Le modifiche non salvate andranno perse.')) return;
+    }
+    document.getElementById('editor-view').style.display = 'none';
+    document.getElementById('list-view').style.display = 'block';
+    document.getElementById('header-title').textContent = 'Gestione Journal';
+    editingId = null;
+}
+
+function getEditorContent() {
+    var body = document.getElementById('edit-body');
+    var html = body.innerHTML;
+    if (!html || html === '<br>' || html === '') return '';
+    return html;
+}
+
+function getEditorData() {
+    var title = document.getElementById('edit-title').value.trim();
+    var slug = document.getElementById('edit-slug').value.trim() || slugify(title) || 'articolo';
+    return {
+        title: title,
+        slug: slug,
+        excerpt: document.getElementById('edit-excerpt').value.trim() || null,
+        body: getEditorContent(),
+        category: document.getElementById('edit-category').value || null,
+        cover_image: document.getElementById('edit-cover').value.trim() || null
+    };
+}
+
+async function saveDraft() {
+    var data = getEditorData();
+    if (!data.title) { showToast('Il titolo è obbligatorio', 'error'); return; }
+    data.status = 'draft';
+    await saveArticle(data);
+}
+
+async function publishArticle() {
+    var data = getEditorData();
+    if (!data.title) { showToast('Il titolo è obbligatorio', 'error'); return; }
+    data.status = 'published';
+    if (!confirm('Pubblicare questo articolo?')) return;
+    await saveArticle(data);
+}
+
+async function saveArticle(data) {
+    try {
+        var id = document.getElementById('edit-id').value;
+        var token = (await window.supabase.auth.getSession()).data.session?.access_token;
+        var method = id ? 'PUT' : 'POST';
+        var url = id ? '/api/operatore/blog/' + id : '/api/operatore/blog';
+        var r = await fetch(url, { method: method, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        if (!r.ok) { var eb; try { eb = await r.json(); } catch(e) { eb = {}; } throw new Error(eb.message || eb.error || 'HTTP ' + r.status); }
+        var result = await r.json();
+        document.getElementById('edit-id').value = result.id || id;
+        editingId = result.id || id;
+        if (result.cover_image) {
+            document.getElementById('edit-cover').value = result.cover_image;
+        }
+        setStatusBadge(data.status === 'published');
+        showToast(id ? 'Articolo salvato' : 'Articolo creato', 'success');
+        if (result.id && Array.isArray(currentPosts)) {
+            var idx = currentPosts.findIndex(function(p) { return p.id === result.id; });
+            if (idx >= 0) currentPosts[idx] = result;
+            else currentPosts.unshift(result);
+        }
+        await loadPosts();
+    } catch(e) {
+        showToast('Errore: ' + e.message, 'error');
+    }
+}
+
+async function deletePost(id) {
+    if (!confirm('Eliminare questo articolo definitivamente?')) return;
+    try {
+        var token = (await window.supabase.auth.getSession()).data.session?.access_token;
+        var r = await fetch('/api/operatore/blog/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+        if (!r.ok) throw new Error('Errore');
+        showToast('Articolo eliminato', 'success');
+        await loadPosts();
+    } catch(e) { showToast('Errore eliminazione', 'error'); }
+}
+
+async function deleteCurrentArticle() {
+    var id = document.getElementById('edit-id').value;
+    if (!id) { showToast('Nessun articolo da eliminare', 'info'); return; }
+    await deletePost(id);
+    closeEditor();
+}
+
+function previewArticle() {
+    var title = document.getElementById('edit-title').value || 'Senza titolo';
+    var body = getEditorContent() || '<p>Nessun contenuto.</p>';
+    var cover = document.getElementById('edit-cover').value.trim();
+    var category = document.getElementById('edit-category').value || 'Journal';
+    var html = '';
+    if (cover) html += '<img src="' + cover + '" class="w-full aspect-video object-cover rounded-lg mb-8"/>';
+    html += '<div class="text-[10px] uppercase tracking-[0.3em] font-bold text-primary mb-4">' + category + '</div>';
+    html += '<h1 class="font-headline text-4xl text-primary mb-6">' + title + '</h1>';
+    html += '<div class="article-body">' + body + '</div>';
+    document.getElementById('preview-body').innerHTML = html;
+    document.getElementById('preview-modal').classList.remove('hidden');
+    document.getElementById('preview-modal').classList.add('flex');
+}
+
+function closePreviewModal() {
+    document.getElementById('preview-modal').classList.add('hidden');
+    document.getElementById('preview-modal').classList.remove('flex');
+}
+
+document.getElementById('edit-publish-toggle').addEventListener('change', function() {
+    setStatusBadge(this.checked);
+});
+
+document.addEventListener('input', function(e) {
+    if (e.target.id === 'edit-title') {
+        var slugField = document.getElementById('edit-slug');
+        if (!slugField.dataset.manual) slugField.value = slugify(e.target.value);
+    }
+    if (e.target.id === 'edit-slug') {
+        e.target.dataset.manual = e.target.value ? 'true' : '';
+    }
+    updateReadingTime();
+});
+
+function updateReadingTime() {
+    var el = document.getElementById('edit-body');
+    var rt = document.getElementById('reading-time');
+    if (!el || !rt) return;
+    var text = el.innerText || '';
+    var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    var minutes = Math.max(1, Math.round(words / 200));
+    rt.textContent = minutes + ' min lettura · ' + words + ' parole';
+}
+
+function showToast(msg, type) {
+    var old = document.querySelector('.hdl-notification');
+    if (old) old.remove();
+    var colors = { error: '#b91c1c', success: '#166534', info: '#1e40af' };
+    var icons = { error: 'error', success: 'check_circle', info: 'info' };
+    var el = document.createElement('div');
+    el.className = 'hdl-notification';
+    el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+    el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + (icons[type] || 'info') + '</span><p style="flex:1">' + msg + '</p><button onclick="this.parentElement.remove()" style="margin-left:8px;opacity:.7"><span class="material-symbols-outlined" style="font-size:16px">close</span></button>';
+    document.body.appendChild(el);
+    setTimeout(function() { if (el.parentElement) el.remove(); }, 5000);
+}
+
+var waitAttempts = 0;
+(function wait() {
+    waitAttempts++;
+    if (window.supabase && window.currentUser) { loadPosts(); }
+    else if (waitAttempts < 100) setTimeout(wait, 200);
+})();
+</script>
+</body></html>

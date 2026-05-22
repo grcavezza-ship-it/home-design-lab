@@ -26,29 +26,6 @@ const port = CONFIG.APP.PORT;
 const templatesDir = join(__dirname, 'templates');
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-// Security headers per produzione
-app.use(function(_req, res, next) {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
-    if (process.env.NODE_ENV === 'production') {
-        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-    }
-    next();
-});
-
-// HTTPS redirect in produzione
-if (process.env.NODE_ENV === 'production') {
-    app.use(function(req, res, next) {
-        if (req.headers['x-forwarded-proto'] !== 'https') {
-            return res.redirect(301, 'https://' + req.headers.host + req.url);
-        }
-        next();
-    });
-}
-
 // CORS con supporto per preflight
 app.use(cors({
     origin: true,
@@ -630,38 +607,6 @@ app.get('/api/instagram', async (_req, res) => {
         console.error('[Instagram]', err.message);
         res.json([]);
     }
-});
-
-// ─── Sitemap & Robots ────────────────────────────────────────────────────────
-app.get('/sitemap.xml', function(_req, res) {
-    res.setHeader('Content-Type', 'application/xml');
-    var pages = ['', 'chi-siamo', 'servizi-lab', 'portfolio', 'journal', 'collection', 'contatti', 'login', 'imposta-password'];
-    var xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-    pages.forEach(function(p) {
-        xml += '  <url>\n    <loc>https://www.homedesignlab.it/' + p + '</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
-    });
-    xml += '</urlset>';
-    res.send(xml);
-});
-
-app.get('/robots.txt', function(_req, res) {
-    res.setHeader('Content-Type', 'text/plain');
-    res.send('User-agent: *\nAllow: /\nSitemap: https://www.homedesignlab.it/sitemap.xml\n');
-});
-
-// ─── JSON-LD Structured Data ──────────────────────────────────────────────────
-app.get('/api/structured-data', function(_req, res) {
-    res.json({
-        '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: 'Home Design Lab',
-        url: 'https://www.homedesignlab.it',
-        logo: 'https://www.homedesignlab.it/assets/images/Logo%20Home%20Design%20Lab.png',
-        description: 'Studio di progettazione architettonica e interior design. Design lab, collection immobiliare e servizi di ristrutturazione.',
-        address: { '@type': 'PostalAddress', streetAddress: 'Via Mulimento, 23', addressLocality: 'Cicciano', addressRegion: 'NA', postalCode: '80033', addressCountry: 'IT' },
-        contactPoint: { '@type': 'ContactPoint', email: 'info@homedesignlab.it', contactType: 'customer service', availableLanguage: ['Italian'] },
-        sameAs: ['https://www.instagram.com/homedesignlab.official/']
-    });
 });
 
 // ─── Public pages ─────────────────────────────────────────────────────────────

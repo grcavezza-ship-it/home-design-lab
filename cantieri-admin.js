@@ -21,7 +21,7 @@ class CantieriAdmin {
     async loadCurrentUser() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-            window.location.href = '/login';
+            window.location.href = 'templates/login.html';
             return;
         }
         this.currentUser = user;

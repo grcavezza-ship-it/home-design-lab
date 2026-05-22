@@ -1,102 +1,99 @@
 <!DOCTYPE html>
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
-<meta name="description" content="Journal e Blog di architettura - Home Design Lab. Approfondimenti su materiali innovativi, normative edilizie e tendenze di design."/>
-<meta name="keywords" content="architettura, interior design, progettazione, ristrutturazione, Napoli, Home Design Lab"/>
-<meta name="robots" content="index, follow"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="Home Design Lab"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<link rel="canonical" href="https://www.homedesignlab.it/journal.html"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Journal | Home Design Lab</title>
+<meta name="description" content="Approfondimenti di architettura, interior design, materiali innovativi e normative edilizie. Il blog tecnico di Home Design Lab."/>
+<meta property="og:title" content="Journal & Blog | Home Design Lab"/>
+<meta property="og:description" content="Approfondimenti di architettura, interior design, materiali innovativi e normative edilizie."/>
+<meta property="og:type" content="website"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
- tailwind.config = {
- darkMode: "class",
- theme: {
- extend: {
- "colors": {
- "primary": "#1B4332",
- "secondary": "#2D6A4F",
- "accent": "#B7E4C7",
- "background": "#F8F9F8",
- "surface": "#FFFFFF",
- "on-surface": "#1B1C1C",
- "on-surface-variant": "#4A4A4A",
- "outline": "#D1D5DB",
- "primary-container": "#D8F3DC"
- },
- "borderRadius": {
- "DEFAULT": "0rem",
- "lg": "0rem",
- "xl": "0rem",
- "full": "9999px"
- },
- "fontFamily": {
- "headline": ["Noto Serif", "serif"],
- "body": ["Manrope", "sans-serif"],
- "label": ["Manrope", "sans-serif"]
- }
- },
- },
- }
- </script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary": "#1B4332",
+                "secondary": "#2D6A4F",
+                "accent": "#B7E4C7",
+                "background": "#F8F9F8",
+                "surface": "#FFFFFF",
+                "on-surface": "#1B1C1C",
+                "on-surface-variant": "#4A4A4A",
+                "outline": "#D1D5DB",
+                "primary-container": "#D8F3DC"
+            },
+            "borderRadius": {
+                "DEFAULT": "0rem",
+                "lg": "0rem",
+                "xl": "0rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Noto Serif", "serif"],
+                "body": ["Manrope", "sans-serif"],
+                "label": ["Manrope", "sans-serif"]
+            }
+          },
+        },
+      }
+    </script>
 <style>
- .material-symbols-outlined {
- font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
- }
- body {
- font-family: 'Manrope', sans-serif;
- background-color: #F8F9F8;
- color: #1B1C1C;
- -webkit-font-smoothing: antialiased;
- }
- h1, h2, h3, h4, .font-serif {
- font-family: 'Noto Serif', serif;
- }
- .editorial-border {
- border-bottom: 1px solid rgba(27, 67, 50, 0.1);
- }
- </style>
- <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #F8F9F8;
+            color: #1B1C1C;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Noto Serif', serif;
+        }
+        .editorial-border {
+            border-bottom: 1px solid rgba(27, 67, 50, 0.1);
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
-<body class="select-none bg-background text-on-surface">
+<body class="bg-background text-on-surface">
 <nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
- <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
- <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
- <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
- </a>
- <div class="hidden md:flex items-center gap-8">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
- <a class="text-primary font-bold border-b-2 border-primary pb-1" href="journal.html">Journal</a>
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- <div class="flex items-center gap-4">
- <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
- <span class="material-symbols-outlined text-lg">person</span>
- Area Riservata
- </a>
- <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
- <span class="material-symbols-outlined text-2xl">menu</span>
- </button>
- </div>
- </div>
- <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
- <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
- <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="journal.html">Journal</a>
- <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
- </div>
- </div>
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+        <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
+            <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
+            <a class="text-primary font-bold border-b-2 border-primary pb-1" href="journal.html">Journal</a>
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold flex items-center gap-2" href="login.html">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Area Riservata
+            </a>
+            <button id="mobile-menu-button" class="md:hidden text-on-surface/70 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-2xl">menu</span>
+            </button>
+        </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
+        <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="index.html">Home</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="collection.html">Collection</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="portfolio.html">Progetti</a>
+            <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="journal.html">Journal</a>
+            <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="contatti.html">Contatti</a>
+        </div>
+    </div>
 </nav>
 <main class="pt-32 pb-24">
 <header class="max-w-[1440px] mx-auto px-6 md:px-12 mb-24">
@@ -104,14 +101,14 @@
 <div class="lg:col-span-7">
 <p class="font-label text-[10px] uppercase tracking-[0.4em] text-primary mb-6 font-bold">Il Blog</p>
 <h1 class="text-6xl md:text-8xl font-serif text-primary leading-[1.05] tracking-tight mb-10">
- Journal <br/><span class="italic font-normal">Home Design Lab</span>.
- </h1>
+                    Journal <br/><span class="italic font-normal">Home Design Lab</span>.
+                </h1>
 <p class="text-on-surface-variant max-w-xl text-xl leading-relaxed font-light">
- Approfondimenti di architettura, interior design, materiali innovativi e aggiornamenti normativi. Il punto di vista tecnico di Home Design Lab.
- </p>
+                    Approfondimenti di architettura, interior design, materiali innovativi e aggiornamenti normativi. Il punto di vista tecnico di Home Design Lab.
+                </p>
 </div>
 <div class="lg:col-span-5 aspect-[4/5] overflow-hidden bg-primary-container">
-<img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Interior design"/>
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Interno architettonico moderno"/>
 </div>
 </div>
 </header>
@@ -159,67 +156,67 @@
 <script src="assets/js/public-footer.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', async function() {
- var grid = document.getElementById('journal-grid');
- var filterBtns = document.querySelectorAll('#journal-filters button');
- var currentFilter = 'all';
- var articoli = [];
+    var grid = document.getElementById('journal-grid');
+    var filterBtns = document.querySelectorAll('#journal-filters button');
+    var currentFilter = 'all';
+    var articoli = [];
 
- async function caricaArticoli() {
- try {
- var r = await fetch('/api/articoli');
- if (!r.ok) throw new Error('HTTP ' + r.status);
- articoli = await r.json();
- if (!Array.isArray(articoli)) articoli = [];
- renderArticoli();
- } catch(e) {
- grid.innerHTML = '<div class="lg:col-span-3 text-center py-24 text-on-surface-variant"><span class="material-symbols-outlined text-5xl mb-4 block">error</span><p class="text-lg">Errore caricamento articoli</p></div>';
- }
- }
+    async function caricaArticoli() {
+        try {
+            var r = await fetch('/api/articoli');
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            articoli = await r.json();
+            if (!Array.isArray(articoli)) articoli = [];
+            renderArticoli();
+        } catch(e) {
+            grid.innerHTML = '<div class="lg:col-span-3 text-center py-24 text-on-surface-variant"><span class="material-symbols-outlined text-5xl mb-4 block">error</span><p class="text-lg">Errore caricamento articoli</p></div>';
+        }
+    }
 
- function renderArticoli() {
- var filtered = currentFilter === 'all' ? articoli : articoli.filter(function(a) {
- return (a.category || '').toLowerCase() === currentFilter.toLowerCase();
- });
+    function renderArticoli() {
+        var filtered = currentFilter === 'all' ? articoli : articoli.filter(function(a) {
+            return (a.category || '').toLowerCase() === currentFilter.toLowerCase();
+        });
 
- if (filtered.length === 0) {
- grid.innerHTML = '<div class="lg:col-span-3 text-center py-24 text-on-surface-variant"><span class="material-symbols-outlined text-5xl mb-4 block">article</span><p class="text-lg">Nessun articolo in questa categoria</p></div>';
- return;
- }
+        if (filtered.length === 0) {
+            grid.innerHTML = '<div class="lg:col-span-3 text-center py-24 text-on-surface-variant"><span class="material-symbols-outlined text-5xl mb-4 block">article</span><p class="text-lg">Nessun articolo in questa categoria</p></div>';
+            return;
+        }
 
- grid.innerHTML = filtered.map(function(a) {
- var cat = a.category || 'Journal';
- var data = a.published_at || a.created_at || '';
- var dataFmt = data ? new Date(data).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
- var immagine = a.cover_image || '';
- var slug = a.slug || a.id;
- return '<article class="group bg-white rounded-none overflow-hidden transition-all duration-500 hover:shadow-xl border border-primary/5">' +
- (immagine ? '<div class="aspect-[16/10] overflow-hidden bg-primary-container"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="' + immagine + '" alt="' + (a.title || '') + '"/></div>' : '<div class="aspect-[16/10] bg-primary-container"></div>') +
- '<div class="p-8">' +
- '<div class="flex items-center gap-4 mb-4">' +
- '<span class="text-[10px] uppercase tracking-widest font-bold text-primary">' + cat + '</span>' +
- (dataFmt ? '<span class="text-sm text-on-surface-variant">' + dataFmt + '</span>' : '') +
- '</div>' +
- '<h3 class="font-headline text-2xl italic mb-4 group-hover:text-primary transition-colors">' + (a.title || '') + '</h3>' +
- '<p class="text-on-surface-variant mb-6 line-clamp-3">' + (a.excerpt || '') + '</p>' +
- '<div class="flex items-center justify-between">' +
- '<span class="text-sm text-on-surface-variant">Home Design Lab</span>' +
- '<a href="dettaglio-journal.html?id=' + a.id + '" class="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-xs hover:text-secondary transition-colors">Leggi tutto <span class="material-symbols-outlined text-sm">arrow_forward</span></a>' +
- '</div></div></article>';
- }).join('');
- }
+        grid.innerHTML = filtered.map(function(a) {
+            var cat = a.category || 'Journal';
+            var data = a.published_at || a.created_at || '';
+            var dataFmt = data ? new Date(data).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+            var immagine = a.cover_image || '';
+            var slug = a.slug || a.id;
+            return '<article class="group bg-white rounded-none overflow-hidden transition-all duration-500 hover:shadow-xl border border-primary/5">' +
+                (immagine ? '<div class="aspect-[16/10] overflow-hidden bg-primary-container"><img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" src="' + immagine + '" alt="' + (a.title || '') + '"/></div>' : '<div class="aspect-[16/10] bg-primary-container"></div>') +
+                '<div class="p-8">' +
+                '<div class="flex items-center gap-4 mb-4">' +
+                '<span class="text-[10px] uppercase tracking-widest font-bold text-primary">' + cat + '</span>' +
+                (dataFmt ? '<span class="text-sm text-on-surface-variant">' + dataFmt + '</span>' : '') +
+                '</div>' +
+                '<h3 class="font-headline text-2xl italic mb-4 group-hover:text-primary transition-colors">' + (a.title || '') + '</h3>' +
+                '<p class="text-on-surface-variant mb-6 line-clamp-3">' + (a.excerpt || '') + '</p>' +
+                '<div class="flex items-center justify-between">' +
+                '<span class="text-sm text-on-surface-variant">Home Design Lab</span>' +
+                '<a href="dettaglio-journal.html?id=' + a.id + '" class="inline-flex items-center gap-2 text-primary font-bold uppercase tracking-widest text-xs hover:text-secondary transition-colors">Leggi tutto <span class="material-symbols-outlined text-sm">arrow_forward</span></a>' +
+                '</div></div></article>';
+        }).join('');
+    }
 
- filterBtns.forEach(function(btn) {
- btn.addEventListener('click', function() {
- filterBtns.forEach(function(b) {
- b.className = 'text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all';
- });
- this.className = 'text-[10px] uppercase tracking-[0.3em] font-bold text-primary border-b border-primary';
- currentFilter = this.getAttribute('data-filter');
- renderArticoli();
- });
- });
+    filterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            filterBtns.forEach(function(b) {
+                b.className = 'text-[10px] uppercase tracking-[0.3em] font-medium text-on-surface-variant hover:text-primary transition-all';
+            });
+            this.className = 'text-[10px] uppercase tracking-[0.3em] font-bold text-primary border-b border-primary';
+            currentFilter = this.getAttribute('data-filter');
+            renderArticoli();
+        });
+    });
 
- caricaArticoli();
+    caricaArticoli();
 });
 </script>
 </body></html>

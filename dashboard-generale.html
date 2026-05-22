@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#f5dfc6",
+                    "surface-container": "#f0eded",
+                    "on-tertiary-fixed": "#251a0a",
+                    "inverse-primary": "#87d992",
+                    "surface": "#fbf9f8",
+                    "primary-container": "#186c32",
+                    "surface-bright": "#fbf9f8",
+                    "on-tertiary-container": "#ead4bb",
+                    "tertiary-fixed-dim": "#d8c3ab",
+                    "on-primary-fixed": "#002109",
+                    "outline-variant": "#bfc9bc",
+                    "on-secondary-fixed-variant": "#005313",
+                    "primary": "#005220",
+                    "surface-variant": "#e4e2e1",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#303030",
+                    "surface-dim": "#dcd9d9",
+                    "on-secondary-container": "#00731e",
+                    "secondary-fixed": "#94f990",
+                    "background": "#fbf9f8",
+                    "on-tertiary-fixed-variant": "#534432",
+                    "on-surface-variant": "#40493f",
+                    "on-secondary-fixed": "#002204",
+                    "surface-tint": "#196c32",
+                    "surface-container-low": "#f6f3f2",
+                    "on-primary": "#ffffff",
+                    "tertiary": "#524431",
+                    "primary-fixed-dim": "#87d992",
+                    "on-primary-fixed-variant": "#005321",
+                    "on-error": "#ffffff",
+                    "secondary": "#006e1c",
+                    "on-surface": "#1b1c1c",
+                    "surface-container-high": "#eae8e7",
+                    "inverse-on-surface": "#f3f0f0",
+                    "secondary-container": "#91f78e",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#78dc77",
+                    "surface-container-highest": "#e4e2e1",
+                    "primary-fixed": "#a3f5ac",
+                    "on-background": "#1b1c1c",
+                    "outline": "#707a6e",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#6b5b47",
+                    "on-primary-container": "#98eba2",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .surface-shift-no-lines {
+            border: none !important;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased flex overflow-hidden">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-[#f6f3f2] dark:bg-slate-900 overflow-y-auto flex flex-col z-50">
+<div class="px-6 py-8">
+<h1 class="text-xl font-bold tracking-tighter text-[#1b1c1c] dark:text-white font-body">Atelier Admin</h1>
+<p class="font-label text-[10px] uppercase tracking-widest text-slate-500 mt-1">Technical Portal</p>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-1">
+<!-- Active Item: Overview -->
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-[#186C32] dark:text-green-400 bg-white dark:bg-slate-800 rounded-l-none border-r-4 border-[#186C32] translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium text-sm tracking-tight">Overview</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-[#186C32] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="domain">domain</span>
+<span class="font-medium text-sm tracking-tight">Properties</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-[#186C32] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+<span class="font-medium text-sm tracking-tight">Articles</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-[#186C32] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium text-sm tracking-tight">Customers</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-[#186C32] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-medium text-sm tracking-tight">Analytics</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 dark:text-slate-400 hover:text-[#186C32] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium text-sm tracking-tight">Settings</span>
+</a>
+</li>
+</ul>
+<div class="px-6 mt-8">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-2.5 rounded-lg font-medium text-sm shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                    New Project
+                </button>
+</div>
+</nav>
+<div class="p-6 border-t border-slate-200 dark:border-slate-800 space-y-2">
+<a class="flex items-center gap-3 text-slate-500 hover:text-[#186C32] transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium text-sm tracking-tight">Help</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 hover:text-red-600 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium text-sm tracking-tight">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-grow h-screen overflow-y-auto no-scrollbar bg-surface flex flex-col">
+<!-- TopAppBar Anchor -->
+<header class="flex justify-between items-center w-full px-8 h-16 sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-[#eae8e7]/20 dark:border-slate-800 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+<div class="flex items-center gap-8">
+<span class="text-lg font-semibold text-[#1b1c1c] dark:text-white font-body">Project Blueprint</span>
+<nav class="hidden md:flex gap-6">
+<a class="font-label uppercase text-[10px] tracking-widest text-slate-500 hover:text-[#1b1c1c]" href="#">Documents</a>
+<a class="font-label uppercase text-[10px] tracking-widest text-slate-500 hover:text-[#1b1c1c]" href="#">Materials</a>
+<a class="font-label uppercase text-[10px] tracking-widest text-slate-500 hover:text-[#1b1c1c]" href="#">Timeline</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="bg-surface-container-low text-sm border-none focus:ring-1 focus:ring-primary rounded-md px-4 py-1.5 w-64 font-body transition-all" placeholder="Search blueprint..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2 text-slate-400 text-sm" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:opacity-80 transition-opacity"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="hover:opacity-80 transition-opacity flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="p-8 max-w-7xl mx-auto w-full space-y-10">
+<!-- Hero Stats: Editorial Style -->
+<section class="flex flex-col md:flex-row gap-6 items-end">
+<div class="flex-grow">
+<p class="font-label uppercase text-[10px] tracking-widest text-primary font-bold mb-1">Operational Pulse</p>
+<h2 class="font-headline text-5xl font-bold tracking-tight text-on-surface">Overview</h2>
+</div>
+<div class="flex gap-12 bg-surface-container-low px-8 py-6 rounded-xl border-l-4 border-primary">
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-slate-500 mb-1">Active Projects</p>
+<p class="font-headline text-3xl font-bold">24</p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-slate-500 mb-1">Pending Requests</p>
+<p class="font-headline text-3xl font-bold">08</p>
+</div>
+<div>
+<p class="font-label text-[10px] uppercase tracking-widest text-slate-500 mb-1">Pipeline Value</p>
+<p class="font-headline text-3xl font-bold">$4.2M</p>
+</div>
+</div>
+</section>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Active Projects Module -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-headline text-2xl font-bold">Active Projects</h3>
+<button class="font-label text-primary text-[11px] uppercase tracking-widest font-bold border-b-2 border-tertiary-fixed-dim">View Portfolio</button>
+</div>
+<div class="space-y-4">
+<!-- Project Item 1 -->
+<div class="group flex items-center gap-6 p-4 rounded-lg bg-surface-container-low/50 hover:bg-surface-container-low transition-all">
+<div class="w-16 h-16 rounded bg-surface-variant overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="architectural sketch of a modern minimalist villa with large glass windows and concrete textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr0z-iqFvWUglYhgc_JIyC-g0mVZmwDj_wRSNnfwwrWzL9s6KbCf5mu-qGQ5W77V9vG38CaYyBy50LrLAfiMtIX0uZF8TJhnSfuD6KTBuEemEdiBTO6aMHvydGVsxWQRZBgCNJEKFWU_3ReA1a6Nu8rfxluIPGK0ETUDU_oyZCKYn8EmCKLIBGiQFfX9ANpDuf3tsh_EfgxVfVvJuT1mCyaaqb-ICGW2ZfHSyAuQakfx_4jFvv0T5dBo6UPpIgsSi7LwqypfZS24M"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-body font-bold text-base">Villa Marittima</h4>
+<p class="text-sm text-slate-500 font-medium">Concept Phase • Coastal Region</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex gap-1">
+<div class="h-1.5 w-8 rounded-full bg-primary"></div>
+<div class="h-1.5 w-8 rounded-full bg-primary-fixed"></div>
+<div class="h-1.5 w-8 rounded-full bg-surface-variant"></div>
+</div>
+<p class="text-[10px] font-label text-slate-400">65% Complete</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</div>
+<!-- Project Item 2 -->
+<div class="group flex items-center gap-6 p-4 rounded-lg bg-surface-container-low/50 hover:bg-surface-container-low transition-all">
+<div class="w-16 h-16 rounded bg-surface-variant overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="high-end luxury apartment interior with oak flooring and natural stone finishes in soft daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBasNKH9XGt_Z7rFJZhxExpksRRb5IvBWJkxftPPN0p7M_9zIcb_Ox3hJXBcPdWCAY9_zW-zglnVzqwwLsPv5_NWPnoisqcu1OtN7B_-BFxZ_ZRLsWxAof47aBCuuTHLy9uVBKdpU_Dv9xeeF1x88DBtSPmffG6I6JjXvPLg-mnTpTF6RXCi8KyLT97Z6CXPOjmNIbswSui0-fAeSlh4ukFoOWLKro5TrxG00yuFzR4qP5NYxWGI3DfXX_YVbAtzQzH8jiqM8BO3i8"/>
+</div>
+<div class="flex-grow">
+<h4 class="font-body font-bold text-base">The Obsidian Lofts</h4>
+<p class="text-sm text-slate-500 font-medium">Execution • Urban Center</p>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex gap-1">
+<div class="h-1.5 w-8 rounded-full bg-primary"></div>
+<div class="h-1.5 w-8 rounded-full bg-primary"></div>
+<div class="h-1.5 w-8 rounded-full bg-primary"></div>
+</div>
+<p class="text-[10px] font-label text-slate-400">92% Complete</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Material Journal Section (Spec Module style) -->
+<div class="grid grid-cols-2 gap-6">
+<div class="bg-surface-container-high p-6 rounded-xl space-y-4">
+<div class="flex items-center gap-3 text-tertiary">
+<span class="material-symbols-outlined" data-icon="architecture" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<p class="font-label uppercase text-[10px] tracking-widest font-bold">Latest Material Spec</p>
+</div>
+<h4 class="font-headline text-lg">Brushed Oak &amp; Concrete</h4>
+<p class="text-sm text-slate-600 leading-relaxed font-body">Selected for Villa Marittima living spaces to bridge raw coastal textures with interior warmth.</p>
+<div class="pt-2 border-t border-slate-300/30 flex justify-between items-center">
+<span class="text-[10px] font-label text-slate-400 uppercase">Vendor: ArchiStone Ltd</span>
+<span class="material-symbols-outlined text-sm text-primary" data-icon="open_in_new">open_in_new</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl space-y-4">
+<div class="flex items-center gap-3 text-tertiary">
+<span class="material-symbols-outlined" data-icon="history" style="font-variation-settings: 'FILL' 1;">history</span>
+<p class="font-label uppercase text-[10px] tracking-widest font-bold">Recent Customer Log</p>
+</div>
+<h4 class="font-headline text-lg">Elena Rostova</h4>
+<p class="text-sm text-slate-600 leading-relaxed font-body">Updated material preferences for Penthouse C. Requested darker walnut finishes over oak.</p>
+<div class="pt-2 border-t border-slate-300/30 flex justify-between items-center">
+<span class="text-[10px] font-label text-slate-400 uppercase">2 hours ago</span>
+<span class="material-symbols-outlined text-sm text-primary" data-icon="person">person</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Latest Inquiries Sidebar -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-tertiary text-white rounded-xl p-8 space-y-6">
+<div>
+<p class="font-label uppercase text-[10px] tracking-widest text-tertiary-fixed font-bold mb-2">Priority Queue</p>
+<h3 class="font-headline text-2xl font-bold">Latest Inquiries</h3>
+</div>
+<div class="space-y-6">
+<!-- Inquiry 1 -->
+<div class="group relative pb-6 border-b border-white/10 last:border-0 last:pb-0">
+<div class="flex justify-between items-start mb-2">
+<h5 class="font-body font-bold text-sm">Marcus Sterling</h5>
+<span class="bg-primary-container text-[9px] px-2 py-0.5 rounded font-label uppercase tracking-tighter">High Priority</span>
+</div>
+<p class="text-xs text-slate-300 font-body mb-3 italic">"Interested in the off-market industrial loft on 4th. Can we tour this Thursday?"</p>
+<button class="text-[10px] font-label uppercase tracking-widest text-tertiary-fixed hover:text-white flex items-center gap-1 transition-colors">
+                                    Respond Now <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Inquiry 2 -->
+<div class="group relative pb-6 border-b border-white/10 last:border-0 last:pb-0">
+<div class="flex justify-between items-start mb-2">
+<h5 class="font-body font-bold text-sm">Design Bureau Co.</h5>
+<span class="bg-slate-600 text-[9px] px-2 py-0.5 rounded font-label uppercase tracking-tighter">Material Request</span>
+</div>
+<p class="text-xs text-slate-300 font-body mb-3 italic">"Need full architectural specs for the limestone cladding project."</p>
+<button class="text-[10px] font-label uppercase tracking-widest text-tertiary-fixed hover:text-white flex items-center gap-1 transition-colors">
+                                    Respond Now <span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="bg-white rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+<h3 class="font-label uppercase text-[10px] tracking-widest text-slate-500 font-bold mb-6">Management Modules</h3>
+<div class="grid grid-cols-2 gap-4">
+<a class="flex flex-col items-center justify-center p-6 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors text-center group" href="#">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:scale-110 transition-transform mb-3" data-icon="groups">groups</span>
+<span class="font-body text-xs font-bold">Customers</span>
+</a>
+<a class="flex flex-col items-center justify-center p-6 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors text-center group" href="#">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:scale-110 transition-transform mb-3" data-icon="home_work">home_work</span>
+<span class="font-body text-xs font-bold">Properties</span>
+</a>
+<a class="flex flex-col items-center justify-center p-6 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors text-center group" href="#">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:scale-110 transition-transform mb-3" data-icon="book">book</span>
+<span class="font-body text-xs font-bold">Journal</span>
+</a>
+<a class="flex flex-col items-center justify-center p-6 bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors text-center group" href="#">
+<span class="material-symbols-outlined text-3xl text-primary group-hover:scale-110 transition-transform mb-3" data-icon="construction">construction</span>
+<span class="font-body text-xs font-bold">Labs</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer-like Technical Readout -->
+<footer class="pt-8 border-t border-[#eae8e7] flex justify-between items-center">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-label text-[10px] uppercase tracking-widest text-slate-400">System Online</span>
+</div>
+<span class="font-label text-[10px] uppercase tracking-widest text-slate-400">Build: 4.2.1-Atelier</span>
+</div>
+<p class="font-label text-[10px] uppercase tracking-widest text-slate-400">© 2024 Atelier Technical Infrastructure</p>
+</footer>
+</div>
+</main>
+<!-- Contextual FAB Suppression: Hide FAB on Dashboard per instruction if not perfectly aligned with "Book a Walk" equivalent -->
+
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin'],
+    defaultActiveMenu: 'overview',
+    pageName: 'Dashboard Generale'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+</body></html>

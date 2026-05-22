@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <title>Nuovo Cliente | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#186C32",
+                        "on-primary": "#FFFFFF",
+                        "primary-container": "#E8F5E9",
+                        "on-primary-container": "#0D3D1A",
+                        "secondary": "#4CAF50",
+                        "on-secondary": "#FFFFFF",
+                        "secondary-container": "#E8F5E9",
+                        "on-secondary-container": "#1B5E20",
+                        "tertiary": "#FFC107",
+                        "on-tertiary": "#212121",
+                        "tertiary-container": "#FFF8E1",
+                        "on-tertiary-container": "#4A4A4A",
+                        "error": "#D32F2F",
+                        "on-error": "#FFFFFF",
+                        "error-container": "#FFEBEE",
+                        "on-error-container": "#B71C1C",
+                        "background": "#FAFAFA",
+                        "on-background": "#1C1B1F",
+                        "surface": "#FFFFFF",
+                        "on-surface": "#1C1B1F",
+                        "surface-variant": "#E4E2E1",
+                        "on-surface-variant": "#49454F",
+                        "outline": "#79747E",
+                        "outline-variant": "#CAC4D0",
+                        "surface-container": "#F3F2F1",
+                        "surface-container-low": "#FBF9F8",
+                        "surface-container-high": "#ECE6E0",
+                        "surface-container-highest": "#E6E1E5"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .font-headline { font-family: 'Noto Serif', serif; }
+        .font-body { font-family: 'Manrope', sans-serif; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-background font-body text-on-surface">
+    <!-- Navigation Sidebar -->
+    <nav class="fixed left-0 top-0 h-full w-64 bg-surface border-r border-outline-variant/20 z-50 flex flex-col">
+        <div class="p-8">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-on-primary">architecture</span>
+                </div>
+                <h1 class="text-xl font-headline font-bold text-primary">Home Design Lab</h1>
+            </div>
+        </div>
+        
+        <div class="flex-1 px-4">
+            <a class="text-stone-500 hover:text-primary px-4 py-3 transition-colors hover:bg-surface-container-low/50 rounded-lg flex items-center gap-4" href="dashboard.html">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+            <a class="text-stone-500 hover:text-primary px-4 py-3 transition-colors hover:bg-surface-container-low/50 rounded-lg flex items-center gap-4" href="gestione-progetti.html">
+                <span class="material-symbols-outlined">architecture</span>
+                Progetti
+            </a>
+            <a class="text-stone-500 hover:text-primary px-4 py-3 transition-colors hover:bg-surface-container-low/50 rounded-lg flex items-center gap-4" href="gestione-immobili.html">
+                <span class="material-symbols-outlined">inventory_2</span>
+                Immobili
+            </a>
+            <a class="text-stone-500 hover:text-primary px-4 py-3 transition-colors hover:bg-surface-container-low/50 rounded-lg flex items-center gap-4" href="gestione-journal.html">
+                <span class="material-symbols-outlined">menu_book</span>
+                Journal
+            </a>
+            <a class="text-stone-500 hover:text-primary px-4 py-3 transition-colors hover:bg-surface-container-low/50 rounded-lg flex items-center gap-4" href="gestione-team.html">
+                <span class="material-symbols-outlined">groups</span>
+                Team
+            </a>
+            <a class="text-primary font-bold bg-primary/10 rounded-lg px-4 py-3 transition-all flex items-center gap-4" href="gestione-clienti.html">
+                <span class="material-symbols-outlined">handshake</span>
+                Clienti
+            </a>
+        </div>
+        
+        <div class="px-4 pb-8">
+            <button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-lg py-3 text-xs font-bold tracking-widest uppercase hover:opacity-90 transition-opacity">
+                Nuovo Progetto
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="ml-64 pt-20 min-h-screen bg-surface">
+        <div class="p-10 max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-4xl font-headline font-bold text-on-surface mb-2">Gestione Clienti</h1>
+                    <p class="text-on-surface-variant">Gestisci i committenti e i loro progetti</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="edit-toggle-btn" onclick="toggleEditMode()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                        <span id="edit-icon" class="material-symbols-outlined text-sm">edit</span>
+                        <span id="edit-text">Modifica</span>
+                    </button>
+                    <button onclick="addNewClient()" class="flex items-center gap-2 px-4 py-2 bg-secondary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        Nuovo Cliente
+                    </button>
+                </div>
+            </div>
+
+            <!-- Clienti Table -->
+            <div class="bg-surface-container-lowest rounded-2xl shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] border border-outline-variant/20">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-outline-variant/20">
+                                <th class="px-6 py-4 text-left text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Ragione Sociale</th>
+                                <th class="px-6 py-4 text-left text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Partita IVA/CF</th>
+                                <th class="px-6 py-4 text-left text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Email</th>
+                                <th class="px-6 py-4 text-left text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Telefono</th>
+                                <th class="px-6 py-4 text-left text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Progetti</th>
+                                <th class="px-6 py-4 text-center text-[10px] font-extrabold uppercase tracking-widest text-on-surface-variant">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clienti-tbody" class="divide-y divide-outline-variant/10">
+                            <!-- Clienti verranno caricati qui dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden text-center py-16">
+                <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">groups</span>
+                <h3 class="text-xl font-headline font-bold text-on-surface mb-2">Nessun cliente</h3>
+                <p class="text-on-surface-variant mb-6">Inizia aggiungendo il tuo primo cliente</p>
+                <button onclick="addNewClient()" class="px-6 py-3 bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">
+                    Aggiungi Cliente
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Stato globale per modalità editing
+        let isEditMode = false;
+        let originalValues = {};
+        
+        // Inizializzazione Supabase
+        const supabaseUrl = 'https://your-project.supabase.co';
+        const supabaseKey = 'your-anon-key';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Toggle Edit Mode
+        function toggleEditMode() {
+            const editBtn = document.getElementById('edit-toggle-btn');
+            const editIcon = document.getElementById('edit-icon');
+            const editText = document.getElementById('edit-text');
+            
+            if (!isEditMode) {
+                // Entra in modalità editing
+                enterEditMode();
+                editBtn.className = 'flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-emerald-600 transition-colors';
+                editIcon.textContent = 'save';
+                editText.textContent = 'Salva';
+                isEditMode = true;
+            } else {
+                // Salva ed esci dalla modalità editing
+                saveEdits();
+                editBtn.className = 'flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity';
+                editIcon.textContent = 'edit';
+                editText.textContent = 'Modifica';
+                isEditMode = false;
+            }
+        }
+
+        // Entra in modalità editing
+        function enterEditMode() {
+            // Salva valori originali
+            const rows = document.querySelectorAll('#clienti-tbody tr');
+            rows.forEach(row => {
+                const clientId = row.dataset.clientId;
+                originalValues[clientId] = {
+                    ragioneSociale: row.querySelector('.ragione-sociale')?.textContent,
+                    partitaIva: row.querySelector('.partita-iva')?.textContent,
+                    email: row.querySelector('.email')?.textContent,
+                    telefono: row.querySelector('.telefono')?.textContent,
+                    note: row.querySelector('.note')?.textContent
+                };
+
+                // Trasforma elementi in input inline
+                makeEditableInline(row, 'ragione-sociale', 'text');
+                makeEditableInline(row, 'partita-iva', 'text');
+                makeEditableInline(row, 'email', 'email');
+                makeEditableInline(row, 'telefono', 'tel');
+                makeEditableInline(row, 'note', 'textarea');
+            });
+        }
+
+        // Rendi elemento editabile inline
+        function makeEditableInline(row, className, type) {
+            const element = row.querySelector(`.${className}`);
+            if (!element) return;
+
+            const currentValue = element.textContent.trim();
+            const clientId = row.dataset.clientId;
+
+            if (type === 'textarea') {
+                element.innerHTML = `<textarea id="${clientId}-${className}" class="w-full px-2 py-1 border border-cyan-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-cyan-50 resize-none" rows="2">${currentValue}</textarea>`;
+            } else {
+                element.innerHTML = `<input id="${clientId}-${className}" type="${type}" value="${currentValue}" class="w-full px-2 py-1 border border-cyan-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-cyan-50" />`;
+            }
+        }
+
+        // Salva le modifiche
+        async function saveEdits() {
+            try {
+                const rows = document.querySelectorAll('#clienti-tbody tr');
+                let hasChanges = false;
+
+                for (const row of rows) {
+                    const clientId = row.dataset.clientId;
+                    const original = originalValues[clientId];
+                    
+                    const newData = {
+                        ragione_sociale: document.getElementById(`${clientId}-ragione-sociale`)?.value,
+                        partita_iva_cf: document.getElementById(`${clientId}-partita-iva`)?.value,
+                        email_contatto: document.getElementById(`${clientId}-email`)?.value,
+                        telefono: document.getElementById(`${clientId}-telefono`)?.value,
+                        note: document.getElementById(`${clientId}-note`)?.value
+                    };
+
+                    // Controlla se ci sono modifiche
+                    const hasRowChanges = Object.keys(newData).some(key => {
+                        const originalKey = key === 'ragione_sociale' ? 'ragioneSociale' :
+                                          key === 'partita_iva_cf' ? 'partitaIva' :
+                                          key === 'email_contatto' ? 'email' :
+                                          key === 'telefono' ? 'telefono' : 'note';
+                        return newData[key] && newData[key] !== original[originalKey];
+                    });
+
+                    if (hasRowChanges) {
+                        const { error } = await supabase
+                            .from('clienti')
+                            .update(newData)
+                            .eq('id', clientId);
+
+                        if (error) {
+                            console.error('Errore salvataggio cliente:', error);
+                        } else {
+                            hasChanges = true;
+                        }
+                    }
+                }
+
+                if (hasChanges) {
+                    showNotification('Dati clienti aggiornati con successo!');
+                    loadClienti();
+                } else {
+                    showNotification('Nessuna modifica da salvare');
+                }
+
+            } catch (err) {
+                console.error('Errore salvataggio:', err);
+                showNotification('Errore nel salvataggio');
+            }
+        }
+
+        // Carica clienti dal database
+        async function loadClienti() {
+            try {
+                const { data: clienti, error } = await supabase
+                    .from('clienti')
+                    .select('*')
+                    .order('ragione_sociale', { ascending: true });
+
+                if (error) throw error;
+
+                renderClienti(clienti || []);
+
+            } catch (err) {
+                console.error('Errore caricamento clienti:', err);
+                showError('Errore nel caricamento dei clienti');
+            }
+        }
+
+        // Renderizza clienti nella tabella
+        async function renderClienti(clienti) {
+            const tbody = document.getElementById('clienti-tbody');
+            const emptyState = document.getElementById('empty-state');
+
+            if (!clienti || clienti.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            
+            let html = '';
+            for (const cliente of clienti) {
+                // Conta progetti associati
+                const { data: progetti, error: progettiError } = await supabase
+                    .from('progetti')
+                    .select('id')
+                    .eq('cliente_id', cliente.id);
+
+                const numProgetti = progettiError ? 0 : (progetti?.length || 0);
+
+                html += `
+                    <tr data-client-id="${cliente.id}" class="hover:bg-surface-container-low/50 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="ragione-sociale font-medium text-on-surface">${cliente.ragione_sociale || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="partita-iva text-sm text-on-surface-variant">${cliente.partita_iva_cf || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="email text-sm text-on-surface-variant">${cliente.email_contatto || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="telefono text-sm text-on-surface-variant">${cliente.telefono || '-'}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">
+                                <span class="material-symbols-outlined text-[12px]">architecture</span>
+                                ${numProgetti} progetti
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="viewClientProjects('${cliente.id}')" class="text-primary hover:text-primary/80 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                                </button>
+                                <button onclick="deleteClient('${cliente.id}')" class="text-slate-600 hover:text-slate-800 transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+
+            tbody.innerHTML = html;
+        }
+
+        // Aggiungi nuovo cliente
+        function addNewClient() {
+            // Mostra form per nuovo cliente (semplificato)
+            const ragioneSociale = prompt('Ragione Sociale:');
+            if (!ragioneSociale) return;
+
+            const email = prompt('Email:');
+            const telefono = prompt('Telefono:');
+            const partitaIva = prompt('Partita IVA/CF:');
+
+            createClient({
+                ragione_sociale: ragioneSociale,
+                email_contatto: email,
+                telefono: telefono,
+                partita_iva_cf: partitaIva,
+                note: ''
+            });
+        }
+
+        // Crea nuovo cliente
+        async function createClient(clientData) {
+            try {
+                const { data, error } = await supabase
+                    .from('clienti')
+                    .insert([clientData])
+                    .select();
+
+                if (error) throw error;
+
+                showNotification('Cliente creato con successo!');
+                loadClienti();
+
+            } catch (err) {
+                console.error('Errore creazione cliente:', err);
+                showNotification('Errore nella creazione del cliente');
+            }
+        }
+
+        // Elimina cliente
+        async function deleteClient(clientId) {
+            if (!confirm('Sei sicuro di voler eliminare questo cliente?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('clienti')
+                    .delete()
+                    .eq('id', clientId);
+
+                if (error) throw error;
+
+                showNotification('Cliente eliminato con successo!');
+                loadClienti();
+
+            } catch (err) {
+                console.error('Errore eliminazione cliente:', err);
+                showNotification('Errore nell\'eliminazione del cliente');
+            }
+        }
+
+        // Visualizza progetti cliente
+        function viewClientProjects(clientId) {
+            window.location.href = `gestione-progetti.html?cliente=${clientId}`;
+        }
+
+        // Mostra notifica
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'fixed bottom-4 right-4 bg-primary text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
+            notif.innerHTML = `<span class="material-symbols-outlined align-middle mr-2">check_circle</span>${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Mostra errore
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'bg-error-container text-on-error-container px-6 py-3 rounded-lg text-center mb-6';
+            errorDiv.textContent = message;
+            document.querySelector('main').prepend(errorDiv);
+        }
+
+        // Carica clienti al caricamento pagina
+        document.addEventListener('DOMContentLoaded', loadClienti);
+    </script>
+</body>
+</html>

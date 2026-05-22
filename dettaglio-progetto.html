@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html class="light" lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dettaglio Progetto | Home Design Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        secondary: "#006e1c",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#91f78e",
+                        "on-secondary-container": "#00731e",
+                        primary: "#005220",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#186c32",
+                        "on-primary-container": "#98eba2",
+                        surface: "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "surface-variant": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        outline: "#707a6e",
+                        "outline-variant": "#bfc9bc",
+                        background: "#fbf9f8",
+                        "on-background": "#1b1c1c",
+                        error: "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "surface-container-highest": "#e4e2e1",
+                    },
+                    fontFamily: {
+                        headline: ["Noto Serif"],
+                        body: ["Manrope"],
+                        label: ["Manrope"],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 15px;
+            top: 35px;
+            bottom: -20px;
+            width: 2px;
+            background: #e4e2e1;
+        }
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+    </style>
+        <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+    <!-- SideNavBar -->
+    <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+
+    <!-- TopAppBar (From JSON) -->
+    <header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+        <div class="flex-1 flex items-center h-full gap-4">
+            <a href="gestione-progetti.html" class="text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <span class="leading-none">Dettaglio Progetto</span>
+        </div>
+        <div class="flex items-center gap-6 h-full">
+            <div class="relative w-64 flex items-center">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+                <input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Cerca risorse..." type="text"/>
+            </div>
+            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+            <!-- Avatar Dropdown -->
+            <div class="relative" id="avatar-dropdown-container">
+                <button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+                    <img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+                </button>
+                <!-- Dropdown Menu -->
+                <div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-800 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+                    <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+                    <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+                    <a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="ml-64 pt-20 min-h-screen">
+        <div class="p-10 max-w-7xl mx-auto space-y-8">
+            
+            <!-- Breadcrumb & Actions -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm">
+                    <a class="text-stone-500 hover:text-[#186C32] transition-colors" href="dashboard-senior.html">Progetti</a>
+                    <span class="material-symbols-outlined text-stone-400 text-sm">chevron_right</span>
+                    <span id="project-title-breadcrumb" class="text-[#186C32] font-semibold">Caricamento...</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button class="flex items-center gap-2 px-4 py-2 bg-white border border-stone-200 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-stone-50 transition-colors">
+                        <span class="material-symbols-outlined text-sm">share</span>
+                        Condividi
+                    </button>
+                    <button id="edit-btn" onclick="toggleEditMode()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                        Modifica
+                    </button>
+                    <button id="save-btn" onclick="saveProjectChanges()" class="hidden flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-green-700 transition-opacity">
+                        <span class="material-symbols-outlined text-sm">save</span>
+                        Salva
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header Progetto -->
+            <div class="bg-white rounded-2xl p-10 shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] border border-outline-variant/20">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider rounded-full border border-primary/20">In Corso</span>
+                            <span id="project-id" class="text-stone-500 text-sm">ID: Caricamento...</span>
+                        </div>
+                        <h1 id="project-title" class="text-4xl font-headline text-on-surface mb-2">Caricamento...</h1>
+                        <p id="project-description" class="text-on-surface-variant">Caricamento descrizione...</p>
+                    </div>
+                    <div class="relative flex items-center justify-center w-24 h-24">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle class="text-stone-200" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="8"></circle>
+                            <circle id="progress-circle" class="text-primary progress-circle" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-dasharray="282.7" stroke-dashoffset="282.7" stroke-linecap="round" stroke-width="8"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="progress-text-main" class="text-2xl font-headline text-primary">0%</span>
+                            <span class="text-[8px] uppercase tracking-widest text-on-surface-variant font-black">Avanzamento</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-4 gap-6">
+                    <div class="p-5 bg-surface-container-low rounded-xl border border-outline-variant/10">
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Cliente</p>
+                        <div class="flex items-center gap-2">
+                            <div id="project-client-avatar" class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-bold text-xs">-</div>
+                            <span id="project-client" class="text-sm font-bold text-primary cursor-pointer hover:underline" onclick="apriSchedaClienteProgetto()">Caricamento...</span>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container-low rounded-xl border border-outline-variant/10">
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Data Inizio</p>
+                        <p id="project-start-date" class="text-sm font-black text-on-surface">-</p>
+                    </div>
+                    <div class="p-5 bg-surface-container-low rounded-xl border border-outline-variant/10">
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Consegna Prevista</p>
+                        <p id="project-end-date" class="text-sm font-black text-on-surface">-</p>
+                    </div>
+                    <div class="p-5 bg-primary-container/10 rounded-xl border border-primary/20">
+                        <p class="text-[9px] uppercase tracking-[0.2em] text-on-primary-container font-bold mb-2">Budget</p>
+                        <p id="project-budget" class="text-lg font-black text-primary">€ 0</p>
+                    </div>
+                    <div id="header-parcella-block" class="bg-stone-50 p-5 rounded-2xl border border-stone-100" style="display:none">
+                        <p class="text-[9px] uppercase font-bold text-stone-400 block mb-1">Parcella Netta</p>
+                        <p id="header-fee-display" class="text-lg font-bold text-secondary">€ 0,00</p>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Two Columns Layout -->
+            <div class="grid grid-cols-12 gap-8">
+                
+                <!-- Left Column: Timeline & Tasks -->
+                <div class="col-span-8 space-y-8">
+                    
+                    <!-- Copilota AI -->
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-outline-variant/20">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="material-symbols-outlined text-[#005220] text-3xl">smart_toy</span>
+                            <h3 class="text-xl font-headline font-bold text-[#005220]">Copilota di Cantiere</h3>
+                        </div>
+                        <textarea id="ai-task-prompt" class="w-full bg-surface-variant/50 border-outline-variant/20 rounded-2xl p-4 text-sm text-on-surface placeholder:text-on-surface-variant focus:ring-primary focus:border-primary mb-4" rows="3" placeholder="Descrivi l'intervento (es: Ristrutturazione villa con cappotto termico)..."></textarea>
+                        <div class="flex justify-end gap-3">
+                            <button onclick="clearAIPrompt()" class="px-4 py-2 text-xs font-bold uppercase text-stone-500 hover:text-stone-700 transition-colors">Pulisci</button>
+                            <button onclick="showAIChoiceModal()" class="px-6 py-3 bg-[#005220] text-white rounded-xl text-xs font-bold uppercase tracking-wider hover:bg-[#186c32] transition-all flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">auto_awesome</span> Analizza Strategia
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Timeline -->
+                    <div class="bg-white rounded-2xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/20">
+                        <div class="flex items-center justify-between mb-8">
+                            <h3 class="text-xl font-headline font-bold">Timeline Progetto</h3>
+                            <button class="text-primary text-xs font-bold uppercase tracking-wider hover:underline">Vedi tutto</button>
+                        </div>
+                        
+                        <div id="timeline-container" class="space-y-4">
+                            <div class="flex items-center gap-3 opacity-40" data-phase="1">
+                                <span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+                                <div>
+                                    <p class="text-xs font-bold text-on-surface">Concept & Design</p>
+                                    <p id="phase-1-date" class="text-[10px] text-on-surface-variant uppercase">--</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 opacity-40" data-phase="2">
+                                <span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+                                <div>
+                                    <p class="text-xs font-bold text-on-surface">Sviluppo Esecutivo</p>
+                                    <p id="phase-2-date" class="text-[10px] text-on-surface-variant uppercase">--</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 opacity-40" data-phase="3">
+                                <span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+                                <div>
+                                    <p class="text-xs font-bold text-on-surface">Realizzazione</p>
+                                    <p id="phase-3-date" class="text-[10px] text-on-surface-variant uppercase">--</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 opacity-40" data-phase="4">
+                                <span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
+                                <div>
+                                    <p class="text-xs font-bold text-on-surface">Collaudo & Consegna</p>
+                                    <p id="phase-4-date" class="text-[10px] text-on-surface-variant uppercase">--</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task List -->
+                    <div class="bg-white rounded-2xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/20">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-headline font-bold">Task Attivi</h3>
+                            <div class="flex gap-2">
+                                <button onclick="deleteAllTasks()" class="px-4 py-2 bg-red-500 text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-600 transition-colors">
+                                    Pulisci Task
+                                </button>
+                                <button class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity">
+                                    + Nuovo Task
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="tasks-container" class="space-y-3">
+                            <div class="text-center py-10 text-stone-400">
+                                <span class="material-symbols-outlined text-4xl mb-2">task_alt</span>
+                                <p class="text-sm">Nessun task attivo</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Condividi file con cliente -->
+                    <div class="bg-white rounded-2xl p-8 border-2 border-dashed border-outline-variant/40 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-symbols-outlined text-primary">upload_file</span>
+                            <h3 class="text-lg font-headline font-bold">Carica Documenti</h3>
+                        </div>
+                        <form id="upload-form" class="space-y-4">
+                            <input type="file" id="upload-file" class="w-full px-4 py-3 bg-surface-variant/50 rounded-xl text-sm border border-outline-variant/20"/>
+                            <div class="flex gap-3">
+                                <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors">Carica</button>
+                            </div>
+                        </form>
+                        <div id="upload-status" class="mt-2 text-xs hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Files & Team -->
+                <div class="col-span-4 space-y-8">
+                    
+                    <!-- Dettagli Immobile -->
+                    <div class="bg-white rounded-2xl p-6 md:p-8 border border-stone-200 mb-8 shadow-sm">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined">home_pin</span>
+                                </div>
+                                <h3 class="text-lg font-headline font-bold text-stone-800">Dettagli Immobile</h3>
+                            </div>
+                            <button onclick="openImmobileModal()" class="flex items-center gap-2 px-4 py-2 bg-stone-50 text-stone-600 rounded-lg text-sm font-medium border border-stone-200 hover:text-primary hover:border-primary hover:bg-white transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                                Modifica
+                            </button>
+                        </div>
+                        
+                        <div class="bg-stone-50 rounded-xl p-6 border border-stone-100" id="immobile-data-grid">
+                            <div class="text-stone-400 text-sm italic col-span-full">Nessun dato inserito. Clicca su Modifica.</div>
+                        </div>
+                    </div>
+
+                    <!-- Team -->
+                    <div class="bg-white rounded-2xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/20">
+                        <h3 class="text-lg font-headline font-bold mb-6">Team Progetto</h3>
+                        <div id="team-container" class="space-y-4">
+                            <div class="text-center py-8 text-stone-400">
+                                <span class="material-symbols-outlined text-4xl mb-2">groups</span>
+                                <p class="text-sm">Caricamento team...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Concept & Moodboard -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-outline-variant/20">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined">palette</span>
+                                </div>
+                                <h3 class="text-lg font-headline font-bold">Concept & Moodboard</h3>
+                            </div>
+                            <a class="text-[10px] uppercase tracking-widest text-primary font-black border-b border-primary/20" href="#">Gallery</a>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 mb-4">
+                            <div class="aspect-square rounded-xl overflow-hidden bg-surface-container-low flex items-center justify-center border border-outline-variant/10">
+                                <span class="material-symbols-outlined text-stone-300">image</span>
+                            </div>
+                            <div class="aspect-square rounded-xl overflow-hidden bg-surface-container-low flex items-center justify-center border border-outline-variant/10">
+                                <span class="material-symbols-outlined text-stone-300">image</span>
+                            </div>
+                            <div class="aspect-square rounded-xl bg-surface-container-low flex flex-col items-center justify-center cursor-pointer hover:bg-surface-container transition-colors border-2 border-dashed border-outline-variant/30">
+                                <span class="material-symbols-outlined text-primary">add</span>
+                                <span class="text-[9px] uppercase tracking-tighter text-on-surface-variant font-black">Aggiungi</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-tertiary-fixed/40 text-on-tertiary-fixed rounded-xl flex items-start gap-3 border border-tertiary-fixed-dim/30">
+                            <span class="material-symbols-outlined text-primary text-sm">lightbulb</span>
+                            <p class="text-[11px] leading-relaxed font-medium"><strong>Nota dell'Architetto:</strong> I materiali e le finiture vengono aggiornati in base all'avanzamento del progetto.</p>
+                        </div>
+                    </div>
+
+                    <!-- Files -->
+                    <div class="bg-white rounded-2xl p-8 shadow-sm border border-outline-variant/20">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined">folder</span>
+                                </div>
+                                <h3 class="text-lg font-headline font-bold">Documenti</h3>
+                            </div>
+                            <span class="text-[10px] uppercase tracking-widest text-on-surface-variant font-black bg-surface-variant/50 px-3 py-1 rounded-full">Drive</span>
+                        </div>
+                        
+                        <div id="files-container" class="space-y-2">
+                            <div class="text-center py-10 text-stone-400">
+                                <span class="material-symbols-outlined text-5xl mb-3 text-stone-200">folder_open</span>
+                                <p class="text-sm font-medium">Nessun documento caricato</p>
+                                <p class="text-[10px] text-stone-400 mt-1">I file appariranno qui quando verranno aggiunti al progetto</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex flex-wrap gap-2 mb-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-600 rounded-md text-[9px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px]">picture_as_pdf</span>PDF</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-600 rounded-md text-[9px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px]">image</span>Immagini</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md text-[9px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px]">description</span>Documenti</span>
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-stone-50 text-stone-600 rounded-md text-[9px] font-bold uppercase tracking-wider"><span class="material-symbols-outlined text-[12px]">architecture</span>DWG</span>
+                        </div>
+                        
+                        <button class="w-full py-3 bg-primary/5 text-primary rounded-lg text-xs font-bold uppercase tracking-wider border border-primary/10 hover:bg-primary hover:text-white hover:border-primary transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-sm">folder</span>
+                            Vedi tutti i file
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-primary text-on-primary rounded-2xl p-8 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <h3 class="text-lg font-headline font-bold mb-2">Azioni Rapide</h3>
+                            <p class="text-sm opacity-80 mb-6">Gestisci il progetto in modo efficiente</p>
+                            <div class="space-y-2">
+                                <button onclick="setupDriveFolders()" class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">drive_folder_upload</span>
+                                    Configura Drive
+                                </button>
+                                <button onclick="sendMessageToClient()" class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">mail</span>
+                                    Invia Messaggio
+                                </button>
+                                <button onclick="scheduleMeeting()" class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">event</span>
+                                    Pianifica Meeting
+                                </button>
+                                <button onclick="addNewTask()" class="w-full py-3 bg-white text-primary rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">add</span>
+                                    Aggiungi Task
+                                </button>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-9xl absolute -right-4 -bottom-4 opacity-10 rotate-12">architecture</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="fee-accordion-wrapper" style="display:none">
+        <!-- Accordion Parcella -->
+        <div class="w-full bg-white rounded-2xl border border-outline-variant/20 shadow-sm">
+            <button onclick="toggleAccordion('fee-accordion')" class="w-full px-8 py-6 flex items-center justify-between hover:bg-surface-variant/30 transition-colors rounded-t-2xl">
+                <h3 class="text-xl font-headline font-bold text-primary">Calcolo Parcella (D.Lgs. 36/2023 ex D.M. 2016)</h3>
+                <span id="fee-accordion-icon" class="material-symbols-outlined text-primary transition-transform">expand_more</span>
+            </button>
+            
+            <div id="fee-accordion" class="hidden">
+                <div class="px-8 pb-8">
+                    <!-- Campi Input Principali -->
+                    <div class="grid grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Valore dell'Opera (V)</label>
+                            <input type="number" id="opera-value" class="w-full px-4 py-3 border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none" placeholder="Inserisci valore opera" onchange="calcolaParcella()">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-primary mb-2">Sconto (%)</label>
+                            <input type="number" id="sconto-value" class="w-full px-4 py-3 border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary focus:border-primary outline-none" value="0" step="0.1" onchange="calcolaParcella()">
+                        </div>
+                    </div>
+
+                    <!-- Griglia Aliquote -->
+                    <div class="space-y-6">
+                        <h4 class="text-lg font-bold text-primary">Aliquote di Lavoro (Q)</h4>
+                        
+                        <!-- Fase Iniziale -->
+                        <div class="bg-surface-variant/20 rounded-xl p-4">
+                            <h5 class="font-bold text-primary mb-3">Fase Iniziale</h5>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.040" checked onchange="calcolaParcella()">
+                                    <span class="text-sm">Rilievi planoaltimetrici e dei manufatti (Q: 0.040)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Progettazione -->
+                        <div class="bg-surface-variant/20 rounded-xl p-4">
+                            <h5 class="font-bold text-primary mb-3">Progettazione</h5>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.230" checked onchange="calcolaParcella()">
+                                    <span class="text-sm">Architettonica/Interior (Q: 0.230)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.060" checked onchange="calcolaParcella()">
+                                    <span class="text-sm">Impiantistica (Q: 0.060)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Esecuzione -->
+                        <div class="bg-surface-variant/20 rounded-xl p-4">
+                            <h5 class="font-bold text-primary mb-3">Esecuzione</h5>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.320" checked onchange="calcolaParcella()">
+                                    <span class="text-sm">Direzione Lavori e Direzione Artistica (Q: 0.320)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.250" checked onchange="calcolaParcella()">
+                                    <span class="text-sm">Coordinamento Sicurezza (Q: 0.250)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Altre Voci Opzionali -->
+                        <div class="bg-surface-variant/20 rounded-xl p-4">
+                            <h5 class="font-bold text-primary mb-3">Altre Voci (Opzionali)</h5>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.050" onchange="calcolaParcella()">
+                                    <span class="text-sm">Studi di Fattibilità (Q: 0.050)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.080" onchange="calcolaParcella()">
+                                    <span class="text-sm">Progettazione Strutturale (Q: 0.080)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.030" onchange="calcolaParcella()">
+                                    <span class="text-sm">Perizie e Consulenze (Q: 0.030)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer">
+                                    <input type="checkbox" class="w-4 h-4 accent-primary" value="0.020" onchange="calcolaParcella()">
+                                    <span class="text-sm">Attestazioni e Certificazioni (Q: 0.020)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risultato Calcolo -->
+                    <div class="mt-8 p-6 bg-primary-container/10 rounded-xl border border-primary/20">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-on-primary-container font-medium">Compenso Finale</p>
+                                <p id="fee-total-display" class="text-2xl font-bold text-secondary">€ 0,00</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-stone-500">Formula: P = 0.03 + (10 / V^0.4)</p>
+                                <p class="text-xs text-stone-500">CP = V × P × G × ΣQ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+                    </div>
+    </main>
+
+    <!-- Modal Scheda Rapida Cliente (progetto) -->
+    <div id="modal-cliente-overlay" class="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm hidden flex items-center justify-center" onclick="closeSchedaClienteProgetto()">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+                <div>
+                    <h3 class="font-headline text-xl text-on-surface font-bold" id="modal-cliente-nome">Caricamento...</h3>
+                    <p class="text-sm text-on-surface-variant" id="modal-cliente-azienda"></p>
+                </div>
+                <button onclick="closeSchedaClienteProgetto()" class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-surface-container-low rounded-xl">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Contatti</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">mail</span><span class="text-sm text-on-surface break-all" id="modal-cliente-email">-</span></div>
+                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">call</span><span class="text-sm text-on-surface" id="modal-cliente-telefono">-</span></div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-surface-container-low rounded-xl">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Indirizzo</p>
+                        <div class="flex items-start gap-2">
+                            <span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0 mt-0.5">location_on</span>
+                            <div><p class="text-sm text-on-surface" id="modal-cliente-indirizzo">-</p><p class="text-sm text-on-surface-variant" id="modal-cliente-citta"></p></div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-surface-container-low rounded-xl">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Dati Fiscali</p>
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">assignment</span><span class="text-sm text-on-surface" id="modal-cliente-cf">-</span></div>
+                            <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">receipt</span><span class="text-sm text-on-surface" id="modal-cliente-piva">-</span></div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-surface-container-low rounded-xl">
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Tipo Cliente</p>
+                        <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">category</span><span class="text-sm text-on-surface" id="modal-cliente-tipo">-</span></div>
+                        <p class="text-[10px] uppercase tracking-widest font-bold text-outline mt-3 mb-1">Note</p>
+                        <p class="text-sm text-on-surface-variant" id="modal-cliente-note">-</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="copiaClientePerPraticheProgetto()" class="w-full bg-primary text-on-primary px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">content_copy</span> Copia per SCIA/CILA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Modal -->
+    <div id="ai-choice-modal" class="fixed inset-0 z-[100] bg-stone-800/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[40px] max-w-3xl w-full p-10 shadow-2xl mx-auto">
+            <h2 class="text-3xl font-headline font-bold text-primary mb-2 text-center">Scegli la Strategia di Cantiere</h2>
+            <p class="text-stone-400 text-center mb-10 text-sm">Il Copilota ha analizzato l'intervento e suggerisce 3 approcci:</p>
+            <div class="grid grid-cols-3 gap-6">
+                <div onclick="selectAIStrategy('task_only')" class="p-6 rounded-3xl border-2 border-stone-100 hover:border-primary hover:bg-stone-50 transition-all cursor-pointer group text-center">
+                    <span class="material-symbols-outlined text-stone-300 group-hover:text-primary mb-4 text-4xl">format_list_bulleted</span>
+                    <h4 class="font-bold text-primary mb-2">Solo Task</h4>
+                    <p class="text-[10px] text-stone-500">Genera esclusivamente il piano lavori e la checklist operativa (rilievi, direzione lavori, sicurezza in cantiere) senza toccare i compensi.</p>
+                </div>
+                <div onclick="selectAIStrategy('fee_only')" class="p-6 rounded-3xl border-2 border-stone-100 hover:border-primary hover:bg-stone-50 transition-all cursor-pointer group text-center">
+                    <span class="material-symbols-outlined text-stone-300 group-hover:text-primary mb-4 text-4xl">calculate</span>
+                    <h4 class="font-bold text-primary mb-2">Solo Parcella</h4>
+                    <p class="text-[10px] text-stone-500">Analizza la richiesta e calcola esclusivamente le voci della parcella secondo il D.M. 2016 (es. Progettazione, Direzione Artistica, Impianti).</p>
+                </div>
+                <div onclick="selectAIStrategy('both')" class="p-6 rounded-3xl border-2 border-stone-100 hover:border-primary hover:bg-stone-50 transition-all cursor-pointer group text-center">
+                    <span class="material-symbols-outlined text-stone-300 group-hover:text-primary mb-4 text-4xl">account_tree</span>
+                    <h4 class="font-bold text-primary mb-2">Entrambe</h4>
+                    <p class="text-[10px] text-stone-500">Azione completa: genera la timeline operativa per il cantiere e spunta in automatico le voci corrispondenti nella parcella professionale.</p>
+                </div>
+            </div>
+            <button onclick="closeAIChoiceModal()" class="mt-10 w-full py-4 text-stone-400 text-xs font-bold uppercase tracking-widest">Annulla</button>
+        </div>
+    </div>
+
+    <script>
+        // Configura la pagina per il ruolo
+        if (typeof PORTAL_PAGE_CONFIG === 'undefined') {
+            window.PORTAL_PAGE_CONFIG = {
+                allowedRoles: ['admin', 'senior', 'operator', 'client', 'architect'],
+                defaultActiveMenu: 'progetti',
+                pageName: 'dettaglio-progetto'
+            };
+        }
+
+        // Stato Globale
+        let currentProjectId = null;
+        let currentProjectData = null;
+        let isEditMode = false;
+
+        // Estrai ID progetto dall'URL
+        function getProjectIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Carica dati progetto da Supabase
+        window.loadProjectData = async function(projectId) {
+            try {
+                console.log('Caricamento progetto ID:', projectId);
+                
+                const { data, error } = await window.supabase
+                    .from('projects')
+                    .select(`
+                        *,
+                        clienti_profiles(nome)
+                    `)
+                    .eq('id', projectId)
+                    .single();
+
+                if (error) {
+                    console.error('Errore query progetto:', error);
+                    throw error;
+                }
+                
+                console.log('Progetto caricato:', data);
+                console.log('Cliente recuperato:', data.clienti_profiles);
+                
+                currentProjectData = data;
+                populateProjectFields(data);
+                
+                // Pre-carica valore opera con il budget del progetto
+                setTimeout(() => preCaricaValoreOpera(), 500);
+                
+                // Ripristina dettagli (fee config) se presente
+                if (data.dettagli) {
+                    console.log('Ripristino dettagli/fee:', data.dettagli);
+                    window.projectDettagli = data.dettagli;
+                    await ripristinaFeeConfig(data.dettagli);
+                } else {
+                    // Inizializza projectDettagli se non esiste
+                    window.projectDettagli = {};
+                }
+                
+                // Renderizza dati immobile dopo aver caricato i dettagli
+                renderImmobileData();
+                
+                // Carica file drive dopo aver caricato i dati del progetto
+                if (data.drive_folder_id) {
+                    console.log("🗂️ Drive folder ID dal database:", data.drive_folder_id);
+                    window.currentDriveFolderId = data.drive_folder_id;
+                    loadDriveFiles(window.currentDriveFolderId);
+                } else {
+                    console.log("⚠️ Nessun drive_folder_id trovato per questo progetto");
+                }
+                
+                // Carica task del progetto
+                await loadProjectTasks(projectId);
+                
+                // Carica team del progetto
+                await loadProjectTeam(projectId);
+                
+                return data;
+            } catch (error) {
+                console.error('Errore caricamento progetto:', error);
+                showNotification('Errore', 'Impossibile caricare i dati del progetto', 'error');
+            }
+        }
+
+        // Carica team del progetto da Supabase
+        window.loadProjectTeam = async function(projectId) {
+            try {
+                console.log('Caricamento team progetto ID:', projectId);
+                
+                // Prima recupera il nome del progetto
+                const { data: projectData, error: projectError } = await window.supabase
+                    .from('projects')
+                    .select('titolo')
+                    .eq('id', projectId)
+                    .single();
+                
+                if (projectError) {
+                    console.error('Errore caricamento nome progetto:', projectError);
+                    return;
+                }
+                
+                const nomeProgetto = projectData?.titolo || '';
+                console.log('Nome progetto:', nomeProgetto);
+                
+                // Query con ilike per trovare collaboratori con questo progetto
+                const { data: teamData, error: teamError } = await window.supabase
+                    .from('operatori_profiles')
+                    .select('*')
+                    .ilike('progetti_assegnati', `%${nomeProgetto}%`);
+                
+                if (teamError) {
+                    console.error('Errore caricamento team:', teamError);
+                    return;
+                }
+                
+                console.log('Team trovato:', teamData);
+                
+                const teamContainer = document.getElementById('team-container');
+                if (!teamContainer) return;
+                
+                if (!teamData || teamData.length === 0) {
+                    teamContainer.innerHTML = `
+                        <div class="text-center py-8 text-stone-400">
+                            <span class="material-symbols-outlined text-4xl mb-2">groups</span>
+                            <p class="text-sm">Nessun membro assegnato a questo progetto</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                teamContainer.innerHTML = teamData.map(member => {
+                    // Genera iniziali se non c'è avatar
+                    const initials = member.nome ? member.nome.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '??';
+                    const avatarContent = member.avatar_url 
+                        ? `<img alt="${member.nome}" class="w-10 h-10 rounded-full object-cover" src="${member.avatar_url}"/>`
+                        : `<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary text-sm font-bold">${initials}</div>`;
+                    
+                    return `
+                        <div class="flex items-center gap-3 p-3 bg-stone-50 rounded-lg hover:bg-stone-100 transition-colors">
+                            ${avatarContent}
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-stone-800">${member.nome || ''} ${member.cognome || ''}</p>
+                                <p class="text-xs text-stone-500">${member.ruolo || 'Nessun ruolo'}</p>
+                                <p class="text-xs text-stone-400">${member.email || 'Nessuna email'}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+            } catch (error) {
+                console.error('Errore caricamento team progetto:', error);
+                const teamContainer = document.getElementById('team-container');
+                if (teamContainer) {
+                    teamContainer.innerHTML = `
+                        <div class="text-center py-8 text-red-400">
+                            <span class="material-symbols-outlined text-4xl mb-2">error</span>
+                            <p class="text-sm">Errore nel caricamento del team</p>
+                        </div>
+                    `;
+                }
+            }
+        };
+
+        // Carica task del progetto da Supabase
+        window.loadProjectTasks = async function(projectId) {
+            try {
+                console.log('Caricamento task progetto ID:', projectId);
+                
+                // Pulizia del container per evitare duplicati
+                const tasksContainer = document.getElementById('tasks-container');
+                if (tasksContainer) {
+                    tasksContainer.innerHTML = '';
+                }
+                
+                const { data, error } = await window.supabase
+                    .from('project_tasks')
+                    .select('*')
+                    .eq('project_id', projectId)
+                    .order('created_at', { ascending: true });
+
+                if (error) {
+                    console.error('Errore query task:', error);
+                    window.currentTasks = [];
+                    updateProgressUI();
+                    return;
+                }
+                
+                console.log('Task caricati:', data?.length || 0);
+                
+                // Se non ci sono task, mostra messaggio chiaro e aggiorna avanzamento
+                if (!data || data.length === 0) {
+                    window.currentTasks = [];
+                    
+                    // Mostra messaggio "Nessun task" nel container
+                    const tasksContainer = document.getElementById('tasks-container');
+                    if (tasksContainer) {
+                        tasksContainer.innerHTML = `
+                            <div class="text-center py-10">
+                                <span class="material-symbols-outlined text-stone-300 text-5xl mb-4">pending_actions</span>
+                                <p class="text-sm text-stone-500 font-medium">Nessun task per questo cantiere.</p>
+                                <p class="text-xs text-stone-400 mt-2">Usa il Copilota per generarli.</p>
+                            </div>
+                        `;
+                    }
+                    
+                    updateProgressUI();
+                    return;
+                }
+                
+                // Popola i task nell'interfaccia
+                populateTasks(data);
+                
+            } catch (error) {
+                console.error('Errore caricamento task:', error);
+                // In caso di errore, imposta array vuoto
+                window.currentTasks = [];
+                updateProgressUI();
+            }
+        }
+
+        // Popola i task nell'interfaccia
+        function populateTasks(tasks) {
+            const tasksContainer = document.getElementById('tasks-container');
+            if (!tasksContainer) return;
+            
+            window.currentTasks = tasks;
+            
+            if (tasks.length === 0) {
+                tasksContainer.innerHTML = '<p class="text-center text-stone-500 py-8">Nessun task presente per questo progetto</p>';
+                updateProgressUI();
+                return;
+            }
+            
+            tasksContainer.innerHTML = tasks.map(task => {
+                const taskId = task.id;
+                const isCompleted = task.completato === true;
+                const titolo = task.titolo || 'Task senza titolo';
+                const fase = task.fase_lavorativa || 'In corso';
+                
+                return '<div class="group flex items-center p-3 hover:bg-stone-50 cursor-pointer w-full rounded-xl transition-all border border-transparent hover:border-stone-200" ' +
+                    'onclick="toggleTaskStatus(\'' + taskId + '\')" data-task-id="' + taskId + '">' +
+                    '<input type="checkbox" id="task-' + taskId + '" ' + (isCompleted ? 'checked' : '') + ' ' +
+                        'class="w-5 h-5 rounded border-stone-300 text-primary focus:ring-primary mr-4 pointer-events-none">' +
+                    '<div class="flex-1">' +
+                        '<p class="text-sm ' + (isCompleted ? 'line-through text-stone-400' : 'text-stone-700') + '">' + titolo + '</p>' +
+                        '<p class="text-[10px] text-stone-400 uppercase tracking-wider">' + fase + '</p>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+            
+            updateProgressUI();
+            renderTimeline();
+        }
+
+        // Variabile per tracciare il folder Drive corrente
+        let currentDriveFolderId = null;
+
+        // Carica file Drive da Google Drive API (Backend)
+        window.loadDriveFiles = async function(folderId) {
+            if (!folderId) return;
+            const container = document.getElementById('files-container');
+            if (!container) return;
+            
+            try {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-stone-400">
+                        <span class="material-symbols-outlined text-4xl mb-2 animate-pulse">sync</span>
+                        <p class="text-sm">Caricamento documenti in corso...</p>
+                    </div>
+                `;
+                
+                const response = await fetch('/api/drive/files/' + folderId);
+                if (!response.ok) throw new Error('Errore dal server');
+                
+                const data = await response.json();
+                const files = data.files || [];
+                
+                if (files.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-8 text-stone-400">
+                            <span class="material-symbols-outlined text-4xl mb-2">folder_open</span>
+                            <p class="text-sm">Nessun documento</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = files.map(function(file) {
+                    var isFolder = file.icon === 'folder' || file.mimeType.includes('folder');
+                    var iconName = isFolder ? 'folder' : 'description';
+                    
+                    return '<a href="' + file.webViewLink + '" target="_blank" ' +
+                       'class="flex items-center justify-between p-3 bg-white rounded-xl border border-outline-variant/20 hover:border-primary hover:shadow-sm transition-all group">' +
+                        '<div class="flex items-center gap-3 overflow-hidden">' +
+                            '<span class="material-symbols-outlined ' + (isFolder ? 'text-amber-500' : 'text-blue-500') + '">' + iconName + '</span>' +
+                            '<p class="text-sm font-medium text-stone-700 truncate group-hover:text-primary transition-colors">' + file.name + '</p>' +
+                        '</div>' +
+                        '<span class="material-symbols-outlined text-stone-400 group-hover:text-primary text-sm">open_in_new</span>' +
+                    '</a>';
+                }).join('');
+
+                var seeAllBtn = container.parentElement.querySelector('button');
+                if (seeAllBtn) {
+                    seeAllBtn.onclick = function() { window.open('https://drive.google.com/drive/folders/' + folderId, '_blank'); };
+                }
+
+            } catch (error) {
+                console.error('Errore render Drive:', error);
+                container.innerHTML = `
+                    <div class="text-center py-8 text-red-400">
+                        <span class="material-symbols-outlined text-4xl mb-2">error</span>
+                        <p class="text-sm">Impossibile caricare i documenti.</p>
+                    </div>
+                `;
+            }
+        };
+
+        // Funzioni per gestione Dettagli Immobile
+        window.openImmobileModal = function() {
+            var modal = document.getElementById('modal-immobile');
+            var content = document.getElementById('modal-immobile-content');
+            
+            if (window.projectDettagli && window.projectDettagli.immobile) {
+                var dati = window.projectDettagli.immobile;
+                var fields = ['imm-tipologia','imm-via','imm-paese','imm-prov','imm-cap','imm-foglio','imm-particella','imm-sub'];
+                fields.forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.value = dati[id.replace('imm-','')] || dati[id.replace('imm-','').replace('paese','citta')] || '';
+                });
+            }
+            
+            modal.classList.remove('hidden');
+            setTimeout(function() {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        };
+
+        window.closeImmobileModal = function() {
+            var modal = document.getElementById('modal-immobile');
+            var content = document.getElementById('modal-immobile-content');
+            
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(function() { modal.classList.add('hidden'); }, 300);
+        };
+
+        window.saveImmobileData = async function() {
+            try {
+                if (!window.projectDettagli) window.projectDettagli = {};
+                
+                var immobileData = {
+                    tipologia: document.getElementById('imm-tipologia').value,
+                    via: document.getElementById('imm-via').value,
+                    paese: document.getElementById('imm-paese').value,
+                    prov: document.getElementById('imm-prov').value,
+                    cap: document.getElementById('imm-cap').value,
+                    foglio: document.getElementById('imm-foglio').value,
+                    particella: document.getElementById('imm-particella').value,
+                    sub: document.getElementById('imm-sub').value
+                };
+                
+                window.projectDettagli.immobile = immobileData;
+                
+                var { error } = await window.supabase
+                    .from('projects')
+                    .update({ dettagli: window.projectDettagli })
+                    .eq('id', currentProjectId);
+                
+                if (error) throw error;
+                
+                closeImmobileModal();
+                renderImmobileData();
+                showNotification('Successo', 'Dati immobile salvati correttamente', 'success');
+                
+            } catch (error) {
+                console.error('Errore salvataggio immobile:', error);
+                showNotification('Errore', 'Errore durante il salvataggio', 'error');
+            }
+        };
+
+        window.renderImmobileData = function() {
+            var container = document.getElementById('immobile-data-grid');
+            if (!container) return;
+            
+            if (!window.projectDettagli || !window.projectDettagli.immobile) {
+                container.innerHTML = '<div class="text-stone-400 text-sm italic col-span-full">Nessun dato inserito. Clicca su Modifica.</div>';
+                return;
+            }
+            
+            var dati = window.projectDettagli.immobile;
+            
+            container.innerHTML = `
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4">
+                    <div class="col-span-2 md:col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Tipologia</p><p class="text-sm font-semibold text-stone-800">${dati.tipologia || '-'}</p></div>
+                    <div class="col-span-2 md:col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Indirizzo</p><p class="text-sm font-semibold text-stone-800">${dati.via || '-'}</p></div>
+                    <div class="col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Comune</p><p class="text-sm font-semibold text-stone-800">${dati.paese || '-'}</p></div>
+                    <div class="col-span-1 flex gap-4">
+                        <div class="flex-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Prov.</p><p class="text-sm font-semibold text-stone-800">${dati.prov || '-'}</p></div>
+                        <div class="flex-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">CAP</p><p class="text-sm font-semibold text-stone-800">${dati.cap || '-'}</p></div>
+                    </div>
+                    <div class="col-span-full border-t border-stone-200/60 my-1"></div>
+                    <div class="col-span-2 md:col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Foglio</p><p class="text-sm font-semibold text-stone-800">${dati.foglio || '-'}</p></div>
+                    <div class="col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Particella</p><p class="text-sm font-semibold text-stone-800">${dati.particella || '-'}</p></div>
+                    <div class="col-span-1"><p class="text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1">Sub</p><p class="text-sm font-semibold text-stone-800">${dati.sub || '-'}</p></div>
+                </div>
+            `;
+        };
+
+        function populateDriveFiles(files) {
+            var container = document.getElementById('drive-files-container');
+            if (!container) return;
+            if (!files || files.length === 0) {
+                container.innerHTML = '<p class="text-center text-stone-500 py-8">Nessun file presente in questa cartella</p>';
+                return;
+            }
+            container.innerHTML = files.map(function(file) {
+                return '<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10 hover:border-primary/30 transition-colors cursor-pointer" onclick="window.open(\'' + (file.webViewLink || '#') + '\', \'_blank\')">' +
+                    '<span class="material-symbols-outlined text-stone-400">description</span>' +
+                    '<div class="flex-grow"><p class="text-sm font-bold text-on-surface">' + file.name + '</p><p class="text-[10px] text-on-surface-variant">Modificato: ' + new Date(file.modifiedTime).toLocaleDateString('it-IT') + '</p></div>' +
+                    '<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded">' + (file.size / 1024).toFixed(1) + ' KB</span>' +
+                '</div>';
+            }).join('');
+        }
+
+        function populateProjectFields(project) {
+            var titleEl = document.getElementById('project-title');
+            if (titleEl) titleEl.textContent = project.titolo || 'Progetto senza titolo';
+            
+            var breadcrumbEl = document.getElementById('project-title-breadcrumb');
+            if (breadcrumbEl) breadcrumbEl.textContent = project.titolo || 'Progetto senza titolo';
+            
+            var descEl = document.getElementById('project-description');
+            if (descEl) descEl.textContent = project.descrizione || 'Nessuna descrizione';
+            
+            var budgetEl = document.getElementById('project-budget');
+            if (budgetEl) {
+                var budget = project.budget || 0;
+                budgetEl.textContent = '\u20AC ' + budget.toLocaleString('it-IT', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            }
+            
+            var startEl = document.getElementById('project-start-date');
+            if (startEl) startEl.textContent = project.data_inizio || '-';
+            
+            var endEl = document.getElementById('project-end-date');
+            if (endEl) endEl.textContent = project.data_consegna || '-';
+            
+            var idEl = document.getElementById('project-id');
+            if (idEl) idEl.textContent = 'ID: ' + (project.id || '-');
+            
+            var clientEl = document.getElementById('project-client');
+            if (clientEl) {
+                clientEl.textContent = (project.clienti_profiles && project.clienti_profiles.nome) ? project.clienti_profiles.nome : 'Cliente non assegnato';
+            }
+            
+            var avatarEl = document.getElementById('project-client-avatar');
+            if (avatarEl) {
+                avatarEl.textContent = (project.clienti_profiles && project.clienti_profiles.nome) ? project.clienti_profiles.nome.charAt(0).toUpperCase() : '-';
+            }
+            
+            var progressValue = project.avanzamento || 0;
+            setProgressAnimation(progressValue);
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            var editBtn = document.getElementById('edit-btn');
+            var saveBtn = document.getElementById('save-btn');
+            
+            if (isEditMode) {
+                makeFieldsEditable();
+                editBtn.classList.add('hidden');
+                saveBtn.classList.remove('hidden');
+            } else {
+                makeFieldsReadOnly();
+                editBtn.classList.remove('hidden');
+                saveBtn.classList.add('hidden');
+            }
+        }
+
+        function makeFieldsEditable() {
+            var title = document.getElementById('project-title');
+            var description = document.getElementById('project-description');
+            var budget = document.getElementById('project-budget');
+            var startDate = document.getElementById('project-start-date');
+            var endDate = document.getElementById('project-end-date');
+            
+            if (title) {
+                title.innerHTML = '<input type="text" id="title-input" value="' + title.textContent + '" class="text-4xl font-headline text-on-surface leading-tight bg-transparent border-b-2 border-primary focus:outline-none">';
+            }
+            if (description) {
+                description.innerHTML = '<textarea id="description-input" rows="3" class="text-stone-500 italic max-w-2xl bg-transparent border-b-2 border-primary focus:outline-none w-full">' + description.textContent + '</textarea>';
+            }
+            if (budget) {
+                var budgetValue = budget.textContent.replace('\u20AC', '').replace(/\./g, '').replace(/,/g, '.').trim();
+                budget.innerHTML = '<input type="number" id="budget-input" value="' + budgetValue + '" class="text-lg font-black text-primary bg-transparent border-b-2 border-primary focus:outline-none w-full" oninput="syncBudgetToParcella(this.value)">';
+            }
+            if (startDate) {
+                var sv = startDate.textContent !== '-' ? startDate.textContent : '';
+                startDate.innerHTML = '<input type="date" id="start-date-input" value="' + sv + '" class="text-sm font-black text-on-surface bg-transparent border-b-2 border-primary focus:outline-none">';
+            }
+            if (endDate) {
+                var ev = endDate.textContent !== '-' ? endDate.textContent : '';
+                endDate.innerHTML = '<input type="date" id="end-date-input" value="' + ev + '" class="text-sm font-black text-on-surface bg-transparent border-b-2 border-primary focus:outline-none">';
+            }
+        }
+
+        function makeFieldsReadOnly() {
+            var titleInput = document.getElementById('title-input');
+            var descriptionInput = document.getElementById('description-input');
+            var budgetInput = document.getElementById('budget-input');
+            var startDateInput = document.getElementById('start-date-input');
+            var endDateInput = document.getElementById('end-date-input');
+            
+            var titleElement = document.getElementById('project-title');
+            if (titleInput && titleElement) titleElement.textContent = titleInput.value;
+            
+            var descriptionElement = document.getElementById('project-description');
+            if (descriptionInput && descriptionElement) descriptionElement.textContent = descriptionInput.value;
+            
+            var budgetElement = document.getElementById('project-budget');
+            if (budgetInput && budgetElement) {
+                var bv = parseFloat(budgetInput.value) || 0;
+                budgetElement.textContent = '\u20AC ' + bv.toLocaleString('it-IT', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            }
+            
+            var startDateElement = document.getElementById('project-start-date');
+            if (startDateInput && startDateElement) startDateElement.textContent = startDateInput.value || '-';
+            
+            var endDateElement = document.getElementById('project-end-date');
+            if (endDateInput && endDateElement) endDateElement.textContent = endDateInput.value || '-';
+        }
+
+        async function saveProjectChanges() {
+            try {
+                var updates = {
+                    titolo: document.getElementById('title-input').value,
+                    descrizione: document.getElementById('description-input').value,
+                    budget: parseFloat(document.getElementById('budget-input').value) || 0,
+                    data_inizio: document.getElementById('start-date-input').value || null,
+                    data_consegna: document.getElementById('end-date-input').value || null
+                };
+
+                var { error } = await window.supabase
+                    .from('projects')
+                    .update(updates)
+                    .eq('id', currentProjectId);
+
+                if (error) throw error;
+                showNotification('Successo', 'Progetto aggiornato correttamente', 'success');
+                await updateHeaderAfterSave(updates);
+                toggleEditMode();
+                await loadProjectData(currentProjectId);
+                if (typeof loadProjectTasks === 'function') await loadProjectTasks(currentProjectId);
+            } catch (error) {
+                console.error('Errore salvataggio:', error);
+                showNotification('Errore', 'Impossibile salvare le modifiche', 'error');
+            }
+        }
+
+        window.syncBudgetToParcella = async function(budgetValue) {
+            try {
+                var operaValueInput = document.getElementById('opera-value');
+                if (operaValueInput) operaValueInput.value = budgetValue;
+                if (typeof calcolaParcella === 'function') await calcolaParcella();
+            } catch (error) {
+                console.error('Errore sincronizzazione budget:', error);
+            }
+        };
+
+        async function updateHeaderAfterSave(updates) {
+            try {
+                if (updates.budget !== undefined) {
+                    var budgetElement = document.getElementById('project-budget');
+                    var budgetValue = 0;
+                    if (budgetElement) {
+                        budgetValue = parseFloat(updates.budget) || 0;
+                        budgetElement.textContent = '\u20AC ' + budgetValue.toLocaleString('it-IT', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+                    }
+                    var operaValueInput = document.getElementById('opera-value');
+                    if (operaValueInput) operaValueInput.value = budgetValue;
+                    if (typeof calcolaParcella === 'function') await calcolaParcella();
+                }
+            } catch (error) {
+                console.error('Errore aggiornamento header:', error);
+            }
+        }
+
+        window.showAIChoiceModal = function() {
+            var modal = document.getElementById('ai-choice-modal');
+            if (modal) { modal.classList.remove('hidden'); modal.classList.add('flex'); }
+        };
+        window.closeAIChoiceModal = function() {
+            var modal = document.getElementById('ai-choice-modal');
+            if (modal) { modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        };
+
+        window.selectAIStrategy = async function(type) {
+            console.log("Selezionata strategia:", type);
+            closeAIChoiceModal();
+            
+            var aiButton = document.querySelector('[onclick="showAIChoiceModal()"]');
+            if (aiButton) {
+                aiButton.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span> Elaborazione in corso...';
+                aiButton.disabled = true;
+            }
+            
+            try {
+                if (type === 'task_only' || type === 'both') await generateTasks(type);
+                if (type === 'fee_only' || type === 'both') await activateParcellaFees(type);
+                showNotification('AI', 'Operazione completata con successo', 'success');
+            } catch (error) {
+                console.error('Errore AI:', error);
+                showNotification('Errore', 'Impossibile completare l\'operazione AI', 'error');
+            } finally {
+                var promptInput = document.getElementById('ai-task-prompt');
+                if (promptInput) promptInput.value = '';
+                if (aiButton) {
+                    aiButton.innerHTML = '<span class="material-symbols-outlined text-sm">auto_awesome</span> Analizza Strategia';
+                    aiButton.disabled = false;
+                }
+            }
+        };
+
+        window.setupDriveFolders = async function() {
+            if (!currentProjectId) { showToast('Nessun progetto caricato', 'warning'); return; }
+            try {
+                var { data: { session } } = await window.supabase.auth.getSession();
+                if (!session) { showToast('Sessione scaduta', 'error'); return; }
+                var res = await fetch('/api/drive/setup-project-folders', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + session.access_token, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ projectId: currentProjectId })
+                });
+                var data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Errore');
+                showToast('Cartelle Drive create con successo!', 'success');
+                // Ricarica
+                if (typeof loadProjectData === 'function') await loadProjectData(currentProjectId);
+            } catch (err) {
+                console.error('Errore setup Drive:', err);
+                showToast('Errore: ' + err.message, 'error');
+            }
+        };
+
+        function clearAIPrompt() { document.getElementById('ai-task-prompt').value = ''; }
+
+        window.deleteAllTasks = async function() {
+            if (!currentProjectId) return;
+            if (!confirm('Sei sicuro di voler eliminare tutti i task di questo cantiere?')) return;
+
+            try {
+                var { error } = await window.supabase.from('project_tasks').delete().eq('project_id', currentProjectId);
+                if (error) throw error;
+                
+                var tasksContainer = document.getElementById('tasks-container');
+                if (tasksContainer) {
+                    tasksContainer.innerHTML = '<div class="text-center py-10"><span class="material-symbols-outlined text-stone-200 text-5xl">pending_actions</span><p class="text-xs text-stone-400 mt-2">Nessun task attivo. Usa il Copilota!</p></div>';
+                }
+                
+                if (typeof updateProgressUI === 'function') updateProgressUI(0);
+                await window.supabase.from('projects').update({ avanzamento: 0 }).eq('id', currentProjectId);
+                window.currentTasks = [];
+                showNotification('Successo', 'Tutti i task sono stati eliminati', 'success');
+            } catch (err) {
+                console.error('Errore pulizia task:', err);
+            }
+        };
+
+        function toggleAccordion(accordionId) {
+            var accordion = document.getElementById(accordionId);
+            var icon = document.getElementById(accordionId + '-icon');
+            if (accordion) {
+                accordion.classList.toggle('hidden');
+                if (icon) icon.style.transform = accordion.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+            }
+        }
+
+        window.addNewTask = async function() {
+            if (!currentProjectId) return;
+            var taskTitle = prompt('Inserisci il titolo del nuovo task:');
+            if (!taskTitle || taskTitle.trim() === '') return;
+            try {
+                var { data, error } = await window.supabase.from('project_tasks').insert({
+                    project_id: currentProjectId,
+                    title: taskTitle.trim(),
+                    status: 'pending',
+                    created_at: new Date().toISOString()
+                }).select().single();
+                if (error) throw error;
+                showToast('Task aggiunto con successo!', 'success');
+                if (typeof loadProjectTasks === 'function') await loadProjectTasks(currentProjectId);
+            } catch (err) {
+                console.error('Errore aggiunta task:', err);
+                showToast('Errore durante l\'aggiunta del task', 'error');
+            }
+        };
+
+        window.sendMessageToClient = function() {
+            if (!currentProjectData || !currentProjectData.clienti_profiles) {
+                showToast('Nessun cliente associato al progetto', 'warning');
+                return;
+            }
+            var clientName = currentProjectData.clienti_profiles.nome;
+            var projectName = currentProjectData.titolo || 'Progetto senza titolo';
+            var subject = encodeURIComponent('Aggiornamento Progetto: ' + projectName);
+            showToast('Apertura email per ' + clientName + '...', 'info');
+            window.open('mailto:?subject=' + subject, '_blank');
+        };
+
+        window.scheduleMeeting = function() {
+            if (!currentProjectData) { showToast('Nessun progetto caricato', 'warning'); return; }
+            var projectName = currentProjectData.titolo || 'Progetto senza titolo';
+            var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(projectName) + '&details=' + encodeURIComponent('Meeting per discutere il progetto: ' + projectName);
+            showToast('Apertura Google Calendar...', 'info');
+            window.open(url, '_blank');
+        };
+
+        function showToast(message, type) {
+            var old = document.querySelector('.hdl-toast');
+            if (old) old.remove();
+            var colors = { success: '#166534', error: '#b91c1c', warning: '#a16207', info: '#1e40af' };
+            var icons = { success: 'check_circle', error: 'error', warning: 'warning', info: 'info' };
+            var el = document.createElement('div');
+            el.className = 'hdl-toast';
+            el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+            el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + (icons[type] || 'info') + '</span><p style="flex:1">' + message + '</p>';
+            document.body.appendChild(el);
+            setTimeout(function() { if (el.parentElement) el.remove(); }, 4000);
+        }
+
+        window.calcolaParcella = async function(skipSave) {
+            try {
+                var operaValueRaw = document.getElementById('opera-value').value || '0';
+                var scontoValueRaw = document.getElementById('sconto-value').value || '0';
+                var operaValue = parseFloat(operaValueRaw.replace(/\./g, '').replace(',', '.')) || 0;
+                var scontoValue = parseFloat(scontoValueRaw.replace(/\./g, '').replace(',', '.')) || 0;
+                
+                var checkboxes = document.querySelectorAll('#fee-accordion input[type="checkbox"]:checked');
+                var sommaQ = 0;
+                checkboxes.forEach(function(cb) { sommaQ += parseFloat(cb.value) || 0; });
+                
+                var P = 0;
+                if (operaValue > 0) P = 0.03 + (10 / Math.pow(operaValue, 0.4));
+                var G = 0.95;
+                var compensoBase = operaValue * P * G * sommaQ;
+                var compensoFinale = compensoBase * (1 - scontoValue / 100);
+                
+                var formattedValue = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(compensoFinale);
+                document.getElementById('fee-total-display').textContent = formattedValue;
+                document.getElementById('header-fee-display').textContent = formattedValue;
+                
+                if (!skipSave) await saveFeeState();
+            } catch (error) {
+                console.error('Errore calcolo parcella:', error);
+                document.getElementById('fee-total-display').textContent = '\u20AC 0,00';
+                document.getElementById('header-fee-display').textContent = '\u20AC 0,00';
+            }
+        };
+
+        async function preCaricaValoreOpera() {
+            var budgetElement = document.getElementById('project-budget');
+            var operaValueInput = document.getElementById('opera-value');
+            if (budgetElement && operaValueInput) {
+                var budgetValue = parseFloat(budgetElement.textContent.replace(/[^0-9.-]+/g, ''));
+                if (budgetValue > 0) { operaValueInput.value = budgetValue; await calcolaParcella(); }
+            }
+        }
+
+        // Avatar Dropdown
+        (function() {
+            var avatarBtn = document.getElementById('avatar-btn');
+            var avatarDropdown = document.getElementById('avatar-dropdown');
+            if (avatarBtn && avatarDropdown) {
+                avatarBtn.onclick = function(e) { e.stopPropagation(); avatarDropdown.classList.toggle('hidden'); };
+                window.onclick = function() { if (avatarDropdown) avatarDropdown.classList.add('hidden'); };
+            }
+        })();
+
+        async function generateTasks(type) {
+            var tasksContainer = document.getElementById('tasks-container');
+            var promptInput = document.getElementById('ai-task-prompt');
+            if (!tasksContainer || !promptInput) return;
+            if (!currentProjectId) { showNotification('Errore', 'Nessun progetto caricato', 'error'); return; }
+
+            var tasks = [
+                { title: 'Rilievo planimetrico e fotografico dello stato esistente', phase: 'Rilievi e Sopralluoghi', assignee: 'Geometra' },
+                { title: 'Sopralluogo geologico e analisi del terreno', phase: 'Rilievi e Sopralluoghi', assignee: 'Geologo' },
+                { title: 'Progetto architettonico preliminare', phase: 'Progettazione Architettonica', assignee: 'Architetto Senior' },
+                { title: 'Progetto impiantistico termico e idraulico', phase: 'Progettazione Impiantistica', assignee: 'Ingegnere Impiantista' },
+                { title: 'Progetto interior design e finiture', phase: 'Progettazione Architettonica', assignee: 'Interior Designer' },
+                { title: 'Presentazione pratica CILA al Comune', phase: 'Pratiche Edilizie e Permessi', assignee: 'Tecnico Ufficio' },
+                { title: 'Ottenimento permessi e autorizzazioni', phase: 'Pratiche Edilizie e Permessi', assignee: 'Ufficio Tecnico' },
+                { title: 'Piano di sicurezza e coordinamento (PSC)', phase: 'Sicurezza in Cantiere', assignee: 'Coordinatore Sicurezza' },
+                { title: 'Direzione lavori preliminare', phase: 'Direzione Lavori', assignee: 'Direttore Lavori' },
+                { title: 'Direzione artistica e scelta finiture', phase: 'Direzione Artistica', assignee: 'Architetto Direttore Artistico' },
+                { title: 'Collaudo finale e certificazione', phase: 'Direzione Lavori', assignee: 'Direttore Lavori' }
+            ];
+
+            try {
+                var tasksToSave = tasks.map(function(t) {
+                    return { project_id: currentProjectId, titolo: t.title, fase_lavorativa: t.phase, completato: false, created_at: new Date().toISOString() };
+                });
+                var { data, error } = await window.supabase.from('project_tasks').insert(tasksToSave).select();
+                if (error) throw error;
+                if (typeof loadProjectTasks === 'function') await loadProjectTasks(currentProjectId);
+                showNotification('Successo', (data?.length || 0) + ' task generati e salvati', 'success');
+            } catch (error) {
+                console.error('Errore salvataggio task AI:', error);
+                showNotification('Errore', 'Impossibile salvare i task generati', 'error');
+                tasksContainer.innerHTML = tasks.map(function(t, i) {
+                    return '<div class="flex items-center gap-4 p-4 bg-surface-container-low rounded-xl border border-outline-variant/10"><input class="w-5 h-5 accent-primary" type="checkbox"/>' +
+                        '<div class="flex-grow"><p class="text-sm font-bold text-on-surface">' + t.title + '</p><p class="text-[10px] text-on-surface-variant">Fase: ' + t.phase + ' \u2022 Assegnato a: ' + t.assignee + '</p></div>' +
+                        '<span class="px-2 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase rounded">AI (Locale)</span></div>';
+                }).join('');
+                window.currentTasks = tasks;
+                updateProgressUI();
+            }
+        }
+
+        async function toggleTaskStatus(taskId) {
+            if (!window.currentTasks) return;
+            var task = window.currentTasks.find(function(t) { return String(t.id) === String(taskId); });
+            if (!task) return;
+            var nuovoStato = !task.completato;
+            task.completato = nuovoStato;
+            updateTaskUI(task);
+            renderTimeline();
+            try {
+                var { error } = await window.supabase.from('project_tasks').update({ completato: nuovoStato }).eq('id', taskId);
+                if (error) { task.completato = !nuovoStato; updateTaskUI(task); renderTimeline(); return; }
+                await updateProjectProgress();
+            } catch (err) {
+                task.completato = !nuovoStato; updateTaskUI(task); renderTimeline();
+            }
+        }
+
+        function updateTaskUI(task) {
+            var taskElement = document.querySelector('[data-task-id="' + task.id + '"]');
+            if (!taskElement) return;
+            var checkbox = taskElement.querySelector('input[type="checkbox"]');
+            var titleElement = taskElement.querySelector('p.text-sm');
+            if (checkbox) checkbox.checked = task.completato;
+            if (titleElement) {
+                if (task.completato) { titleElement.classList.add('line-through', 'text-stone-400'); titleElement.classList.remove('text-stone-700'); }
+                else { titleElement.classList.remove('line-through', 'text-stone-400'); titleElement.classList.add('text-stone-700'); }
+            }
+        }
+
+        function updateProgressUI() {
+            if (!window.currentTasks) return;
+            var total = window.currentTasks.length;
+            var completed = window.currentTasks.filter(function(t) { return t.completato === true; }).length;
+            var percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            setProgressAnimation(percentage);
+        }
+
+        function updatePhases() {
+            if (!window.currentTasks) return;
+            var total = window.currentTasks.length;
+            var completed = window.currentTasks.filter(function(t) { return t.completato === true; }).length;
+            var percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            var configs = [
+                { el: 1, soglia: 25, label: 'Concept & Design' },
+                { el: 2, soglia: 50, label: 'Sviluppo Esecutivo' },
+                { el: 3, soglia: 75, label: 'Realizzazione' },
+                { el: 4, soglia: 100, label: 'Collaudo & Consegna' }
+            ];
+            
+            configs.forEach(function(ph) {
+                var container = document.querySelector('[data-phase="' + ph.el + '"]');
+                if (!container) return;
+                var dateEl = document.getElementById('phase-' + ph.el + '-date');
+                if (!dateEl) return;
+                var iconEl = container.querySelector('.material-symbols-outlined');
+                
+                if (percentage >= ph.soglia) {
+                    container.classList.remove('opacity-40');
+                    if (iconEl) { iconEl.textContent = 'verified'; iconEl.classList.add('text-primary'); iconEl.classList.remove('text-on-surface-variant', 'text-amber-500'); }
+                    dateEl.textContent = 'Completato';
+                } else if (percentage >= ph.soglia - 25) {
+                    container.classList.remove('opacity-40');
+                    if (iconEl) { iconEl.textContent = 'pending'; iconEl.classList.add('text-amber-500'); iconEl.classList.remove('text-on-surface-variant', 'text-primary'); }
+                    dateEl.textContent = 'In Corso';
+                } else {
+                    container.classList.add('opacity-40');
+                    if (iconEl) { iconEl.textContent = 'schedule'; iconEl.classList.remove('text-primary', 'text-amber-500'); iconEl.classList.add('text-on-surface-variant'); }
+                    dateEl.textContent = '--';
+                }
+            });
+        }
+
+        function setProgressAnimation(percentage) {
+            var progressText = document.getElementById('progress-text-main');
+            if (progressText) progressText.textContent = percentage + '%';
+            
+            var circle = document.getElementById('progress-circle');
+            if (circle) {
+                var circumference = 282.7;
+                var offset = circumference - (circumference * percentage / 100);
+                circle.style.strokeDashoffset = offset;
+            }
+            updatePhases();
+        }
+
+        async function saveFeeState() {
+            if (!currentProjectId) return;
+            try {
+                var checkboxes = document.querySelectorAll('#fee-accordion input[type="checkbox"]:checked');
+                var selectedFees = Array.from(checkboxes).map(function(cb) { return cb.value; });
+                var scontoValue = document.getElementById('sconto-value')?.value || '0';
+                var operaValue = document.getElementById('opera-value')?.value || '0';
+                
+                var dettagli = {
+                    feeConfig: { selectedFees: selectedFees, sconto: scontoValue, valoreOpera: operaValue },
+                    updatedAt: new Date().toISOString()
+                };
+                
+                var { error } = await window.supabase.from('projects').update({ dettagli: dettagli }).eq('id', currentProjectId);
+                if (error) console.error('Errore salvataggio dettagli:', error);
+            } catch (error) {
+                console.error('Errore salvataggio dettagli:', error);
+            }
+        }
+
+        async function ripristinaFeeConfig(dettagli) {
+            try {
+                var feeConfig = dettagli?.feeConfig || dettagli;
+                if (!feeConfig) return;
+                
+                if (feeConfig.valoreOpera) {
+                    var operaInput = document.getElementById('opera-value');
+                    if (operaInput) operaInput.value = feeConfig.valoreOpera;
+                }
+                if (feeConfig.sconto) {
+                    var scontoInput = document.getElementById('sconto-value');
+                    if (scontoInput) scontoInput.value = feeConfig.sconto;
+                }
+                if (feeConfig.selectedFees && Array.isArray(feeConfig.selectedFees)) {
+                    document.querySelectorAll('#fee-accordion input[type="checkbox"]').forEach(function(cb) { cb.checked = false; });
+                    feeConfig.selectedFees.forEach(function(feeValue) {
+                        var checkbox = document.querySelector('#fee-accordion input[type="checkbox"][value="' + feeValue + '"]');
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }
+                await calcolaParcella(true);
+            } catch (error) {
+                console.error('Errore ripristino fee:', error);
+            }
+        }
+
+        var lastSavedProgress = -1;
+
+        async function updateProjectProgress() {
+            if (!window.currentTasks) return;
+            var total = window.currentTasks.length;
+            var completed = window.currentTasks.filter(function(t) { return t.completato === true; }).length;
+            var percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            setProgressAnimation(percentage);
+            
+            if (currentProjectId && percentage !== lastSavedProgress) {
+                try {
+                    var { error } = await window.supabase.from('projects').update({ avanzamento: percentage }).eq('id', currentProjectId);
+                    if (!error) { lastSavedProgress = percentage; }
+                } catch (err) { console.error('Errore salvataggio avanzamento:', err); }
+            }
+        }
+
+        window.calculateAndUpdateProgress = async function() { await updateProjectProgress(); };
+
+        async function syncProgressToDatabase() { await updateProjectProgress(); }
+
+        function renderTimeline() {
+            if (typeof updatePhases === 'function') updatePhases();
+        }
+
+        async function activateParcellaFees(type) {
+            // Se type è 'both', spunta alcune checkbox della parcella principale
+            if (type === 'both' || type === 'fee_only') {
+                var checkboxes = document.querySelectorAll('#fee-accordion input[type="checkbox"]');
+                checkboxes.forEach(function(cb) { cb.checked = true; });
+                if (typeof calcolaParcella === 'function') await calcolaParcella();
+            }
+        }
+
+        function showNotification(title, message, type) {
+            var old = document.querySelector('.hdl-notification');
+            if (old) old.remove();
+            var colors = { success: '#166534', error: '#b91c1c', info: '#1e40af' };
+            var icons = { success: 'check_circle', error: 'error', info: 'info' };
+            var el = document.createElement('div');
+            el.className = 'hdl-notification';
+            el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+            el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + (icons[type] || 'info') + '</span><div style="flex:1"><p style="font-weight:600;font-size:13px">' + title + '</p><p style="font-size:12px;opacity:.9">' + message + '</p></div><button onclick="this.parentElement.remove()" style="margin-left:8px"><span class="material-symbols-outlined" style="font-size:16px">close</span></button>';
+            document.body.appendChild(el);
+            setTimeout(function() { if (el.parentElement) el.remove(); }, 5000);
+        }
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var projectId = urlParams.get('id');
+            
+            if (!projectId) {
+                console.error('Nessun ID progetto trovato');
+                showNotification('Errore', 'Nessun progetto specificato', 'error');
+                return;
+            }
+            
+            currentProjectId = projectId;
+
+            // Mostra/nascondi parcella in base al ruolo
+            (function checkFinanceModule() {
+                var role = window.currentUserRole;
+                if (!role) { setTimeout(checkFinanceModule, 200); return; }
+                var mostraParcella = (role === 'senior' || role === 'admin');
+                if (!mostraParcella) {
+                    var perms = window.currentUserPermissions;
+                    if (!perms) { setTimeout(checkFinanceModule, 200); return; }
+                    if (perms.modules && perms.modules.finanze) mostraParcella = true;
+                }
+                if (mostraParcella) {
+                    var headerBlock = document.getElementById('header-parcella-block');
+                    if (headerBlock) headerBlock.style.display = '';
+                    var feeWrapper = document.getElementById('fee-accordion-wrapper');
+                    if (feeWrapper) feeWrapper.style.display = '';
+                }
+            })();
+
+            var checkSupabase = setInterval(function() {
+                if (window.supabase && typeof window.supabase.from === 'function') {
+                    clearInterval(checkSupabase);
+                    console.log('Supabase pronto, avvio caricamento dati...');
+                    loadProjectData(projectId);
+                }
+            }, 100);
+        });
+    </script>
+    <script src="assets/js/portal-init.js"></script>
+
+    <!-- Modal Dettagli Immobile -->
+    <div id="modal-immobile" class="fixed inset-0 z-50 hidden bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity opacity-0">
+        <div class="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform" id="modal-immobile-content">
+            <div class="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <h3 class="text-lg font-bold font-headline text-stone-800">Modifica Dati Immobile</h3>
+                <button onclick="closeImmobileModal()" class="text-stone-400 hover:text-stone-700">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-full">
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Tipologia Immobile</label>
+                        <select id="imm-tipologia" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                            <option value="">Seleziona...</option>
+                            <option value="Appartamento">Appartamento</option>
+                            <option value="Villa">Villa singola</option>
+                            <option value="Duplex">Duplex</option>
+                            <option value="Locale Commerciale">Locale Commerciale</option>
+                            <option value="Ufficio">Ufficio</option>
+                            <option value="Altro">Altro</option>
+                        </select>
+                    </div>
+                    <div class="col-span-full md:col-span-1">
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Via/Piazza</label>
+                        <input type="text" id="imm-via" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Comune</label>
+                        <input type="text" id="imm-paese" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Provincia</label>
+                            <input type="text" id="imm-prov" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary" placeholder="Es. NA">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">CAP</label>
+                            <input type="text" id="imm-cap" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                        </div>
+                    </div>
+                    <div class="col-span-full grid grid-cols-3 gap-4 border-t border-stone-100 pt-4 mt-2">
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Foglio</label>
+                            <input type="text" id="imm-foglio" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Particella</label>
+                            <input type="text" id="imm-particella" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Sub</label>
+                            <input type="text" id="imm-sub" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-stone-100 flex justify-end gap-3 bg-stone-50">
+                <button onclick="closeImmobileModal()" class="px-5 py-2 text-stone-600 font-medium hover:bg-stone-200 rounded-lg transition-colors">Annulla</button>
+                <button onclick="saveImmobileData()" class="px-5 py-2 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-sm">Salva Dati</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function apriSchedaClienteProgetto() {
+        if (!currentProjectData || !currentProjectData.clienti_profiles) {
+            showToast('Nessun cliente associato al progetto', 'info');
+            return;
+        }
+        openModalClienteProgetto(currentProjectData.clienti_profiles.nome, currentProjectData.cliente_id);
+    }
+
+    async function openModalClienteProgetto(nome, clienteId) {
+        window._clienteModalProgettoId = clienteId;
+        var overlay = document.getElementById('modal-cliente-overlay');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+
+        if (!clienteId) {
+            document.getElementById('modal-cliente-nome').textContent = nome || 'N/D';
+            document.getElementById('modal-cliente-azienda').textContent = '';
+            document.getElementById('modal-cliente-email').textContent = 'N/D';
+            document.getElementById('modal-cliente-telefono').textContent = 'N/D';
+            document.getElementById('modal-cliente-indirizzo').textContent = 'N/D';
+            document.getElementById('modal-cliente-citta').textContent = '';
+            document.getElementById('modal-cliente-cf').textContent = 'N/D';
+            document.getElementById('modal-cliente-piva').textContent = 'N/D';
+            document.getElementById('modal-cliente-tipo').textContent = 'N/D';
+            document.getElementById('modal-cliente-note').textContent = 'Nessuna nota';
+            var copyBtn = document.querySelector('#modal-cliente-overlay .flex-1 button:first-child');
+            if (copyBtn) copyBtn.style.display = 'none';
+            return;
+        }
+
+        try {
+            var { data: c, error } = await window.supabase
+                .from('clienti_profiles')
+                .select('*')
+                .eq('id', clienteId)
+                .single();
+            if (error) throw error;
+
+            document.getElementById('modal-cliente-nome').textContent = c.nome || nome || 'N/D';
+            document.getElementById('modal-cliente-azienda').textContent = c.azienda || '';
+            document.getElementById('modal-cliente-email').textContent = c.email || '-';
+            document.getElementById('modal-cliente-telefono').textContent = c.telefono || '-';
+
+            var indirizzo = '';
+            if (c.indirizzo) indirizzo += c.indirizzo;
+            if (c.cap || c.citta || c.provincia) {
+                var parts = [];
+                if (c.cap) parts.push(c.cap);
+                if (c.citta) parts.push(c.citta);
+                if (c.provincia) parts.push(c.provincia);
+                if (c.indirizzo) indirizzo += ' ';
+                indirizzo += parts.join(' ');
+            }
+            document.getElementById('modal-cliente-indirizzo').textContent = indirizzo || '-';
+
+            var cittaText = '';
+            if (c.citta) cittaText += c.citta;
+            if (c.provincia) cittaText += (cittaText ? ' (' + c.provincia + ')' : c.provincia) || '';
+            document.getElementById('modal-cliente-citta').textContent = cittaText || '';
+
+            document.getElementById('modal-cliente-cf').textContent = c.codice_fiscale || '-';
+            document.getElementById('modal-cliente-piva').textContent = c.partita_iva || '-';
+            document.getElementById('modal-cliente-tipo').textContent = c.tipo_cliente ? (c.tipo_cliente === 'azienda' ? 'Azienda' : 'Privato') : '-';
+            document.getElementById('modal-cliente-note').textContent = c.note_interne || 'Nessuna nota';
+        } catch(err) {
+            console.error('[SchedaCliente]', err);
+        }
+    }
+
+    function closeSchedaClienteProgetto() {
+        var overlay = document.getElementById('modal-cliente-overlay');
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    }
+
+    function copiaClientePerPraticheProgetto() {
+        var nome = document.getElementById('modal-cliente-nome').textContent;
+        var azienda = document.getElementById('modal-cliente-azienda').textContent;
+        var email = document.getElementById('modal-cliente-email').textContent;
+        var tel = document.getElementById('modal-cliente-telefono').textContent;
+        var indirizzo = document.getElementById('modal-cliente-indirizzo').textContent;
+        var cf = document.getElementById('modal-cliente-cf').textContent;
+        var piva = document.getElementById('modal-cliente-piva').textContent;
+        var tipo = document.getElementById('modal-cliente-tipo').textContent;
+
+        var txt = 'DATI COMMITTENTE PER PRATICHE EDILIZIE\n';
+        txt += '=====================================\n\n';
+        txt += 'Nome/Ragione Sociale: ' + nome + '\n';
+        if (azienda) txt += 'Azienda: ' + azienda + '\n';
+        txt += 'Email: ' + email + '\n';
+        txt += 'Telefono: ' + tel + '\n';
+        txt += 'Indirizzo: ' + indirizzo + '\n';
+        txt += 'Codice Fiscale: ' + cf + '\n';
+        if (piva && piva !== '-') txt += 'Partita IVA: ' + piva + '\n';
+        txt += 'Tipo: ' + tipo + '\n';
+
+        navigator.clipboard.writeText(txt).then(function() {
+            showToast('Dati copiati! Incollali nella pratica edilizia.', 'success');
+        }).catch(function() {
+            var ta = document.createElement('textarea');
+            ta.value = txt;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            showToast('Dati copiati!', 'success');
+        });
+    }
+    </script>
+</body>
+</html>

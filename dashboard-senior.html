@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="it"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard Senior | Home Design Lab</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/portal-config.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f0eded",
+                        "on-error-container": "#93000a",
+                        "tertiary": "#524431",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#d8c3ab",
+                        "outline-variant": "#bfc9bc",
+                        "surface-dim": "#dcd9d9",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#91f78e",
+                        "surface-variant": "#e4e2e1",
+                        "on-secondary-fixed-variant": "#005313",
+                        "on-background": "#1b1c1c",
+                        "primary-container": "#186c32",
+                        "surface": "#fbf9f8",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#005321",
+                        "on-secondary-container": "#00731e",
+                        "inverse-surface": "#303030",
+                        "on-primary-container": "#98eba2",
+                        "on-tertiary-fixed": "#251a0a",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary-container": "#ead4bb",
+                        "primary-fixed-dim": "#87d992",
+                        "tertiary-container": "#6b5b47",
+                        "inverse-on-surface": "#f3f0f0",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#f5dfc6",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e7",
+                        "secondary-fixed-dim": "#78dc77",
+                        "on-surface": "#1b1c1c",
+                        "primary-fixed": "#a3f5ac",
+                        "surface-tint": "#196c32",
+                        "primary": "#005220",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#94f990",
+                        "surface-container-highest": "#e4e2e1",
+                        "on-surface-variant": "#40493f",
+                        "background": "#fbf9f8",
+                        "secondary": "#006e1c",
+                        "on-secondary-fixed": "#002204",
+                        "surface-bright": "#fbf9f8",
+                        "on-primary-fixed": "#002109",
+                        "on-tertiary-fixed-variant": "#534432",
+                        "outline": "#707a6e",
+                        "inverse-primary": "#87d992"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Noto Serif", "serif"],
+                        "display": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "label": ["Manrope", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-headline { font-family: 'Noto Serif', serif; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+<!-- SideNavBar Dinamico -->
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<!-- TopAppBar (From JSON) -->
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<div class="flex-1 flex items-center h-full">
+<span class="leading-none">Dashboard</span>
+</div>
+<div class="flex items-center gap-6 h-full">
+<div class="relative w-64 flex items-center">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
+<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
+</div>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
+<button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
+<!-- Avatar Dropdown -->
+<div class="relative" id="avatar-dropdown-container">
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
+<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
+</button>
+<!-- Dropdown Menu -->
+<div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
+<span class="material-symbols-outlined text-[18px]">settings</span> Impostazioni</a>
+<div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<div class="max-w-7xl mx-auto space-y-16">
+<!-- Hero Header -->
+<section class="flex justify-between items-end">
+<div>
+<span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Panoramica Generale</span>
+<h2 class="font-headline text-5xl tracking-tight text-on-surface">Dashboard</h2>
+</div>
+<div class="text-right">
+<p class="font-body text-on-surface-variant text-sm max-w-xs">Panoramica tecnica delle attività correnti, avanzamento lavori e risorse condivise.</p>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-between h-48 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-surface to-surface-container-low opacity-50 z-0"></div>
+<div class="relative z-10 flex justify-between items-start">
+<span class="font-label uppercase tracking-wider text-on-surface-variant text-[10px] font-bold">Progetti Attivi</span>
+<span class="material-symbols-outlined text-primary">architecture</span>
+</div>
+<div class="relative z-10">
+<h3 id="stats-progetti" class="font-headline text-5xl tracking-tighter text-on-surface">12</h3>
+<p id="stats-progetti-sub" class="font-body text-xs text-primary mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">arrow_upward</span> +3 questo mese</p>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-between h-48 relative overflow-hidden">
+<div class="relative z-10 flex justify-between items-start">
+<span class="font-label uppercase tracking-wider text-on-surface-variant text-[10px] font-bold">Immobili in Collection</span>
+<span class="material-symbols-outlined text-tertiary">inventory_2</span>
+</div>
+<div class="relative z-10">
+<h3 id="stats-immobili" class="font-headline text-5xl tracking-tighter text-on-surface">48</h3>
+<p id="stats-immobili-sub" class="font-body text-xs text-on-surface-variant mt-2">2 in fase di revisione</p>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-8 flex flex-col justify-between h-48 relative overflow-hidden">
+<div class="relative z-10 flex justify-between items-start">
+<span class="font-label uppercase tracking-wider text-on-surface-variant text-[10px] font-bold">Richieste Pendenti</span>
+<span class="material-symbols-outlined text-error">pending_actions</span>
+</div>
+<div class="relative z-10">
+<h3 id="stats-richieste" class="font-headline text-5xl tracking-tighter text-on-surface">7</h3>
+<p class="font-body text-xs text-on-surface-variant mt-2">Da evadere entro 48h</p>
+</div>
+</div>
+</section>
+<!-- Asymmetrical Lower Section -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: The Spec Module (Recent Activity) -->
+<div class="lg:col-span-8 space-y-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline text-2xl text-on-surface">Attività Recenti</h3>
+<a href="#" class="font-label text-primary text-xs uppercase tracking-widest border-b-2 border-tertiary-fixed-dim pb-1 hover:bg-gray-100 px-2 py-1 rounded transition-colors">Vedi Tutto</a>
+</div>
+<!-- Dynamic container for recent activities -->
+<div id="attivita-recenti-container" class="space-y-4"></div>
+</div>
+<!-- Right Column: Quick Actions -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Quick Actions -->
+<div class="bg-surface-container-low p-8 rounded-xl border-l-4 border-primary">
+<h4 class="font-headline text-lg text-on-surface mb-6">Azioni Rapide</h4>
+<div class="space-y-4">
+<a href="gestione-team.html" class="w-full flex items-center gap-3 text-sm font-body text-on-surface hover:text-primary hover:bg-gray-100 px-2 py-2 rounded transition-colors text-left group">
+<span class="w-8 h-8 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary-container group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[16px]">person_add</span></span>
+                                Invita Membro Team
+                            </a>
+<a href="gestione-immobili.html" class="w-full flex items-center gap-3 text-sm font-body text-on-surface hover:text-primary hover:bg-gray-100 px-2 py-2 rounded transition-colors text-left group">
+<span class="w-8 h-8 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary-container group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[16px]">folder_special</span></span>
+                                Nuova Collezione
+                            </a>
+<a href="gestione-progetti.html" class="w-full flex items-center gap-3 text-sm font-body text-on-surface hover:text-primary hover:bg-gray-100 px-2 py-2 rounded transition-colors text-left group">
+<span class="w-8 h-8 rounded-full bg-surface flex items-center justify-center group-hover:bg-primary-container group-hover:text-on-primary transition-colors"><span class="material-symbols-outlined text-[16px]">request_quote</span></span>
+                                Genera Preventivo
+                            </a>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = {
+    allowedRoles: ['senior', 'admin'],
+    defaultActiveMenu: 'dashboard',
+    pageName: 'Dashboard'
+};
+</script>
+<script src="assets/js/portal-init.js"></script>
+
+<script>
+async function loadSeniorDashboard() {
+    await new Promise(function(resolve) {
+        var check = function() {
+            if (window.currentUserRole && window.supabase) { resolve(); }
+            else { setTimeout(check, 100); }
+        };
+        check();
+    });
+
+    var { data: projects } = await window.supabase
+        .from('projects')
+        .select('id, titolo, status, avanzamento, data_consegna, created_at')
+        .order('created_at', { ascending: false });
+
+    var attivi = projects ? projects.filter(function(p) {
+        return p.status !== 'archived' && p.status !== 'completed' && p.status !== 'completato' && p.status !== 'archiviato';
+    }) : [];
+
+    var statsProgetti = document.getElementById('stats-progetti');
+    if (statsProgetti) statsProgetti.textContent = String(attivi.length);
+
+    var now = new Date();
+    var inizioMese = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    var progettiMese = projects ? projects.filter(function(p) {
+        return p.created_at && p.created_at >= inizioMese;
+    }) : [];
+
+    var statsProgettiSub = document.getElementById('stats-progetti-sub');
+    if (statsProgettiSub) {
+        if (progettiMese.length > 0) {
+            statsProgettiSub.innerHTML = '<span class="material-symbols-outlined text-[14px]">arrow_upward</span> +' + progettiMese.length + ' questo mese';
+        } else {
+            statsProgettiSub.textContent = 'Nessun nuovo progetto questo mese';
+        }
+    }
+
+    var { data: immobili } = await window.supabase
+        .from('properties')
+        .select('id, status');
+
+    var statsImmobili = document.getElementById('stats-immobili');
+    if (statsImmobili) statsImmobili.textContent = String(immobili ? immobili.length : 0);
+
+    var inRevisione = immobili ? immobili.filter(function(p) {
+        return p.status === 'in_progress' || p.status === 'revisione' || p.status === 'in_revisione' || p.status === 'review';
+    }) : [];
+
+    var statsImmobiliSub = document.getElementById('stats-immobili-sub');
+    if (statsImmobiliSub) {
+        if (inRevisione.length > 0) {
+            statsImmobiliSub.textContent = inRevisione.length + ' in fase di revisione';
+        } else if (immobili && immobili.length > 0) {
+            statsImmobiliSub.textContent = immobili.length + ' totale in collection';
+        } else {
+            statsImmobiliSub.textContent = 'Nessun immobile inserito';
+        }
+    }
+
+    var { data: team } = await window.supabase
+        .from('operatori_profiles')
+        .select('id')
+        .eq('is_active', true);
+    var statsRichieste = document.getElementById('stats-richieste');
+    if (statsRichieste) statsRichieste.textContent = String(team ? team.length : 0);
+
+    var container = document.getElementById('attivita-recenti-container');
+    if (container && attivi.length > 0) {
+        container.innerHTML = '';
+        attivi.slice(0, 5).forEach(function(p, idx) {
+            var colori = ['border-l-primary', 'border-l-tertiary', 'border-l-stone-400', 'border-l-secondary', 'border-l-error'];
+            var icone = ['architecture', 'inventory_2', 'handshake', 'construction', 'design_services'];
+            var item = document.createElement('div');
+            item.className = 'flex items-center gap-4 p-4 rounded-xl border-l-4 ' + colori[idx % 5] + ' bg-surface-container-lowest';
+            item.innerHTML =
+                '<span class="material-symbols-outlined text-primary">' + icone[idx % 5] + '</span>' +
+                '<div class="flex-1 min-w-0">' +
+                    '<a href="dettaglio-progetto.html?id=' + p.id + '" class="font-headline text-sm text-on-surface hover:text-primary transition-colors truncate block">' + p.titolo + '</a>' +
+                    '<p class="font-label text-xs text-on-surface-variant mt-0.5">Avanzamento: ' + (p.avanzamento || 0) + '%</p>' +
+                '</div>' +
+                '<span class="font-label text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-surface-container-low text-primary whitespace-nowrap">' + (p.status || 'attivo') + '</span>';
+            container.appendChild(item);
+        });
+    } else if (container) {
+        container.innerHTML = '<div class="text-center py-8 text-on-surface-variant font-label text-sm">Nessun progetto attivo</div>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadSeniorDashboard();
+
+    // Avatar dropdown
+    var avatarBtn = document.getElementById('avatar-btn');
+    var avatarDropdown = document.getElementById('avatar-dropdown');
+    var dropdownLogout = document.getElementById('dropdown-logout');
+
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (avatarDropdown) avatarDropdown.classList.toggle('hidden');
+        });
+    }
+    document.addEventListener('click', function() {
+        if (avatarDropdown) avatarDropdown.classList.add('hidden');
+    });
+    if (dropdownLogout) {
+        dropdownLogout.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (window.supabase) await window.supabase.auth.signOut();
+            localStorage.clear();
+            window.location.href = 'templates/login.html';
+        });
+    }
+});
+</script>
+
+</body></html>

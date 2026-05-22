@@ -1,72 +1,65 @@
 <!DOCTYPE html>
 <html class="scroll-smooth" lang="it"><head>
 <meta charset="utf-8"/>
-<meta name="description" content="Home Design Lab - Studio di progettazione architettonica e interior design. Design lab, collection immobiliare e servizi di ristrutturazione a Napoli."/>
-<meta name="keywords" content="architettura, interior design, progettazione, ristrutturazione, Napoli, Home Design Lab"/>
-<meta name="robots" content="index, follow"/>
-<meta property="og:type" content="website"/>
-<meta property="og:site_name" content="Home Design Lab"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<link rel="canonical" href="https://www.homedesignlab.it/index.html"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Home Design Lab | Design Lab & Collection</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
- tailwind.config = {
- darkMode: "class",
- theme: {
- extend: {
- "colors": {
- "primary": "#186C32",
- "secondary": "#4CAF50",
- "tertiary": "#D4BFA7",
- "on-primary": "#ffffff",
- "surface": "#fbf9f8",
- "on-surface": "#1b1c1c",
- "background": "#fbf9f8",
- "outline": "#707a6e",
- "surface-container": "#f0eded",
- "surface-container-low": "#f6f3f2"
- },
- "borderRadius": {
- "DEFAULT": "0.125rem",
- "lg": "0.25rem",
- "xl": "0.5rem",
- "full": "0.75rem"
- },
- "fontFamily": {
- "headline": ["Noto Serif"],
- "body": ["Manrope"],
- "label": ["Manrope"]
- }
- },
- },
- }
- </script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#186C32",
+                    "secondary": "#4CAF50",
+                    "tertiary": "#D4BFA7",
+                    "on-primary": "#ffffff",
+                    "surface": "#fbf9f8",
+                    "on-surface": "#1b1c1c",
+                    "background": "#fbf9f8",
+                    "outline": "#707a6e",
+                    "surface-container": "#f0eded",
+                    "surface-container-low": "#f6f3f2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
 <style>
- body { font-family: 'Manrope', sans-serif; }
- .font-serif { font-family: 'Noto Serif', serif; }
- .material-symbols-outlined {
- font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
- }
- .text-vertical {
- writing-mode: vertical-rl;
- text-orientation: mixed;
- }
- .perspective-1000 { perspective: 1000px; }
- .no-scrollbar::-webkit-scrollbar { display: none; }
- .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
- </style>
- <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-vertical {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        .perspective-1000 { perspective: 1000px; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
-<body class="select-none bg-surface text-on-surface overflow-x-hidden">
+<body class="bg-surface text-on-surface overflow-x-hidden">
 <nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
 <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
 <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
- <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
- </a>
+                <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
+            </a>
 <div class="hidden md:flex items-center gap-8">
 <a class="text-primary font-bold border-b-2 border-primary pb-1" href="index.html">Home</a>
 <a class="text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
@@ -98,7 +91,7 @@ Area Riservata
 </nav>
 <section class="relative min-h-screen flex flex-col justify-end overflow-hidden bg-stone-950">
 <div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover opacity-40" src="https://images.unsplash.com/photo-1451976426598-a7593bd6d0b2?w=1920&q=80" alt=""/>
+<img class="w-full h-full object-cover opacity-40" data-alt="Technical architectural blueprint layout" src="https://images.unsplash.com/photo-1451976426598-a7593bd6d0b2?w=1920&q=80"/>
 <div class="absolute inset-0 bg-gradient-to-t via-transparent to-transparent from-stone-950"></div>
 </div>
 <div class="relative z-10 max-w-7xl mx-auto px-8 pb-24 w-full">
@@ -109,25 +102,24 @@ Area Riservata
 <span class="text-xs uppercase tracking-[0.3em] text-secondary font-bold">L'Ingegneria del Benessere</span>
 </div>
 <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tighter leading-[0.9] text-white mb-10">
- Precisione <br/>Creativa.
- </h1>
+                        Precisione <br/>Creativa.
+                    </h1>
 <p class="text-xl text-white/70 max-w-xl leading-relaxed mb-12 font-body">
- Dall'analisi strutturale millimetrica alla visione architettonica più audace. Trasformiamo concetti ingegneristici in calore domestico attraverso un laboratorio di idee senza confini.
- </p>
+                        Dall'analisi strutturale millimetrica alla visione architettonica più audace. Trasformiamo concetti ingegneristici in calore domestico attraverso un laboratorio di idee senza confini.
+                    </p>
 <div class="flex flex-wrap gap-6">
 <a class="group px-10 py-5 bg-white text-primary rounded-full font-bold flex items-center gap-3 hover:bg-tertiary transition-all duration-300 uppercase tracking-widest text-xs" href="servizi-lab.html">
 <span class="material-symbols-outlined">architecture</span>
- Entra nel Lab
- </a>
+                            Entra nel Lab
+                        </a>
 <a class="px-10 py-5 border border-white/30 text-white rounded-full font-bold backdrop-blur-sm hover:bg-white/10 transition-all uppercase tracking-widest text-xs inline-flex items-center justify-center" href="chi-siamo.html">
- Il Nostro Metodo
- </a>
+                            Il Nostro Metodo
+                        </a>
 </div>
 </div>
 <div class="hidden lg:block w-96 group relative">
 <div class="absolute -inset-4 border border-white/20 rounded-2xl transition-all duration-500 group-hover:inset-0 group-hover:border-secondary/50"></div>
-<div class="relative rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] overflow-hidden">
-<img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=600&q=80" alt="Interior design"/>
+<img class="relative rounded-xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02]" data-alt="Luxury interior design detail" src="https://images.unsplash.com/photo-1618220179428-22790b461013?w=1200&q=80"/>
 <div class="absolute -bottom-6 -left-6 bg-surface p-6 rounded-lg shadow-xl border-l-4 border-primary">
 <p class="font-serif italic text-primary text-xl">"Oltre la forma, la funzione."</p>
 </div>
@@ -178,7 +170,7 @@ Scopri il metodo
 </div>
 </section>
 
-
+<!-- Instagram Feed -->
 <section class="py-32 px-0 bg-surface-container-low overflow-hidden">
 <div class="max-w-7xl mx-auto px-8">
 <div class="text-center mb-16">
@@ -213,25 +205,25 @@ Seguici su Instagram
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
- var feed = document.getElementById('instagram-feed');
- if (!feed) return;
- fetch('/api/instagram')
- .then(function(r) { return r.json(); })
- .then(function(data) {
- if (data && data.length > 0) {
- feed.innerHTML = data.map(function(post) {
- return '<a href="' + post.url + '" target="_blank" rel="noopener noreferrer" class="snap-start shrink-0 w-64 h-64 overflow-hidden rounded-xl bg-surface-container-high group relative">' +
- '<img src="' + post.image + '" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>' +
- '<div class="absolute inset-0 bg-black/0 group-hover:bg-primary/20 transition-colors duration-500"></div>' +
- '</a>';
- }).join('');
- }
- })
- .catch(function() {});
+    var feed = document.getElementById('instagram-feed');
+    if (!feed) return;
+    fetch('/api/instagram')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data && data.length > 0) {
+                feed.innerHTML = data.map(function(post) {
+                    return '<a href="' + post.url + '" target="_blank" rel="noopener noreferrer" class="snap-start shrink-0 w-64 h-64 overflow-hidden rounded-xl bg-surface-container-high group relative">' +
+                        '<img src="' + post.image + '" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>' +
+                        '<div class="absolute inset-0 bg-black/0 group-hover:bg-primary/20 transition-colors duration-500"></div>' +
+                        '</a>';
+                }).join('');
+            }
+        })
+        .catch(function() {});
 });
 </script>
 
-
+<!-- Servizi Lab -->
 <section class="py-32 px-8 bg-surface-container-low">
 <div class="max-w-7xl mx-auto">
 <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
@@ -264,7 +256,7 @@ Tutti i servizi
 </div>
 </section>
 
-
+<!-- CTA Finale -->
 <section class="px-8 pb-32">
 <div class="max-w-7xl mx-auto bg-primary rounded-2xl p-16 md:p-24 flex flex-col lg:flex-row justify-between items-center gap-12 relative overflow-hidden">
 <div class="absolute inset-0 opacity-[0.03]" style="background-image:url('https://www.transparenttextures.com/patterns/natural-paper.png')"></div>
