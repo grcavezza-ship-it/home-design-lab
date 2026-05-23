@@ -76,7 +76,7 @@ tailwind.config = {
 
 <form id="profile-form" class="space-y-4 md:space-y-8">
 <div class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
-<div class="flex flex-col items-center mb-6 md:mb-8">
+  <div class="flex flex-col items-center mb-6 md:mb-8">
 <div class="relative">
 <button type="button" id="profile-avatar-btn" class="w-28 h-28 rounded-full overflow-hidden border-4 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 group">
 <img id="profile-avatar-img" alt="Foto Profilo" class="w-full h-full object-cover hidden"/>
@@ -170,7 +170,7 @@ tailwind.config = {
 </div>
 </div>
 
-<div class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<div id="sezione-documenti" class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
 <h3 class="font-headline text-lg md:text-xl text-on-surface mb-4 md:mb-6">Documenti</h3>
 <p class="text-sm text-on-surface-variant mb-4 md:mb-6">Carica documenti (CV, contratti, certificazioni, ecc.)</p>
 <div class="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4 mb-4 md:mb-6">
@@ -194,13 +194,15 @@ tailwind.config = {
 </main>
 
 <script>
-// Nascondi sezione Professione & Logistica ai clienti
+// Nascondi sezioni staff ai clienti
 document.addEventListener('DOMContentLoaded', function() {
     var checkRole = setInterval(function() {
         if (window.currentUserRole) {
             if (window.currentUserRole === 'client') {
-                var sezione = document.getElementById('sezione-professione');
-                if (sezione) sezione.style.display = 'none';
+                var sezProf = document.getElementById('sezione-professione');
+                if (sezProf) sezProf.style.display = 'none';
+                var sezDoc = document.getElementById('sezione-documenti');
+                if (sezDoc) sezDoc.style.display = 'none';
             }
             clearInterval(checkRole);
         }
@@ -242,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             var { error: uploadError } = await window.supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
             if (uploadError) throw uploadError;
             var { data: { publicUrl } } = window.supabase.storage.from('avatars').getPublicUrl(filePath);
-            var { error: updateError } = await window.supabase.from('operatori_profiles').update({ avatar_url: publicUrl }).eq('user_id', window.currentUser.id);
+            var { error: updateError } = await window.supabase.from(window.currentUserRole === 'client' ? 'clienti_profiles' : 'operatori_profiles').update({ avatar_url: publicUrl }).eq('user_id', window.currentUser.id);
             if (updateError) throw updateError;
             displayAvatar(publicUrl);
             showNotification('Foto profilo aggiornata', 'success');
@@ -273,19 +275,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function loadProfileData() {
         if (!window.supabase || !window.currentUser) return;
         try {
-            var { data, error } = await window.supabase.from('operatori_profiles').select('*').eq('user_id', window.currentUser.id).maybeSingle();
+            var isClient = window.currentUserRole === 'client';
+            var table = isClient ? 'clienti_profiles' : 'operatori_profiles';
+            var { data, error } = await window.supabase.from(table).select('*').eq('user_id', window.currentUser.id).maybeSingle();
             if (error) throw error;
             if (data) {
-                sv('field-nome', data.nome); sv('field-cognome', data.cognome);
-                sv('field-email', data.email || window.currentUser.email); sv('field-telefono', data.telefono);
-                sv('field-data-nascita', data.data_nascita); sv('field-luogo-nascita', data.luogo_nascita);
-                sv('field-iscrizione-albo', data.iscrizione_albo);
-                sc('field-auto-munito', data.auto_munito); sc('field-trasferte', data.disponibilita_trasferte);
-                sv('field-bio', data.bio);
-                var df = data.dati_fatturazione || {};
-                sv('field-piva', df.piva); sv('field-cf', df.cf); sv('field-sdi', df.sdi);
-                sv('field-indirizzo-fatturazione', data.indirizzo_fatturazione); sv('field-pec', data.pec);
-                if (data.avatar_url) displayAvatar(data.avatar_url); else displayAvatar(null);
+                if (isClient) {
+                    sv('field-nome', data.nome || '');
+                    sv('field-cognome', '');
+                    sv('field-email', data.email || window.currentUser.email);
+                    sv('field-telefono', data.telefono || '');
+                    sv('field-indirizzo-fatturazione', data.indirizzo || '');
+                    sv('field-piva', data.partita_iva || '');
+                    sv('field-cf', data.codice_fiscale || '');
+                    sv('field-sdi', '');
+                    sv('field-pec', '');
+                } else {
+                    sv('field-nome', data.nome); sv('field-cognome', data.cognome);
+                    sv('field-email', data.email || window.currentUser.email); sv('field-telefono', data.telefono);
+                    sv('field-data-nascita', data.data_nascita); sv('field-luogo-nascita', data.luogo_nascita);
+                    sv('field-iscrizione-albo', data.iscrizione_albo);
+                    sc('field-auto-munito', data.auto_munito); sc('field-trasferte', data.disponibilita_trasferte);
+                    sv('field-bio', data.bio);
+                    var df = data.dati_fatturazione || {};
+                    sv('field-piva', df.piva); sv('field-cf', df.cf); sv('field-sdi', df.sdi);
+                    sv('field-indirizzo-fatturazione', data.indirizzo_fatturazione); sv('field-pec', data.pec);
+                    if (data.avatar_url) displayAvatar(data.avatar_url); else displayAvatar(null);
+                }
             } else {
                 sv('field-email', window.currentUser.email || '');
                 displayAvatar(null);
@@ -299,16 +315,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         btnSalva.disabled = true;
         btnSalva.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Salvataggio...';
         try {
-            var df = { piva: gv('field-piva'), cf: gv('field-cf'), sdi: gv('field-sdi') };
-            var { error } = await window.supabase.from('operatori_profiles').update({
-                nome: gv('field-nome'), cognome: gv('field-cognome'), telefono: gv('field-telefono'),
-                data_nascita: gv('field-data-nascita') || null, luogo_nascita: gv('field-luogo-nascita'),
-                iscrizione_albo: gv('field-iscrizione-albo'),
-                auto_munito: gc('field-auto-munito'), disponibilita_trasferte: gc('field-trasferte'),
-                indirizzo_fatturazione: gv('field-indirizzo-fatturazione'),
-                pec: gv('field-pec'), dati_fatturazione: df
-            }).eq('user_id', window.currentUser.id);
-            if (error) throw error;
+            var isClient = window.currentUserRole === 'client';
+            if (isClient) {
+                var nomeCompleto = (gv('field-nome') + ' ' + gv('field-cognome')).trim();
+                var { error } = await window.supabase.from('clienti_profiles').update({
+                    nome: nomeCompleto,
+                    telefono: gv('field-telefono'),
+                    indirizzo: gv('field-indirizzo-fatturazione'),
+                    partita_iva: gv('field-piva'),
+                    codice_fiscale: gv('field-cf')
+                }).eq('user_id', window.currentUser.id);
+                if (error) throw error;
+            } else {
+                var df = { piva: gv('field-piva'), cf: gv('field-cf'), sdi: gv('field-sdi') };
+                var { error } = await window.supabase.from('operatori_profiles').update({
+                    nome: gv('field-nome'), cognome: gv('field-cognome'), telefono: gv('field-telefono'),
+                    data_nascita: gv('field-data-nascita') || null, luogo_nascita: gv('field-luogo-nascita'),
+                    iscrizione_albo: gv('field-iscrizione-albo'),
+                    auto_munito: gc('field-auto-munito'), disponibilita_trasferte: gc('field-trasferte'),
+                    indirizzo_fatturazione: gv('field-indirizzo-fatturazione'),
+                    pec: gv('field-pec'), dati_fatturazione: df
+                }).eq('user_id', window.currentUser.id);
+                if (error) throw error;
+            }
             if (window.currentUserProfile) {
                 window.currentUserProfile.nome = gv('field-nome');
                 window.currentUserProfile.cognome = gv('field-cognome');
