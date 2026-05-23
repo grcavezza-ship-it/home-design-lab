@@ -88,10 +88,11 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-background text-on-surface min-h-screen flex">
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
-<main class="flex-grow md:ml-64 bg-background min-h-screen">
-<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
-<div class="flex-1 flex items-center h-full">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<main class="flex-grow lg:ml-64 bg-background min-h-screen">
+<header class="w-full lg:w-[calc(100%-16rem)] fixed top-0 z-40 bg-background/80 backdrop-blur-md flex justify-between items-center px-4 md:px-8 h-16 md:h-20 border-b border-outline-variant/10">
+<div class="flex items-center gap-3 flex-1">
+<button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center"><span class="material-symbols-outlined">menu</span></button>
 </div>
 <div class="flex items-center gap-5 h-full">
 <span id="user-name" class="text-sm text-on-surface-variant hidden md:block"></span>
@@ -107,13 +108,13 @@
 <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
 <span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
 <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
-<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
 <span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
 </div>
 </div>
 </div>
 </header>
-<div class="p-8 max-w-7xl mx-auto space-y-12 pb-24">
+<div class="p-4 md:p-8 pt-24 md:pt-28 max-w-7xl mx-auto space-y-8 md:space-y-12 pb-24">
 <section class="space-y-4">
 <div class="flex items-center gap-2">
 <span class="w-8 h-[2px] bg-primary"></span>

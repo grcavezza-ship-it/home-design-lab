@@ -88,10 +88,11 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-background text-on-surface min-h-screen flex">
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
-<main class="flex-grow md:ml-64 bg-background min-h-screen">
-<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
-<div class="flex-1 flex items-center h-full">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<main class="flex-grow lg:ml-64 bg-background min-h-screen">
+<header class="w-full lg:w-[calc(100%-16rem)] fixed top-0 z-40 bg-background/80 backdrop-blur-md flex justify-between items-center px-4 md:px-8 h-16 md:h-20 border-b border-outline-variant/10">
+<div class="flex items-center gap-3 flex-1">
+<button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center"><span class="material-symbols-outlined">menu</span></button>
 </div>
 <div class="flex items-center gap-5 h-full">
 <span id="user-name" class="text-sm text-on-surface-variant hidden md:block"></span>
@@ -192,7 +193,7 @@ var selectedProjectId = null;
 document.addEventListener('DOMContentLoaded', function() {
     const avatarBtn = document.getElementById('avatar-btn');
     const avatarDropdown = document.getElementById('avatar-dropdown');
-    const dropdownLogout = document.getElementById('dropdown-logout');
+    const logoutBtn = document.getElementById('logout-btn');
 
     avatarBtn.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -203,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         avatarDropdown.classList.add('hidden');
     });
 
-    dropdownLogout.addEventListener('click', async function(e) {
+    logoutBtn.addEventListener('click', async function(e) {
         e.preventDefault();
         try {
             if (window.supabase) await window.supabase.auth.signOut();
