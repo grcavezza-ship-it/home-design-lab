@@ -92,12 +92,15 @@
 </head>
 <body class="bg-background text-on-surface min-h-screen flex">
 <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
-<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden" onclick="closeSidebar()"></div>
 <main class="flex-grow lg:ml-64 bg-background min-h-screen">
-<header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
-<div class="flex-1 flex items-center h-full">
+<header class="w-full lg:w-[calc(100%-16rem)] fixed top-0 z-40 bg-background/80 backdrop-blur-md flex justify-between items-center px-4 md:px-8 h-16 md:h-20 border-b border-outline-variant/10">
+<div class="flex items-center gap-3">
+<button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+<span class="material-symbols-outlined">menu</span>
+</button>
 </div>
-<div class="flex items-center gap-5 h-full">
+<div class="flex items-center gap-4 md:gap-5 h-full">
 <span id="user-name" class="text-sm text-on-surface-variant hidden md:block"></span>
 <button class="p-2.5 text-on-surface-variant hover:bg-surface-container hover:bg-gray-100 rounded-full transition-all relative h-10 w-10 flex items-center justify-center">
 <span class="material-symbols-outlined">notifications</span>
@@ -111,46 +114,46 @@
 <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
 <span class="material-symbols-outlined text-[18px]">person</span> Profilo</a>
 <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
-<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+<a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
 <span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
 </div>
 </div>
 </div>
 </header>
-<div class="p-8 max-w-7xl mx-auto space-y-12 pb-24">
+<div class="p-4 md:p-8 pt-20 md:pt-28 max-w-7xl mx-auto space-y-8 md:space-y-12 pb-24">
 <section class="space-y-4">
 <div class="flex items-center gap-2">
 <span class="w-8 h-[2px] bg-primary"></span>
 <span class="text-[11px] font-black uppercase tracking-[0.4em] text-primary">Area Riservata</span>
 </div>
-<h2 id="client-welcome" class="text-6xl font-headline text-on-surface tracking-tight">Benvenuto</h2>
-<p class="text-on-surface-variant max-w-2xl text-lg font-light leading-relaxed">Il tuo portale centralizzato per la supervisione dei progetti, il coordinamento tecnico e la gestione dei flussi documentali.</p>
+<h2 id="client-welcome" class="text-3xl md:text-6xl font-headline text-on-surface tracking-tight">Benvenuto</h2>
+			<p class="text-on-surface-variant max-w-2xl text-sm md:text-lg font-light leading-relaxed">Il tuo portale centralizzato per la supervisione dei progetti, il coordinamento tecnico e la gestione dei flussi documentali.</p>
 </section>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-<div id="project-card" class="lg:col-span-8 bg-white rounded-2xl p-10 shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] relative overflow-hidden flex flex-col justify-between border border-outline-variant/20">
+<div id="project-card" class="lg:col-span-8 bg-white rounded-2xl p-4 md:p-10 shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] relative overflow-hidden flex flex-col justify-between border border-outline-variant/20">
 <div class="relative z-10">
-<div class="flex justify-between items-start mb-12">
+<div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-6 md:mb-12">
 <div>
 <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mb-2 block">Cantiere Attivo</span>
-<a id="project-title" class="text-4xl font-headline text-on-surface hover:text-primary transition-colors cursor-pointer" href="dettaglio-progetto.html">Nessun progetto</a>
+<a id="project-title" class="text-2xl md:text-4xl font-headline text-on-surface hover:text-primary transition-colors cursor-pointer" href="dettaglio-progetto.html">Nessun progetto</a>
 </div>
-<div id="project-status-badge" class="bg-primary/10 px-5 py-2 rounded-full border border-primary/20">
-<span id="project-status" class="text-[11px] font-black text-primary uppercase tracking-widest">--</span>
+<div id="project-status-badge" class="bg-primary/10 px-4 md:px-5 py-1.5 md:py-2 rounded-full border border-primary/20">
+<span id="project-status" class="text-[10px] md:text-[11px] font-black text-primary uppercase tracking-widest">--</span>
 </div>
 </div>
-<div class="flex flex-col md:flex-row items-center gap-12 py-4">
-<div class="relative flex items-center justify-center w-40 h-40">
+<div class="flex flex-col md:flex-row items-center gap-6 md:gap-12 py-2 md:py-4">
+<div class="relative flex items-center justify-center w-28 h-28 md:w-40 md:h-40">
 <svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
 <circle class="text-surface-container" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="8"></circle>
 <circle id="progress-circle" class="text-primary progress-circle" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-dasharray="282.7" stroke-dashoffset="282.7" stroke-linecap="round" stroke-width="8"></circle>
 </svg>
 <div class="absolute inset-0 flex flex-col items-center justify-center">
-<span id="progress-percent" class="text-4xl font-headline text-primary">0%</span>
-<span class="text-[8px] uppercase tracking-widest text-on-surface-variant font-black">Avanzamento</span>
+<span id="progress-percent" class="text-2xl md:text-4xl font-headline text-primary">0%</span>
+<span class="text-[7px] md:text-[8px] uppercase tracking-widest text-on-surface-variant font-black">Avanzamento</span>
 </div>
 </div>
-<div class="flex-grow space-y-6 w-full">
-<div id="project-phases" class="space-y-4">
+<div class="flex-grow space-y-4 md:space-y-6 w-full">
+<div id="project-phases" class="space-y-3 md:space-y-4">
 <div class="flex items-center gap-3 opacity-40">
 <span class="material-symbols-outlined text-on-surface-variant text-xl">schedule</span>
 <div>
@@ -161,26 +164,26 @@
 </div>
 </div>
 </div>
-<div class="grid grid-cols-3 gap-6 pt-12 relative z-10">
-<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
-<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Kick-off</p>
-<p id="project-start" class="text-sm font-black text-on-surface">--</p>
+<div class="grid grid-cols-3 gap-3 md:gap-6 pt-6 md:pt-12 relative z-10">
+<div class="bg-surface-container-low p-3 md:p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-1 md:mb-2">Kick-off</p>
+<p id="project-start" class="text-xs md:text-sm font-black text-on-surface">--</p>
 </div>
-<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
-<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Consegna</p>
-<p id="project-end" class="text-sm font-black text-on-surface">--</p>
+<div class="bg-surface-container-low p-3 md:p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-1 md:mb-2">Consegna</p>
+<p id="project-end" class="text-xs md:text-sm font-black text-on-surface">--</p>
 </div>
-<div class="bg-surface-container-low p-5 rounded-xl border border-outline-variant/10">
-<p class="text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-2">Progetti Totali</p>
-<p id="project-count" class="text-sm font-black text-on-surface">0</p>
+<div class="bg-surface-container-low p-3 md:p-5 rounded-xl border border-outline-variant/10">
+<p class="text-[8px] md:text-[9px] uppercase tracking-[0.2em] text-on-surface-variant font-bold mb-1 md:mb-2">Progetti</p>
+<p id="project-count" class="text-xs md:text-sm font-black text-on-surface">0</p>
 </div>
 </div>
 </div>
-<div class="lg:col-span-4 bg-surface-container-low rounded-2xl p-8 flex flex-col border border-outline-variant/10">
-<div class="flex items-center justify-between mb-8 pb-4 border-b border-outline-variant/20">
+<div class="lg:col-span-4 bg-surface-container-low rounded-2xl p-4 md:p-8 flex flex-col border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4 md:mb-8 pb-3 md:pb-4 border-b border-outline-variant/20">
 <div>
-<h3 class="text-xl font-headline text-on-surface">Materiali per te</h3>
-<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">Dallo staff Home Design Lab</p>
+<h3 class="text-lg md:text-xl font-headline text-on-surface">Materiali per te</h3>
+<p class="text-[9px] md:text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5">Dallo staff HDL</p>
 </div>
 <span class="material-symbols-outlined text-primary">ios_share</span>
 </div>
@@ -194,16 +197,16 @@
                     <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
 </button>
 </div>
-<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-<div class="bg-surface-container-high/40 rounded-2xl p-10 border-2 border-dashed border-outline-variant/40 flex flex-col items-center justify-center text-center group hover:border-primary/40 transition-all cursor-pointer relative overflow-hidden">
-<div class="absolute top-4 left-4">
-<span class="text-[9px] font-black uppercase tracking-widest text-primary/60">Area Caricamento Cliente</span>
+<div class="lg:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+<div class="bg-surface-container-high/40 rounded-2xl p-4 md:p-10 border-2 border-dashed border-outline-variant/40 flex flex-col items-center justify-center text-center group hover:border-primary/40 transition-all cursor-pointer relative overflow-hidden">
+<div class="absolute top-3 md:top-4 left-3 md:left-4">
+<span class="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-primary/60">Carica Documenti</span>
 </div>
-<div class="w-20 h-20 bg-white rounded-full flex items-center justify-center text-primary shadow-xl group-hover:scale-110 transition-transform mb-6">
-<span class="material-symbols-outlined text-4xl">drive_folder_upload</span>
+<div class="w-14 h-14 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center text-primary shadow-xl group-hover:scale-110 transition-transform mb-4 md:mb-6">
+<span class="material-symbols-outlined text-2xl md:text-4xl">drive_folder_upload</span>
 </div>
-<h4 class="text-xl font-headline mb-3 text-on-surface">Condividi le tue Idee</h4>
-<p class="text-xs text-on-surface-variant max-w-xs mx-auto font-medium leading-relaxed mb-8">Trascina qui ispirazioni, foto di referenza o documenti tecnici per il team di progetto.</p>
+<h4 class="text-lg md:text-xl font-headline mb-2 md:mb-3 text-on-surface">Condividi le tue Idee</h4>
+<p class="text-[10px] md:text-xs text-on-surface-variant max-w-xs mx-auto font-medium leading-relaxed mb-6 md:mb-8">Trascina qui ispirazioni, foto di referenza o documenti tecnici per il team di progetto.</p>
 <form id="upload-form" class="w-full max-w-md mx-auto">
 <select id="upload-project" class="w-full mb-4 px-4 py-3 bg-white border border-outline-variant/30 rounded-lg text-xs font-bold" required>
 <option value="">Seleziona un progetto</option>
@@ -222,15 +225,15 @@
 <div id="upload-status" class="mt-4 text-xs text-center font-medium hidden"></div>
 <p class="mt-6 text-[10px] text-on-surface-variant font-bold italic">Formati supportati: JPG, PNG, PDF, DWG (Max 150MB)</p>
 </div>
-<div class="bg-white rounded-2xl p-10 shadow-sm border border-outline-variant/10 flex flex-col">
-<div class="flex items-center justify-between mb-8">
+<div class="bg-white rounded-2xl p-4 md:p-10 shadow-sm border border-outline-variant/10 flex flex-col">
+<div class="flex items-center justify-between mb-4 md:mb-8">
 <div>
-<h4 class="text-xl font-headline">Concept &amp; Moodboard</h4>
-<p class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-1">Direzione Creativa</p>
+<h4 class="text-lg md:text-xl font-headline">Concept &amp; Moodboard</h4>
+<p class="text-[9px] md:text-[10px] text-on-surface-variant font-bold uppercase tracking-widest mt-0.5 md:mt-1">Direzione Creativa</p>
 </div>
-<a class="text-[11px] uppercase tracking-widest text-primary font-black border-b border-primary/20" href="#">Gallery</a>
+<a class="text-[10px] md:text-[11px] uppercase tracking-widest text-primary font-black border-b border-primary/20" href="#">Gallery</a>
 </div>
-<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="grid grid-cols-3 gap-2 md:gap-4 mb-6 md:mb-8">
 <div class="aspect-square rounded-xl overflow-hidden relative group cursor-zoom-in border border-outline-variant/10">
 <img alt="Moodboard" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCezpLrJ3vHR6kSauggNlGfUgnbmFofD1CdD1qw799uNikyulKyZTm77oE1jPPQbt7tL1CCajrLK4I0WrCyZYlnHlt1QUoXWBpo-XnK7x1LrFoKBtrZf_Fw_0Gxb5Os09zC20ryhxVm7YL3yfKbYQUQzQxMZWKNx2wD4gddEX256REkffejeUQq16zv-0x3xx4Q6xM1ZmkVkwkpGpJApHAZfwFpTSH_YNiDpiWOVRWl4gUeDgMOdVNHDcbyk704R2mjuVlFlV8jis"/>
 <div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -274,25 +277,44 @@ PORTAL_PAGE_CONFIG = {
 document.addEventListener('DOMContentLoaded', function() {
     const avatarBtn = document.getElementById('avatar-btn');
     const avatarDropdown = document.getElementById('avatar-dropdown');
-    const dropdownLogout = document.getElementById('dropdown-logout');
+    const logoutBtn = document.getElementById('logout-btn');
 
-    avatarBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        avatarDropdown.classList.toggle('hidden');
-    });
+    if (avatarBtn) {
+        avatarBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            avatarDropdown.classList.toggle('hidden');
+        });
+    }
 
     document.addEventListener('click', function() {
-        avatarDropdown.classList.add('hidden');
+        if (avatarDropdown) avatarDropdown.classList.add('hidden');
     });
 
-    dropdownLogout.addEventListener('click', async function(e) {
-        e.preventDefault();
-        try {
-            if (window.supabase) await window.supabase.auth.signOut();
-        } catch(_) {}
-        localStorage.clear();
-        window.location.href = '/login';
-    });
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            try {
+                if (window.supabase) await window.supabase.auth.signOut();
+            } catch(_) {}
+            localStorage.clear();
+            window.location.href = '/login';
+        });
+    }
+
+    // Mobile sidebar toggle
+    var menuToggle = document.getElementById('mobile-menu-toggle');
+    var sidebar = document.getElementById('sidebar-menu');
+    var sidebarOverlay = document.getElementById('mobile-sidebar-overlay');
+    function openSidebar() { sidebar.classList.remove('-translate-x-full'); sidebar.classList.add('translate-x-0'); sidebarOverlay.classList.remove('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close'; }
+    function closeSidebar() { sidebar.classList.add('-translate-x-full'); sidebar.classList.remove('translate-x-0'); sidebarOverlay.classList.add('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu'; }
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) { e.stopPropagation(); var isOpen = !sidebar.classList.contains('-translate-x-full'); if (isOpen) closeSidebar(); else openSidebar(); });
+    }
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+    function checkScreenSize() {
+        if (window.innerWidth >= 1024) { sidebar.classList.remove('-translate-x-full'); sidebar.classList.remove('translate-x-0'); sidebarOverlay.classList.add('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu'; } else { closeSidebar(); }
+    }
+    window.addEventListener('resize', checkScreenSize);
 });
 
 async function loadClientDashboard() {
