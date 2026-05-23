@@ -119,22 +119,22 @@
 </div>
 </header>
 <!-- Page Content -->
-<div class="pt-32 px-10 max-w-7xl mx-auto">
+<div class="pt-24 lg:pt-32 px-4 lg:px-10 max-w-7xl mx-auto">
 <!-- Page Header -->
-<div class="flex justify-between items-end mb-12">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 md:mb-12">
 <div>
 <span class="font-label text-xs uppercase tracking-widest text-primary font-semibold block mb-2">Team &amp; Permessi</span>
-<h1 class="font-display text-4xl text-on-surface tracking-tight">Collaboratori Studio</h1>
+<h1 class="font-display text-2xl md:text-4xl text-on-surface tracking-tight">Collaboratori Studio</h1>
 </div>
-<button onclick="openOperatorModal()" class="bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-md py-3 px-6 flex items-center gap-2 font-label font-medium shadow-[0px_20px_40px_rgba(27,28,28,0.06)] hover:opacity-90 transition-all">
-<span class="material-symbols-outlined">person_add</span>
-                    Aggiungi Collaboratore
+<button onclick="openOperatorModal()" class="bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-md py-3 px-4 md:px-6 flex items-center justify-center gap-2 font-label font-medium shadow-[0px_20px_40px_rgba(27,28,28,0.06)] hover:opacity-90 transition-all self-stretch md:self-auto text-sm md:text-base whitespace-nowrap">
+<span class="material-symbols-outlined text-lg md:text-base">person_add</span>
+                    Aggiungi
                 </button>
 </div>
 <!-- Collaboratori Grid / Table Replacement -->
-<div class="bg-surface-container-low rounded-xl p-8 mb-8">
-<!-- Headers (Hidden on small, visual grid on large) -->
-<div class="grid grid-cols-12 gap-6 pb-6 mb-6 border-b border-surface-variant text-xs font-label uppercase tracking-widest text-on-surface-variant">
+<div class="bg-surface-container-low rounded-xl p-4 md:p-8 mb-8">
+<!-- Headers (Hidden on mobile, visible on desktop) -->
+<div class="hidden md:grid grid-cols-12 gap-6 pb-6 mb-6 border-b border-surface-variant text-xs font-label uppercase tracking-widest text-on-surface-variant">
 <div class="col-span-3">Collaboratore</div>
 <div class="col-span-2">Ruolo</div>
 <div class="col-span-3">Progetti Attivi</div>
@@ -754,45 +754,46 @@ window.loadOperatorData = async function(operatorId) {
                     const progettiArray = member?.progetti_assegnati ? member.progetti_assegnati.split(',') : [];
                     
                     return `
-                        <div class="grid grid-cols-12 gap-6 items-center bg-surface-container-lowest p-4 rounded-xl mb-4 shadow-[0px_10px_20px_rgba(27,28,28,0.02)] transition-all hover:bg-surface-bright">
+                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-6 items-start md:items-center bg-surface-container-lowest p-4 rounded-xl mb-4 shadow-[0px_10px_20px_rgba(27,28,28,0.02)] transition-all hover:bg-surface-bright">
                             <!-- Profile -->
-                            <div class="col-span-3 flex items-center gap-4">
+                            <div class="flex items-center gap-4 w-full md:col-span-3">
                                 ${avatarContent}
-                                <div>
-                                    <p class="font-display text-lg text-on-surface leading-tight">${member?.nome || ''} ${member?.cognome || ''}</p>
-                                    <p class="text-sm text-on-surface-variant font-label">${member?.email || 'Nessuna email'}</p>
+                                <div class="min-w-0 flex-1">
+                                    <p class="font-display text-base md:text-lg text-on-surface leading-tight truncate">${member?.nome || ''} ${member?.cognome || ''}</p>
+                                    <p class="text-xs md:text-sm text-on-surface-variant font-label truncate">${member?.email || 'Nessuna email'}</p>
                                 </div>
                             </div>
                             <!-- Role -->
-                            <div class="col-span-2">
+                            <div class="md:col-span-2">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-sm text-xs font-medium ${roleClass} font-label">
                                     ${member?.ruolo || 'Nessun ruolo'}
                                 </span>
                             </div>
                             <!-- Projects -->
-                            <div class="col-span-3">
-                                <div class="flex flex-wrap gap-2">
-                                    ${progettiArray.length > 0 ? progettiArray.map(project => 
-                                        `<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-sm font-label">${(project || '').trim()}</span>`
+                            <div class="md:col-span-3">
+                                <div class="flex flex-wrap gap-1 md:gap-2">
+                                    ${progettiArray.length > 0 ? progettiArray.slice(0,3).map(project => 
+                                        `<span class="text-[10px] md:text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-sm font-label">${(project || '').trim()}</span>`
                                     ).join('') : '<span class="text-xs text-stone-400">Nessun progetto</span>'}
+                                    ${progettiArray.length > 3 ? `<span class="text-[10px] text-on-surface-variant">+${progettiArray.length - 3}</span>` : ''}
                                 </div>
                             </div>
                             <!-- Permessi Moduli -->
-                            <div class="col-span-3">
-                                <div class="flex gap-2 items-center">
+                            <div class="md:col-span-3">
+                                <div class="flex gap-1 md:gap-2 items-center flex-wrap">
                                     ${permissions}
                                 </div>
-                                <div class="text-xs text-stone-500 mt-1">
+                                <div class="text-[10px] md:text-xs text-stone-500 mt-1">
                                     ${permessi?.scope === 'all' ? 'Tutti i progetti' : 'Solo progetti assegnati'}
                                 </div>
                             </div>
                             <!-- Actions -->
-                            <div class="col-span-1 text-right">
+                            <div class="md:col-span-1 flex md:block justify-end gap-2 md:gap-0 md:text-right mt-2 md:mt-0">
                                 <button onclick="openOperatorModal('${member?.id}')" class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-variant">
-                                    <span class="material-symbols-outlined">folder_open</span>
+                                    <span class="material-symbols-outlined text-lg md:text-base">folder_open</span>
                                 </button>
                                 <button onclick="openProjectAssignment('${member?.id}')" class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-variant">
-                                    <span class="material-symbols-outlined">more_vert</span>
+                                    <span class="material-symbols-outlined text-lg md:text-base">more_vert</span>
                                 </button>
                             </div>
                         </div>
