@@ -86,7 +86,7 @@
                     <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
                         <span class="material-symbols-outlined text-[18px]">person</span> Profilo
                     </a>
-                    <a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
+                    <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
                         <span class="material-symbols-outlined text-[18px]">logout</span> Esci
                     </a>
                 </div>
@@ -202,6 +202,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/portal-config.js"></script>
+    <script>
+        PORTAL_PAGE_CONFIG = {
+            allowedRoles: ['senior', 'admin', 'operator', 'architect'],
+            defaultActiveMenu: 'clienti',
+            pageName: 'Anagrafica Clienti'
+        };
+    </script>
     <script src="assets/js/portal-init.js"></script>
     <script src="assets/js/cookie-banner.js"></script>
 
