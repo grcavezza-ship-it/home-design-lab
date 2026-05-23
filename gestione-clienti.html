@@ -95,49 +95,49 @@
     </header>
 
     <main class="lg:ml-64 pt-20 min-h-screen bg-surface">
-        <div class="p-6 md:p-10 max-w-7xl mx-auto">
-            <div class="flex justify-between items-center mb-8">
+        <div class="p-4 md:p-10 max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-0 mb-6 md:mb-8">
                 <div>
-                    <h1 class="text-4xl font-headline font-bold text-on-surface">Clienti</h1>
-                    <p class="text-on-surface-variant mt-1">Gestisci i tuoi clienti, privati e società</p>
+                    <h1 class="text-2xl md:text-4xl font-headline font-bold text-on-surface">Clienti</h1>
+                    <p class="text-sm md:text-base text-on-surface-variant mt-1">Gestisci i tuoi clienti, privati e società</p>
                 </div>
-                <button onclick="showAddClientForm()" class="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors flex items-center gap-2">
+                <button onclick="showAddClientForm()" class="w-full md:w-auto px-4 md:px-5 py-2.5 bg-primary text-white rounded-lg text-xs md:text-sm font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-lg">add</span>
                     Nuovo Cliente
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">
                 <div class="xl:col-span-8">
                     <div class="bg-surface-container-lowest rounded-xl shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr class="border-b border-outline-variant/20">
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Cliente</th>
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Tipo</th>
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Email</th>
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Telefono</th>
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Progetti</th>
-                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline text-center">Azioni</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline">Cliente</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline hidden md:table-cell">Tipo</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline hidden sm:table-cell">Email</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline hidden md:table-cell">Telefono</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline">Progetti</th>
+                                        <th class="px-4 md:px-6 py-3 md:py-4 text-[9px] md:text-[10px] font-extrabold uppercase tracking-widest text-outline text-center">Azioni</th>
                                     </tr>
                                 </thead>
                                 <tbody id="clienti-tbody" class="divide-y divide-outline-variant/10"></tbody>
                             </table>
                         </div>
-                        <div id="empty-state" class="text-center py-16">
-                            <span class="material-symbols-outlined text-5xl text-on-surface-variant mb-4">group_off</span>
-                            <h3 class="text-lg font-headline font-bold text-on-surface mb-2">Nessun cliente</h3>
-                            <p class="text-on-surface-variant">Clicca "Nuovo Cliente" per iniziare</p>
+                        <div id="empty-state" class="text-center py-10 md:py-16">
+                            <span class="material-symbols-outlined text-4xl md:text-5xl text-on-surface-variant mb-3 md:mb-4">group_off</span>
+                            <h3 class="text-base md:text-lg font-headline font-bold text-on-surface mb-1 md:mb-2">Nessun cliente</h3>
+                            <p class="text-sm md:text-base text-on-surface-variant">Clicca "Nuovo Cliente" per iniziare</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="xl:col-span-4">
-                    <div id="detail-panel" class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/10 min-h-[400px]">
-                        <div class="text-center text-on-surface-variant py-12">
-                            <span class="material-symbols-outlined text-4xl mb-2">person</span>
-                            <p class="text-sm">Seleziona un cliente per visualizzare i dettagli</p>
+                    <div id="detail-panel" class="bg-surface-container-lowest rounded-xl p-4 md:p-6 xl:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/10 min-h-[200px] md:min-h-[400px]">
+                        <div class="text-center text-on-surface-variant py-8 md:py-12">
+                            <span class="material-symbols-outlined text-3xl md:text-4xl mb-2">person</span>
+                            <p class="text-xs md:text-sm">Seleziona un cliente per visualizzare i dettagli</p>
                         </div>
                     </div>
                 </div>
@@ -268,12 +268,12 @@
             var fiscalLabel = c.tipo_cliente === 'societa' ? (c.partita_iva || '-') : (c.codice_fiscale || '-');
 
             html += '<tr data-client-id="' + c.id + '" class="hover:bg-surface-container-low/50 transition-colors cursor-pointer" onclick="window.location.href=\'dettaglio-cliente.html?id=' + c.id + '\'">';
-            html += '<td class="px-6 py-4"><div class="font-medium text-on-surface hover:text-primary transition-colors">' + c.nome + '</div><div class="text-[11px] text-on-surface-variant">' + fiscalLabel + '</div></td>';
-            html += '<td class="px-6 py-4">' + getTipoBadge(c.tipo_cliente) + '</td>';
-            html += '<td class="px-6 py-4"><div class="text-sm text-on-surface-variant">' + c.email + '</div></td>';
-            html += '<td class="px-6 py-4"><div class="text-sm text-on-surface-variant">' + c.telefono + '</div></td>';
-            html += '<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full"><span class="material-symbols-outlined text-[12px]">architecture</span>' + numProgetti + ' progetti</span></td>';
-            html += '<td class="px-6 py-4 text-center"><div class="flex items-center justify-center gap-2">';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4"><div class="font-medium text-on-surface hover:text-primary transition-colors">' + c.nome + '</div><div class="text-[11px] text-on-surface-variant">' + fiscalLabel + '</div></td>';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4 hidden md:table-cell">' + getTipoBadge(c.tipo_cliente) + '</td>';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4 hidden sm:table-cell"><div class="text-sm text-on-surface-variant">' + c.email + '</div></td>';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4 hidden md:table-cell"><div class="text-sm text-on-surface-variant">' + c.telefono + '</div></td>';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4"><span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full"><span class="material-symbols-outlined text-[12px]">architecture</span>' + numProgetti + '</span></td>';
+            html += '<td class="px-4 md:px-6 py-3 md:py-4 text-center"><div class="flex items-center justify-center gap-1 md:gap-2">';
             html += '<button onclick="event.stopPropagation(); openSchedaCliente(\'' + c.id + '\')" class="text-primary hover:text-primary/80 transition-colors" title="Scheda Rapida"><span class="material-symbols-outlined text-[18px]">badge</span></button>';
             html += '<button onclick="event.stopPropagation(); window.location.href=\'dettaglio-cliente.html?id=' + c.id + '\'" class="text-primary hover:text-primary/80 transition-colors" title="Gestisci"><span class="material-symbols-outlined text-[18px]">manage_accounts</span></button>';
             html += '<button onclick="event.stopPropagation(); deleteClient(\'' + c.id + '\')" class="text-stone-500 hover:text-stone-700 transition-colors" title="Elimina"><span class="material-symbols-outlined text-[18px]">delete</span></button>';
