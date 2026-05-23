@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -454,5 +454,41 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     waitForInit();
 });
+    // Mobile sidebar toggle
+    var menuToggle = document.getElementById('mobile-menu-toggle');
+    var sidebar = document.getElementById('sidebar-menu');
+    var overlay = document.getElementById('mobile-sidebar-overlay');
+    function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
+    }
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+    }
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) closeSidebar();
+            else openSidebar();
+        });
+    }
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    function checkScreenSize() {
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+            if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+        } else {
+            closeSidebar();
+        }
+    }
+    window.addEventListener('resize', checkScreenSize);
 </script>
 </body></html>

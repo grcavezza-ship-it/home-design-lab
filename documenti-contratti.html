@@ -414,5 +414,41 @@ function renderFileItem(file) {
         '<a href="' + webLink + '" target="_blank" class="p-2 text-on-surface-variant opacity-0 group-hover:opacity-100 transition-all hover:text-primary shrink-0" title="Apri in Drive">' +
         '<span class="material-symbols-outlined">open_in_new</span></a></div>';
 }
+    // Mobile sidebar toggle
+    var menuToggle = document.getElementById('mobile-menu-toggle');
+    var sidebar = document.getElementById('sidebar-menu');
+    var overlay = document.getElementById('mobile-sidebar-overlay');
+    function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        overlay.classList.remove('hidden');
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
+    }
+    function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+    }
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) closeSidebar();
+            else openSidebar();
+        });
+    }
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+    function checkScreenSize() {
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            overlay.classList.add('hidden');
+            if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+        } else {
+            closeSidebar();
+        }
+    }
+    window.addEventListener('resize', checkScreenSize);
 </script>
 </body></html>

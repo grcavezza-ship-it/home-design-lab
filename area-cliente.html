@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
@@ -91,8 +91,9 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-background text-on-surface min-h-screen flex">
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
-<main class="flex-grow md:ml-64 bg-background min-h-screen">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+<main class="flex-grow lg:ml-64 bg-background min-h-screen">
 <header class="w-full sticky top-0 z-50 bg-background/80 backdrop-blur-md flex justify-between items-center px-8 h-20 border-b border-outline-variant/10">
 <div class="flex-1 flex items-center h-full">
 </div>
@@ -466,3 +467,5 @@ loadClientDashboard();
 loadProjectsForUpload();
 </script>
 </body></html>
+
+
