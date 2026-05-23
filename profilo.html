@@ -290,6 +290,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     sv('field-cf', data.codice_fiscale || '');
                     sv('field-sdi', '');
                     sv('field-pec', '');
+                    if (data.avatar_url) displayAvatar(data.avatar_url); else displayAvatar(null);
                 } else {
                     sv('field-nome', data.nome); sv('field-cognome', data.cognome);
                     sv('field-email', data.email || window.currentUser.email); sv('field-telefono', data.telefono);
