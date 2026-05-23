@@ -90,7 +90,7 @@
 <body class="bg-surface text-on-surface selection:bg-accent selection:text-primary">
 <!-- Navigation Bar Unificata -->
 <nav class="sticky top-0 w-full z-50 bg-[#fbf9f8]/80 backdrop-blur-xl border-b border-primary/10">
-    <div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+    <div class="flex justify-between items-center max-w-7xl mx-auto px-4 md:px-8 h-20">
         <a class="flex items-center hover:opacity-80 transition-opacity" href="index.html">
             <img src="assets/images/Logo Home Design Lab.png" alt="Home Design Lab" class="h-12 w-auto">
         </a>
@@ -123,15 +123,15 @@
         </div>
     </div>
 </nav>
-<main class="max-w-7xl mx-auto px-8 py-24">
+<main class="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
 <!-- Hero Section -->
-<section class="mb-32 flex flex-col md:flex-row items-start gap-16">
-<div class="flex-1 pt-8">
-<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-6 block">Immobili Selezionati</span>
-<h1 class="text-6xl md:text-8xl font-serif italic tracking-tighter leading-[0.9] mb-10 text-primary">
+<section class="mb-16 md:mb-32 flex flex-col md:flex-row items-start gap-8 md:gap-16">
+<div class="flex-1 pt-0 md:pt-8">
+<span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-4 md:mb-6 block">Immobili Selezionati</span>
+<h1 class="text-4xl md:text-6xl lg:text-8xl font-serif italic tracking-tighter leading-[0.9] mb-6 md:mb-10 text-primary">
                     Home Design <br/> Collection
                 </h1>
-<p class="max-w-md text-lg text-on-surface-variant font-light leading-relaxed mb-12">
+<p class="max-w-md text-base md:text-lg text-on-surface-variant font-light leading-relaxed mb-8 md:mb-12">
                     Un portfolio selezionato di proprietà di prestigio ristrutturate, dove l'integrità architettonica storica incontra gli standard contemporanei del lusso abitativo.
                 </p>
 <div class="flex items-center gap-4 group cursor-pointer">
@@ -147,14 +147,14 @@
 </div>
 </section>
 <!-- Property Grid -->
-<section class="mb-32">
-<div class="flex justify-between items-end mb-16 border-b border-outline-variant/20 pb-8">
+<section class="mb-16 md:mb-32">
+<div class="flex justify-between items-end mb-8 md:mb-16 border-b border-outline-variant/20 pb-4 md:pb-8">
 <div>
 <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-primary mb-2 block">La Nostra Selezione</span>
-<h3 class="text-5xl font-serif italic text-primary">Proprietà Disponibili</h3>
+<h3 class="text-3xl md:text-5xl font-serif italic text-primary">Proprietà Disponibili</h3>
 </div>
 </div>
-<div id="collection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+<div id="collection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-12 gap-y-12 md:gap-y-20">
 <div class="col-span-full text-center py-16 text-on-surface-variant">
 <span class="material-symbols-outlined text-4xl mb-4 block">real_estate_agent</span>
 <p class="text-lg">Caricamento proprietà...</p>
@@ -179,16 +179,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 var imgs = p.immagini_urls || [];
                 var img = imgs.length > 0 ? imgs[0] : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80';
                 var price = p.prezzo_richiesta ? new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(p.prezzo_richiesta) : '';
-                var badge = p.stato_immobile === 'disponibile' ? '<span class="bg-white/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary">Disponibile</span>' : '<span class="bg-accent/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white">' + (p.stato_immobile || '') + '</span>';
+                var badge = p.stato_immobile === 'disponibile' ? '<span class="bg-white/90 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-primary">Disponibile</span>' : '<span class="bg-[#1b1c1c]/80 backdrop-blur px-4 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] text-white">' + (p.stato_immobile || '') + '</span>';
                 var location = p.citta || '';
                 return '<a href="dettaglio-immobile.html?id=' + p.id + '" class="group block">' +
-                    '<div class="aspect-[4/5] overflow-hidden mb-8 relative border border-outline-variant/20">' +
+                    '<div class="aspect-[4/5] overflow-hidden mb-6 md:mb-8 relative border border-outline-variant/20">' +
                     '<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]" src="' + img + '" alt="' + (p.titolo || '') + '"/>' +
-                    '<div class="absolute top-6 right-6">' + badge + '</div>' +
+                    '<div class="absolute top-4 right-4 md:top-6 md:right-6">' + badge + '</div>' +
                     '</div>' +
-                    '<div class="flex justify-between items-start border-b border-outline-variant/20 pb-4 mb-2">' +
-                    '<h4 class="text-2xl font-serif italic text-primary">' + (p.titolo || 'Proprietà') + '</h4>' +
-                    (price ? '<p class="text-lg font-serif">' + price + '</p>' : '') +
+                    '<div class="flex justify-between items-start border-b border-outline-variant/20 pb-3 md:pb-4 mb-2 gap-4">' +
+                    '<h4 class="text-lg md:text-2xl font-serif italic text-primary leading-tight">' + (p.titolo || 'Proprietà') + '</h4>' +
+                    (price ? '<p class="text-base md:text-lg font-serif text-on-surface font-semibold whitespace-nowrap">' + price + '</p>' : '') +
                     '</div>' +
                     (location ? '<p class="text-[10px] uppercase tracking-widest text-on-surface-variant flex items-center gap-2"><span class="material-symbols-outlined text-sm">location_on</span> ' + location + '</p>' : '') +
                     '</a>';
