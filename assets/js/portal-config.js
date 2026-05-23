@@ -266,6 +266,17 @@ function renderSidebarMenu(containerId, activeItem) {
     html += '</a>';
     html += '</div>';
 
+    // 👇 Navigazione pubblica per clienti (tornare al sito)
+    if (role === 'client') {
+        html += '<div class="border-t border-stone-200 dark:border-stone-800 pt-4">';
+        html += '<p class="px-8 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-2">Torna al sito</p>';
+        html += '<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="/"><span class="material-symbols-outlined text-[18px]">home</span> Home</a>';
+        html += '<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="/chi-siamo"><span class="material-symbols-outlined text-[18px]">info</span> Chi Siamo</a>';
+        html += '<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="/portfolio"><span class="material-symbols-outlined text-[18px]">collections_bookmark</span> Portfolio</a>';
+        html += '<a class="text-stone-500 dark:text-stone-400 hover:text-[#186C32] dark:hover:text-[#4ade80] px-8 py-2 transition-colors hover:bg-stone-100 dark:hover:bg-stone-800/50 flex items-center gap-4" href="/contatti"><span class="material-symbols-outlined text-[18px]">mail</span> Contatti</a>';
+        html += '</div>';
+    }
+
     container.innerHTML = html;
 }
 
