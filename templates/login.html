@@ -376,6 +376,61 @@ async function handlePrimoAccesso() {
         btn.innerHTML = 'Verifica e Invia <span class="material-symbols-outlined text-base">send</span>';
     }
 }
+
+// ─── Password Dimenticata ────────────────────────────────────────────────────
+function openPasswordDimenticata() {
+    const modal = document.getElementById('password-dimenticata-modal');
+    const track = document.getElementById('pwd-modal-slide-track');
+    const emailInput = document.getElementById('pwd-email');
+    const errorMsg = document.getElementById('pwd-error');
+    track.classList.remove('shifted');
+    emailInput.value = '';
+    errorMsg.classList.add('hidden');
+    document.getElementById('btn-pwd').disabled = false;
+    document.getElementById('btn-pwd').innerHTML = 'Invia Link di Reset <span class="material-symbols-outlined text-base">send</span>';
+    modal.classList.remove('hidden');
+    setTimeout(() => emailInput.focus(), 300);
+}
+
+function closePasswordDimenticata() {
+    document.getElementById('password-dimenticata-modal').classList.add('hidden');
+}
+
+async function handlePasswordDimenticata() {
+    const email = document.getElementById('pwd-email').value.trim();
+    const btn = document.getElementById('btn-pwd');
+    const errorMsg = document.getElementById('pwd-error');
+
+    if (!email) {
+        errorMsg.textContent = 'Inserisci un indirizzo email valido.';
+        errorMsg.classList.remove('hidden');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Invio in corso...';
+
+    try {
+        const res = await fetch('/api/primo-accesso', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.error || 'Errore durante l\'invio');
+
+        document.getElementById('pwd-modal-slide-track').classList.add('shifted');
+
+    } catch (error) {
+        console.error('Password dimenticata error:', error);
+        errorMsg.textContent = 'Errore: ' + error.message;
+        errorMsg.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = 'Invia Link di Reset <span class="material-symbols-outlined text-base">send</span>';
+    }
+}
 </script>
 
 <!-- Primo Accesso Modal -->
@@ -419,6 +474,56 @@ async function handlePrimoAccesso() {
                             Controlla la tua casella di posta! Clicca sul link che ti abbiamo inviato per impostare la tua password e accedere.
                         </p>
                         <button onclick="closePrimoAccesso()" class="mt-8 text-primary-container hover:text-primary font-label text-[11px] uppercase tracking-[0.2em] transition-colors">
+                            Chiudi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Password Dimenticata Modal -->
+<div id="password-dimenticata-modal" class="fixed inset-0 z-[100] hidden modal-overlay">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closePasswordDimenticata()"></div>
+    <div class="min-h-screen flex items-center justify-center p-6 relative z-10">
+        <div class="bg-surface-container-lowest p-10 md:p-12 w-full max-w-md shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] border border-outline-variant/20 relative modal-card">
+            <button onclick="closePasswordDimenticata()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-on-surface-variant/60 hover:text-on-surface transition-colors">
+                <span class="material-symbols-outlined text-lg">close</span>
+            </button>
+
+            <div class="overflow-hidden">
+                <div class="modal-slide-track" id="pwd-modal-slide-track">
+                    <!-- Screen 1: Email Input -->
+                    <div class="modal-slide px-1">
+                        <div class="mb-8">
+                            <div class="inline-flex items-center justify-center w-10 h-10 bg-surface-container-low mb-6">
+                                <span class="material-symbols-outlined text-primary text-lg">lock_reset</span>
+                            </div>
+                            <h2 class="noto-serif text-2xl text-on-surface tracking-tight">Password Dimenticata</h2>
+                            <p class="text-on-surface-variant text-sm mt-3 font-body leading-relaxed">Inserisci la tua email. Ti invieremo un link per reimpostare la password.</p>
+                        </div>
+                        <div class="space-y-2 mb-6">
+                            <label class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant" for="pwd-email">Email</label>
+                            <input class="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary px-4 py-4 text-on-surface text-sm placeholder:text-on-surface-variant/40 transition-colors outline-none" id="pwd-email" type="email" placeholder="architetto@esempio.it" autocomplete="email">
+                        </div>
+                        <div id="pwd-error" class="hidden text-error text-xs font-body mb-4"></div>
+                        <button id="btn-pwd" onclick="handlePasswordDimenticata()" class="w-full bg-primary text-on-primary font-label text-[11px] uppercase tracking-[0.2em] py-5 hover:bg-primary-container transition-all flex items-center justify-center gap-3">
+                            Invia Link di Reset
+                            <span class="material-symbols-outlined text-base">send</span>
+                        </button>
+                    </div>
+
+                    <!-- Screen 2: Success Message -->
+                    <div class="modal-slide px-1 flex flex-col items-center justify-center text-center py-8">
+                        <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-green-600 text-3xl">check</span>
+                        </div>
+                        <h3 class="noto-serif text-xl text-on-surface tracking-tight mb-3">Email Inviata!</h3>
+                        <p class="text-on-surface-variant text-sm font-body leading-relaxed max-w-sm">
+                            Controlla la tua casella di posta. Clicca sul link che ti abbiamo inviato per reimpostare la password.
+                        </p>
+                        <button onclick="closePasswordDimenticata()" class="mt-8 text-primary-container hover:text-primary font-label text-[11px] uppercase tracking-[0.2em] transition-colors">
                             Chiudi
                         </button>
                     </div>
