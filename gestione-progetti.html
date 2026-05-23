@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
@@ -88,14 +88,16 @@
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen">
 <!-- SideNavBar Dinamico -->
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
 <!-- TopAppBar (From JSON) -->
-<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-10 h-20 transition-all">
+<header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-4 lg:px-10 h-20 transition-all">
+<button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 -ml-1 rounded-lg text-on-surface hover:bg-surface-container transition-colors mr-2" aria-label="Apri menu"><span class="material-symbols-outlined">menu</span></button>
 <div class="flex-1 flex items-center h-full">
 <span class="leading-none">Gestione Progetti</span>
 </div>
 <div class="flex items-center gap-6 h-full">
-<div class="relative w-64 flex items-center">
+<div class="relative w-64 items-center hidden lg:flex">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
 <input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Cerca progetti..." type="text"/>
 </div>
@@ -121,7 +123,7 @@
 </div>
 </header>
 <!-- Main Canvas -->
-<main class="ml-64 pt-28 px-12 pb-24 bg-surface min-h-screen">
+<main class="lg:ml-64 pt-28 px-4 lg:px-12 pb-24 bg-surface min-h-screen">
 <div class="max-w-7xl mx-auto space-y-16">
 <!-- Hero Header -->
 <section class="flex justify-between items-end">

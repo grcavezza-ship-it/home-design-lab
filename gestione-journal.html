@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -53,8 +53,10 @@ tailwind.config = {
 </head>
 <body class="bg-surface text-on-surface font-body antialiased min-h-screen">
 
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] flex flex-col py-8 z-50"></nav>
-<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 backdrop-blur-xl flex justify-between items-center px-10 h-20 border-b border-stone-200/30">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 backdrop-blur-xl flex justify-between items-center px-4 lg:px-10 h-20 border-b border-stone-200/30">
+<button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 -ml-1 rounded-lg text-on-surface hover:bg-surface-container transition-colors mr-2" aria-label="Apri menu"><span class="material-symbols-outlined">menu</span></button>
     <div class="flex-1 flex items-center h-full">
         <span class="font-headline italic text-lg text-primary leading-none" id="header-title">Gestione Journal</span>
     </div>
@@ -72,7 +74,7 @@ tailwind.config = {
 </header>
 
 <!-- ─── LISTA ARTICOLI ─── -->
-<main id="list-view" class="ml-64 pt-28 px-10 pb-24 bg-surface min-h-screen">
+<main id="list-view" class="lg:ml-64 pt-28 px-4 lg:px-10 pb-24 bg-surface min-h-screen">
 <div class="max-w-5xl mx-auto">
     <div class="flex justify-between items-center mb-8">
         <div>
@@ -93,7 +95,7 @@ tailwind.config = {
 </main>
 
 <!-- ─── EDITOR A PAGINA INTERA ─── -->
-<main id="editor-view" class="ml-64 pt-28 px-10 pb-24 bg-surface min-h-screen">
+<main id="editor-view" class="lg:ml-64 pt-28 px-4 lg:px-10 pb-24 bg-surface min-h-screen">
 <div class="max-w-6xl mx-auto">
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
