@@ -160,18 +160,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('[Portal Init] Sidebar ri-renderizzata per ruolo:', role);
         }
         
-        // Carica profilo da operatori_profiles per nome, cognome, telefono, avatar_url
+        // Carica profilo per nome e avatar (operatori_profiles per staff, clienti_profiles per clienti)
         try {
+            var profileTable = role === 'client' ? 'clienti_profiles' : 'operatori_profiles';
             const { data: profile } = await window.supabase
-                .from('operatori_profiles')
+                .from(profileTable)
                 .select('nome, cognome, telefono, avatar_url')
                 .eq('user_id', user.id)
                 .maybeSingle();
             if (profile) {
                 window.currentUserProfile = profile;
+                window.currentUserDisplayName = [profile.nome, profile.cognome].filter(Boolean).join(' ') || user.email;
             }
         } catch (e) {
-            console.warn('[Portal Init] Impossibile caricare profilo operatore:', e.message);
+            console.warn('[Portal Init] Impossibile caricare profilo:', e.message);
         }
         
         // Blocca accesso se profilo incompleto (solo per operatori/architetti, non admin/senior/cliente)
@@ -205,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 email: user.email,
                 display_name: window.currentUserDisplayName || user.user_metadata?.display_name || user.email,
                 role: role,
-                avatar_url: user.user_metadata?.avatar_url || null
+                avatar_url: (window.currentUserProfile && window.currentUserProfile.avatar_url) || null
             });
             avatarImg.src = avatarUrl;
             avatarImg.alt = user.email || 'User Avatar';

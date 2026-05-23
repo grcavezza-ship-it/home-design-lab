@@ -293,14 +293,11 @@ function generateAvatarUrl(user) {
     const displayName = user.display_name || user.email || 'User';
     
     if (isStaff) {
-        // 👔 STAFF: Placeholder con iniziali (UI Avatars)
-        // Quando lo staff carica una foto vera, avatar_url sarà popolato
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=186C32&color=fff&size=128`;
     } else {
-        // 👤 CLIENTI: Avatar illustrato (DiceBear Avataaars)
-        // Generato deterministicamente dall'email (stesso avatar sempre)
-        const seed = user.email || user.id || 'default';
-        return `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(seed)}&backgroundColor=c0aede,b6e3f4,d1d4f9,ffd5dc,ffdfbf`;
+        // 👤 CLIENTI: Iniziali come lo staff, ma con colore diverso
+        // Se il cliente ha caricato una foto (avatar_url), verrà mostrata quella
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=c0aede&color=fff&size=128`;
     }
 }
 
