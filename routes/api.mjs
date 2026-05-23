@@ -15,6 +15,7 @@ import {
     requirePermission,
     requireClientAccess
 } from '../middleware/auth.mjs';
+import { primoAccesso, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: CONFIG.STORAGE.MAX_FILE_SIZE } });
@@ -348,52 +349,11 @@ router.post('/primo-accesso', async (req, res, next) => {
                         console.warn('Errore parsing action_link:', e.message);
                     }
                 }
-                const currentYear = new Date().getFullYear();
-
                 await transporter.sendMail({
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
                     to: email,
                     subject: 'Benvenuto in Home Design Lab - Imposta la tua password',
-                    html: `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <style>
-                                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-                                .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; border: 1px solid #eee; }
-                                .logo { text-align: center; margin-bottom: 30px; }
-                                .logo img { max-width: 180px; }
-                                .content { text-align: left; background-color: #ffffff; }
-                                h1 { color: #1a1a1a; font-size: 22px; margin-bottom: 20px; text-align: center; }
-                                p { margin-bottom: 20px; font-size: 16px; color: #555; }
-                                .cta-container { text-align: center; margin: 35px 0; }
-                                .btn { background-color: #1a1a1a; color: #ffffff !important; padding: 15px 30px; text-decoration: none; border-radius: 4px; font-weight: bold; font-size: 16px; display: inline-block; }
-                                .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="container">
-                                <div class="logo">
-                                    <img src="https://coreva-normal.trae.ai/api/ide/v1/text_to_image?prompt=Home%20Design%20Lab%20Logo%20%2D%20elegant%20minimalist%20luxury%20real%20estate%20interior%20design%20logo&image_size=square_hd" alt="Home Design Lab Logo">
-                                </div>
-                                <div class="content">
-                                    <h1>Benvenuto in Home Design Lab</h1>
-                                    <p>Siamo lieti di darti il benvenuto nel portale ufficiale di <strong>Home Design Lab</strong>.</p>
-                                    <p>Per accedere alla piattaforma e gestire i tuoi progetti, &egrave; necessario impostare la tua password personale. Clicca sul pulsante qui sotto per procedere:</p>
-                                    <div class="cta-container">
-                                        <a href="${impostaPasswordLink}" class="btn">Imposta la tua Password</a>
-                                    </div>
-                                    <p>Per motivi di sicurezza, questo link scadr&agrave; tra 24 ore. Se non hai richiesto tu l'accesso, puoi ignorare questa mail.</p>
-                                    <p>A presto,<br><strong>Il Team di Home Design Lab</strong></p>
-                                </div>
-                                <div class="footer">
-                                    &copy; ${currentYear} Home Design Lab | Progettazione, Sicurezza e Interior Design<br>
-                                    Cicciano (NA) - Italia
-                                </div>
-                            </div>
-                        </body>
-                        </html>
-                    `
+                    html: primoAccesso(impostaPasswordLink)
                 });
                 emailSent = true;
                 console.log(`Email inviata a ${email}`);
@@ -619,38 +579,11 @@ router.post('/contatti', async (req, res, next) => {
                     auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
                 });
 
-                const currentYear = new Date().getFullYear();
-
                 await transporter.sendMail({
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
                     to: CONFIG.SMTP.FROM_EMAIL,
                     subject: `Nuovo contatto dal sito: ${subject || 'nessun oggetto'}`,
-                    html: `
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <style>
-                                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-                                .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; border: 1px solid #eee; }
-                                h1 { color: #1a1a1a; font-size: 22px; margin-bottom: 20px; }
-                                .field { margin-bottom: 15px; }
-                                .label { font-weight: bold; color: #555; }
-                                .value { color: #1a1a1a; margin-top: 3px; }
-                                .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="container">
-                                <h1>Nuovo messaggio dal sito</h1>
-                                <div class="field"><div class="label">Nome</div><div class="value">${name}</div></div>
-                                <div class="field"><div class="label">Email</div><div class="value">${email}</div></div>
-                                <div class="field"><div class="label">Oggetto</div><div class="value">${subject || 'non specificato'}</div></div>
-                                <div class="field"><div class="label">Messaggio</div><div class="value">${message}</div></div>
-                                <div class="footer">&copy; ${currentYear} Home Design Lab</div>
-                            </div>
-                        </body>
-                        </html>
-                    `
+                    html: nuovoContatto({ name, email, subject, message })
                 });
                 console.log(`Email contatto inviata a info@homedesignlab.it da ${email}`);
             } catch (err) {
@@ -696,12 +629,7 @@ router.post('/newsletter', async (req, res, next) => {
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
                     to: CONFIG.SMTP.FROM_EMAIL,
                     subject: `[HDL Newsletter] Nuovo iscritto: ${email}`,
-                    html: `<div style="font-family:Manrope,sans-serif;max-width:600px;margin:0 auto;">
-                        <h2 style="color:#186C32;">Nuova iscrizione newsletter</h2>
-                        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
-                        <p><strong>Provenienza:</strong> ${source || 'sito'}</p>
-                        <p style="color:#707a6e;font-size:12px;margin-top:24px;">Home Design Lab</p>
-                    </div>`
+                    html: nuovaNewsletter(email, source)
                 });
                 console.log('[Newsletter] Notifica inviata per', email);
             } catch (err) {
