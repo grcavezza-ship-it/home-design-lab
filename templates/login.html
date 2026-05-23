@@ -370,7 +370,14 @@ async function handlePrimoAccesso() {
 
     } catch (error) {
         console.error('Primo accesso error:', error);
-        errorMsg.textContent = 'Errore: ' + error.message;
+        var msg = error.message;
+        var match = msg.match(/only request this after (\d+) seconds/);
+        if (match) {
+            var seconds = parseInt(match[1]) + 2;
+            errorMsg.textContent = 'Troppe richieste. Riprova tra ' + seconds + ' secondi.';
+        } else {
+            errorMsg.textContent = 'Errore: ' + msg;
+        }
         errorMsg.classList.remove('hidden');
         btn.disabled = false;
         btn.innerHTML = 'Verifica e Invia <span class="material-symbols-outlined text-base">send</span>';
@@ -425,7 +432,14 @@ async function handlePasswordDimenticata() {
 
     } catch (error) {
         console.error('Password dimenticata error:', error);
-        errorMsg.textContent = 'Errore: ' + error.message;
+        var msg = error.message;
+        var match = msg.match(/only request this after (\d+) seconds/);
+        if (match) {
+            var seconds = parseInt(match[1]) + 2;
+            errorMsg.textContent = 'Troppe richieste. Riprova tra ' + seconds + ' secondi.';
+        } else {
+            errorMsg.textContent = 'Errore: ' + msg;
+        }
         errorMsg.classList.remove('hidden');
         btn.disabled = false;
         btn.innerHTML = 'Invia Link di Reset <span class="material-symbols-outlined text-base">send</span>';
