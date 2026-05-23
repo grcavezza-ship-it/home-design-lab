@@ -135,7 +135,7 @@
         } else if (window.supabase) {
             await window.supabase.auth.signOut();
         }
-        window.location.href = 'templates/login.html';
+        window.location.href = '/';
     }
 
     async function guardProtectedPage() {
@@ -152,7 +152,7 @@
         // Verifica sessione con Supabase
         var user = await getStoredUser();
         if (!user) { 
-            window.location.replace('templates/login.html'); 
+            window.location.replace('/'); 
             return; 
         }
         
@@ -266,7 +266,7 @@
             opts = opts||{};
             var token = await getToken();
             if (!token) { 
-                window.location.replace('templates/login.html');
+                window.location.replace('/');
                 throw new Error('Sessione scaduta'); 
             }
             var headers = Object.assign({'Content-Type':'application/json'}, opts.headers||{}, {Authorization:'Bearer '+token});

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="light" lang="it"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -421,7 +421,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             e.preventDefault();
             if (window.supabase) await window.supabase.auth.signOut();
             localStorage.clear();
-            window.location.href = 'templates/login.html';
+            window.location.href = '/';
         });
     }
 
