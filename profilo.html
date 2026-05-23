@@ -116,7 +116,7 @@ tailwind.config = {
 </div>
 </div>
 
-<div class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<div id="sezione-professione" class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
 <h3 class="font-headline text-lg md:text-xl text-on-surface mb-4 md:mb-6">Professione & Logistica</h3>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div>
@@ -144,8 +144,8 @@ tailwind.config = {
 </div>
 </div>
 
-<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
-<h3 class="font-headline text-xl text-on-surface mb-6">Dati Fatturazione</h3>
+<div class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<h3 class="font-headline text-lg md:text-xl text-on-surface mb-4 md:mb-6">Dati Fatturazione</h3>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <div>
 <label class="block text-sm font-medium text-on-surface-variant mb-1.5">P.IVA</label>
@@ -192,6 +192,21 @@ tailwind.config = {
 </form>
 </div>
 </main>
+
+<script>
+// Nascondi sezione Professione & Logistica ai clienti
+document.addEventListener('DOMContentLoaded', function() {
+    var checkRole = setInterval(function() {
+        if (window.currentUserRole) {
+            if (window.currentUserRole === 'client') {
+                var sezione = document.getElementById('sezione-professione');
+                if (sezione) sezione.style.display = 'none';
+            }
+            clearInterval(checkRole);
+        }
+    }, 100);
+});
+</script>
 
 <script>
 PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'architect', 'operator', 'client'], defaultActiveMenu: null, pageName: 'Il Mio Profilo' };
