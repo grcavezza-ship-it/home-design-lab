@@ -330,7 +330,7 @@ router.post('/primo-accesso', async (req, res, next) => {
                 const transporter = nodemailer.createTransport({
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
-                    secure: true,
+                    secure: CONFIG.SMTP.PORT === 465,
                     auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
                 });
 
@@ -582,7 +582,7 @@ router.post('/contatti', async (req, res, next) => {
                 const transporter = nodemailer.createTransport({
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
-                    secure: true,
+                    secure: CONFIG.SMTP.PORT === 465,
                     auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
                 });
 
@@ -590,7 +590,7 @@ router.post('/contatti', async (req, res, next) => {
 
                 await transporter.sendMail({
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
-                    to: 'info@homedesignlab.it',
+                    to: CONFIG.SMTP.FROM_EMAIL,
                     subject: `Nuovo contatto dal sito: ${subject || 'nessun oggetto'}`,
                     html: `
                         <!DOCTYPE html>
@@ -626,6 +626,57 @@ router.post('/contatti', async (req, res, next) => {
         }
 
         res.json({ ok: true, message: 'Messaggio ricevuto, ti risponderemo presto' });
+    } catch (e) { next(e); }
+});
+
+// ─── NEWSLETTER ──────────────────────────────────────────────────────────────
+
+router.post('/newsletter', async (req, res, next) => {
+    try {
+        const { email, source } = req.body;
+        if (!email || !email.includes('@')) {
+            return res.status(400).json({ error: 'Email non valida' });
+        }
+
+        // Salva in Supabase
+        if (CONFIG.SUPABASE.URL && CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
+            const { error } = await getAdminClient()
+                .from('newsletter_subscribers')
+                .upsert({ email, source: source || 'sito', is_active: true }, { onConflict: 'email' });
+
+            if (error && error.code !== '42P01') {
+                console.error('[Newsletter] Errore salvataggio:', error.message);
+            }
+        }
+
+        // Invia notifica email
+        if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: CONFIG.SMTP.HOST,
+                    port: CONFIG.SMTP.PORT,
+                    secure: CONFIG.SMTP.PORT === 465,
+                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
+                });
+
+                await transporter.sendMail({
+                    from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
+                    to: CONFIG.SMTP.FROM_EMAIL,
+                    subject: `[HDL Newsletter] Nuovo iscritto: ${email}`,
+                    html: `<div style="font-family:Manrope,sans-serif;max-width:600px;margin:0 auto;">
+                        <h2 style="color:#186C32;">Nuova iscrizione newsletter</h2>
+                        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+                        <p><strong>Provenienza:</strong> ${source || 'sito'}</p>
+                        <p style="color:#707a6e;font-size:12px;margin-top:24px;">Home Design Lab</p>
+                    </div>`
+                });
+                console.log('[Newsletter] Notifica inviata per', email);
+            } catch (err) {
+                console.error('[Newsletter] Errore invio email:', err.message);
+            }
+        }
+
+        res.json({ ok: true, message: 'Iscrizione completata con successo!' });
     } catch (e) { next(e); }
 });
 
