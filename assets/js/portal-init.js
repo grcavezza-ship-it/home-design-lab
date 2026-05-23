@@ -233,6 +233,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         var notifScript = document.createElement('script');
         notifScript.src = 'notifications-system.js';
         document.body.appendChild(notifScript);
+
+        // Carica ricerca dashboard
+        var searchScript = document.createElement('script');
+        searchScript.src = 'assets/js/dashboard-search.js';
+        document.body.appendChild(searchScript);
         
     } catch (error) {
         console.error(`Errore inizializzazione ${config.pageName}:`, error);

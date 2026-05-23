@@ -563,24 +563,157 @@ router.post('/contatti', async (req, res, next) => {
             return res.status(400).json({ error: 'Nome, email e messaggio sono richiesti' });
         }
 
-        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
-            return res.json({ ok: true, message: 'Messaggio ricevuto, ti risponderemo presto' });
-        }
-
-        // Salva in Supabase (tabella semplice) o invia email — per ora lo salviamo
+        // Salva in Supabase
         const { error } = await getAdminClient()
             .from('contact_requests')
             .insert({ name, email, subject, message });
 
-        // La tabella potrebbe non esistere ancora — non blocchiamo l'utente
         if (error) {
             if (error.code === '42P01' || (error.message && error.message.includes('table') && error.message.includes('contact_requests'))) {
-                return res.json({ ok: true, message: 'Messaggio ricevuto, ti risponderemo presto' });
+                // Tabella non ancora creata — procedi
+            } else {
+                throw error;
             }
-            throw error;
+        }
+
+        // Invia email via SMTP (se configurato)
+        if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: CONFIG.SMTP.HOST,
+                    port: CONFIG.SMTP.PORT,
+                    secure: true,
+                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
+                });
+
+                const currentYear = new Date().getFullYear();
+
+                await transporter.sendMail({
+                    from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
+                    to: 'info@homedesignlab.it',
+                    subject: `Nuovo contatto dal sito: ${subject || 'nessun oggetto'}`,
+                    html: `
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <style>
+                                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
+                                .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; border: 1px solid #eee; }
+                                h1 { color: #1a1a1a; font-size: 22px; margin-bottom: 20px; }
+                                .field { margin-bottom: 15px; }
+                                .label { font-weight: bold; color: #555; }
+                                .value { color: #1a1a1a; margin-top: 3px; }
+                                .footer { margin-top: 40px; text-align: center; font-size: 12px; color: #999; border-top: 1px solid #eee; padding-top: 20px; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <h1>Nuovo messaggio dal sito</h1>
+                                <div class="field"><div class="label">Nome</div><div class="value">${name}</div></div>
+                                <div class="field"><div class="label">Email</div><div class="value">${email}</div></div>
+                                <div class="field"><div class="label">Oggetto</div><div class="value">${subject || 'non specificato'}</div></div>
+                                <div class="field"><div class="label">Messaggio</div><div class="value">${message}</div></div>
+                                <div class="footer">&copy; ${currentYear} Home Design Lab</div>
+                            </div>
+                        </body>
+                        </html>
+                    `
+                });
+                console.log(`Email contatto inviata a info@homedesignlab.it da ${email}`);
+            } catch (err) {
+                console.error('Errore invio email contatto:', err.message);
+            }
         }
 
         res.json({ ok: true, message: 'Messaggio ricevuto, ti risponderemo presto' });
+    } catch (e) { next(e); }
+});
+
+// ─── NOTIFICHE ───────────────────────────────────────────────────────────────
+
+router.get('/notifiche', authenticate, async (req, res, next) => {
+    try {
+        const { data, error } = await getAdminClient()
+            .from('notifications')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .order('created_at', { ascending: false })
+            .limit(20);
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+router.post('/notifiche/:id/read', authenticate, async (req, res, next) => {
+    try {
+        const { error } = await getAdminClient()
+            .from('notifications')
+            .update({ read: true })
+            .eq('id', req.params.id)
+            .eq('user_id', req.user.id);
+        if (error) throw error;
+        res.json({ ok: true });
+    } catch (e) { next(e); }
+});
+
+// ─── PUBBLICA: RICERCA ──────────────────────────────────────────────────
+
+router.get('/search', async (req, res, next) => {
+    try {
+        const q = (req.query.q || '').trim().toLowerCase();
+        if (!q || q.length < 2) return res.json({ results: [] });
+
+        const results = [];
+
+        // Cerca tra i progetti
+        const { data: projects } = await getAnonClient()
+            .from('projects')
+            .select('id, titolo, categoria, descrizione')
+            .ilike('titolo', `%${q}%`)
+            .limit(5);
+        if (projects) {
+            projects.forEach(p => results.push({
+                type: 'progetto',
+                title: p.titolo,
+                desc: p.descrizione,
+                url: '/dettaglio-progetto.html?id=' + p.id,
+                category: p.categoria
+            }));
+        }
+
+        // Cerca tra gli immobili
+        const { data: immobili } = await getAnonClient()
+            .from('properties')
+            .select('id, titolo, citta, descrizione')
+            .or(`titolo.ilike.%${q}%,citta.ilike.%${q}%,descrizione.ilike.%${q}%`)
+            .limit(5);
+        if (immobili) {
+            immobili.forEach(p => results.push({
+                type: 'immobile',
+                title: p.titolo,
+                desc: p.citta || p.descrizione,
+                url: '/dettaglio-immobile.html?id=' + p.id,
+                category: 'proprietà'
+            }));
+        }
+
+        // Cerca tra gli articoli del journal
+        const { data: articles } = await getAnonClient()
+            .from('blog_posts')
+            .select('id, title, excerpt, slug')
+            .or(`title.ilike.%${q}%,excerpt.ilike.%${q}%,content.ilike.%${q}%`)
+            .limit(5);
+        if (articles) {
+            articles.forEach(p => results.push({
+                type: 'articolo',
+                title: p.title,
+                desc: p.excerpt,
+                url: '/dettaglio-journal.html?slug=' + (p.slug || p.id),
+                category: 'journal'
+            }));
+        }
+
+        res.json({ results });
     } catch (e) { next(e); }
 });
 
