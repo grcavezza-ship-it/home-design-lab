@@ -415,6 +415,35 @@ router.post('/primo-accesso', async (req, res, next) => {
     }
 });
 
+// ─── RESET PASSWORD (via Supabase built-in - funziona con anon key) ─────────
+
+router.post('/reset-password', async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        if (!email || !email.includes('@')) {
+            return res.status(400).json({ error: 'Email non valida' });
+        }
+
+        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.ANON_KEY) {
+            return res.status(503).json({ error: 'Supabase non configurato' });
+        }
+
+        const siteUrl = process.env.SITE_URL || 'http://localhost:3000';
+        const supabase = createClient(CONFIG.SUPABASE.URL, CONFIG.SUPABASE.ANON_KEY);
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${siteUrl}/imposta-password.html`
+        });
+
+        if (error) throw error;
+
+        res.json({ success: true, message: 'Email inviata con successo' });
+    } catch (error) {
+        console.error('Reset password error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ─── IMPOSTA PASSWORD (via admin per evitare problemi di sessione client) ────
 
 router.post('/imposta-password', async (req, res, next) => {

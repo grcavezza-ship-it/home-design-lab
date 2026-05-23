@@ -173,7 +173,7 @@
                             <label class="font-label text-[10px] uppercase tracking-[0.2em] text-on-surface-variant" for="site-login-password">Password</label>
                             <div class="flex gap-4">
                                 <a class="text-[10px] font-label uppercase tracking-[0.2em] text-primary-container hover:text-primary transition-colors cursor-pointer" onclick="openPrimoAccesso()">Primo accesso</a>
-                                <a class="text-[10px] font-label uppercase tracking-[0.2em] text-primary-container hover:text-primary transition-colors cursor-pointer" onclick="openPrimoAccesso()">Dimenticata?</a>
+                                <a class="text-[10px] font-label uppercase tracking-[0.2em] text-primary-container hover:text-primary transition-colors cursor-pointer" onclick="openPasswordDimenticata()">Dimenticata?</a>
                             </div>
                         </div>
 <div class="relative">
@@ -355,7 +355,7 @@ async function handlePrimoAccesso() {
     btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Invio in corso...';
 
     try {
-        const res = await fetch('/api/primo-accesso', {
+        const res = await fetch('/api/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
@@ -411,7 +411,7 @@ async function handlePasswordDimenticata() {
     btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Invio in corso...';
 
     try {
-        const res = await fetch('/api/primo-accesso', {
+        const res = await fetch('/api/reset-password', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
