@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it" class="light">
 <head>
     <meta charset="utf-8"/>
@@ -118,8 +118,12 @@
                         </div>
                         <div class="space-y-5">
                             <div>
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Nome Completo</span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Nome / Ragione Sociale</span>
                                 <p id="client-nome-label" class="text-sm text-on-surface mt-1">-</p>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Tipo Cliente</span>
+                                <p id="client-tipo" class="text-sm text-on-surface mt-1">-</p>
                             </div>
                             <div>
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Email</span>
@@ -129,9 +133,9 @@
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Telefono</span>
                                 <p id="client-telefono" class="text-sm text-on-surface mt-1">-</p>
                             </div>
-                            <div>
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Azienda</span>
-                                <p id="client-azienda-detail" class="text-sm text-on-surface mt-1">-</p>
+                            <div id="client-fiscal-block">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-outline" id="client-fiscal-label">Partita IVA / CF</span>
+                                <p id="client-fiscal" class="text-sm text-on-surface mt-1">-</p>
                             </div>
                             <div>
                                 <span class="text-[10px] font-bold uppercase tracking-widest text-outline">Indirizzo</span>
@@ -259,12 +263,23 @@
             var nome = cliente.nome || cliente.email || 'Cliente';
             document.getElementById('client-name-header').textContent = nome;
             document.getElementById('client-title').textContent = nome;
-            document.getElementById('client-subtitle').textContent = cliente.azienda || 'Cliente';
+            document.getElementById('client-subtitle').textContent = cliente.tipo_cliente === 'societa' ? 'Società' : 'Privato';
 
             document.getElementById('client-nome-label').textContent = nome;
+            document.getElementById('client-tipo').textContent = cliente.tipo_cliente === 'societa' ? 'Società' : 'Privato';
             document.getElementById('client-email').textContent = cliente.email || '-';
             document.getElementById('client-telefono').textContent = cliente.telefono || '-';
-            document.getElementById('client-azienda-detail').textContent = cliente.azienda || '-';
+
+            var fiscalBlock = document.getElementById('client-fiscal-block');
+            var fiscalEl = document.getElementById('client-fiscal');
+            var fiscalLabel = document.getElementById('client-fiscal-label');
+            if (cliente.tipo_cliente === 'societa') {
+              fiscalLabel.textContent = 'Partita IVA';
+              fiscalEl.textContent = cliente.partita_iva || '-';
+            } else {
+              fiscalLabel.textContent = 'Codice Fiscale';
+              fiscalEl.textContent = cliente.codice_fiscale || '-';
+            }
             document.getElementById('client-indirizzo').textContent = cliente.indirizzo || '-';
         }
 

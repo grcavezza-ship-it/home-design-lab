@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Anagrafica Clienti | Home Design Lab</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-    <title>Gestione Clienti | Home Design Lab</title>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
         tailwind.config = {
@@ -21,10 +22,6 @@
                         "on-secondary": "#FFFFFF",
                         "secondary-container": "#E8F5E9",
                         "on-secondary-container": "#1B5E20",
-                        "tertiary": "#FFC107",
-                        "on-tertiary": "#212121",
-                        "tertiary-container": "#FFF8E1",
-                        "on-tertiary-container": "#4A4A4A",
                         "error": "#D32F2F",
                         "on-error": "#FFFFFF",
                         "error-container": "#FFEBEE",
@@ -53,705 +50,503 @@
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .surface-shift-no-lines { border: none !important; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #eae8e7; border-radius: 10px; }
+        .tipo-btn.active { background: #186C32; color: white; border-color: #186C32; }
+        .tipo-btn:not(.active) { background: white; color: #49454F; border-color: #CAC4D0; }
+        .tipo-btn:not(.active):hover { background: #f0f0f0; }
     </style>
-    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-surface text-on-surface min-h-screen">
-    <!-- Navigation Sidebar -->
-     <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
-<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+    <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
 
-    <!-- TopAppBar Master Shell -->
-    <header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-4 lg:px-10 h-20 transition-all">
-        <button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 -ml-1 rounded-lg text-on-surface hover:bg-surface-container transition-colors mr-2" aria-label="Apri menu"><span class="material-symbols-outlined">menu</span></button>
-        <div class="flex-1 flex items-center h-full">
-            <span class="leading-none">Console Gestionale</span>
+    <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-6 md:px-10 h-20 transition-all">
+        <div class="flex items-center gap-4">
+            <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="flex-1 flex items-center h-full">
+                <span class="leading-none">Anagrafica Clienti</span>
+            </div>
         </div>
         <div class="flex items-center gap-6 h-full">
-            <div class="relative w-64 hidden lg:flex items-center">
+            <div class="relative w-64 flex items-center">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-                <input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Cerca risorse..." type="text"/>
+                <input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Cerca clienti..." type="text" id="search-input"/>
             </div>
-            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
-            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
-            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
-            <!-- Avatar Dropdown -->
+            <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
             <div class="relative" id="avatar-dropdown-container">
                 <button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
                     <img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
                 </button>
-                <!-- Dropdown Menu -->
                 <div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
                     <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo
+                        <span class="material-symbols-outlined text-[18px]">person</span> Profilo
                     </a>
-                    <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni
-                    </a>
-                    <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
                     <a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
-                        <span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci
+                        <span class="material-symbols-outlined text-[18px]">logout</span> Esci
                     </a>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="lg:ml-64 pt-28 min-h-screen bg-surface">
-        <div class="p-10 max-w-7xl mx-auto">
-            <!-- Header -->
+    <main class="lg:ml-64 pt-20 min-h-screen bg-surface">
+        <div class="p-6 md:p-10 max-w-7xl mx-auto">
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h1 class="text-4xl font-headline font-bold text-on-surface mb-2">Anagrafica Clienti</h1>
-                    <p class="text-on-surface-variant">Gestisci i committenti e i loro progetti</p>
+                    <h1 class="text-4xl font-headline font-bold text-on-surface">Clienti</h1>
+                    <p class="text-on-surface-variant mt-1">Gestisci i tuoi clienti, privati e società</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-                        <input class="pl-10 pr-4 py-2.5 bg-surface-container-low border-none rounded-lg text-sm w-72 focus:ring-1 focus:ring-primary" placeholder="Filtra per nome o progetto..." type="text"/>
-                    </div>
-                </div>
+                <button onclick="showAddClientForm()" class="px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">add</span>
+                    Nuovo Cliente
+                </button>
             </div>
 
-            <div class="grid grid-cols-12 gap-8">
-                <div class="col-span-8 space-y-8">
-                    <!-- Tabella Clienti -->
-                    <div class="bg-surface-container-lowest rounded-xl p-1 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8">
+                <div class="xl:col-span-8">
+                    <div class="bg-surface-container-lowest rounded-xl shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="border-b border-surface-variant/30">
-                                        <th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Cliente</th>
-                                        <th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Email</th>
-                                        <th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Telefono</th>
-                                        <th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline">Progetti</th>
-                                        <th class="px-6 py-5 text-[10px] font-extrabold uppercase tracking-widest text-outline text-right">Azioni</th>
+                                    <tr class="border-b border-outline-variant/20">
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Cliente</th>
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Tipo</th>
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Email</th>
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Telefono</th>
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline">Progetti</th>
+                                        <th class="px-6 py-4 text-[10px] font-extrabold uppercase tracking-widest text-outline text-center">Azioni</th>
                                     </tr>
                                 </thead>
-                                <tbody id="clienti-tbody" class="divide-y divide-surface-variant/10">
-                                    <!-- Clienti verranno caricati qui dinamicamente -->
-                                </tbody>
+                                <tbody id="clienti-tbody" class="divide-y divide-outline-variant/10"></tbody>
                             </table>
                         </div>
-                    </div>
-
-                    <!-- Empty State -->
-                    <div id="empty-state" class="hidden text-center py-16">
-                        <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4">groups</span>
-                        <h3 class="text-xl font-headline font-bold text-on-surface mb-2">Nessun cliente</h3>
-                        <p class="text-on-surface-variant mb-6">Inizia aggiungendo il tuo primo cliente</p>
-                        <button onclick="showAddClientForm()" class="px-6 py-3 bg-primary text-white rounded-lg text-sm font-bold hover:opacity-90 transition-opacity">
-                            Aggiungi Cliente
-                        </button>
+                        <div id="empty-state" class="text-center py-16">
+                            <span class="material-symbols-outlined text-5xl text-on-surface-variant mb-4">group_off</span>
+                            <h3 class="text-lg font-headline font-bold text-on-surface mb-2">Nessun cliente</h3>
+                            <p class="text-on-surface-variant">Clicca "Nuovo Cliente" per iniziare</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Pannello Dettaglio Cliente -->
-                <div class="col-span-4">
-                    <div id="detail-panel" class="bg-surface-container-lowest rounded-xl p-6 shadow-[0px_20px_40px_rgba(27,28,28,0.06)]">
+                <div class="xl:col-span-4">
+                    <div id="detail-panel" class="bg-surface-container-lowest rounded-xl p-6 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)] border border-outline-variant/10 min-h-[400px]">
                         <div class="text-center text-on-surface-variant py-12">
                             <span class="material-symbols-outlined text-4xl mb-2">person</span>
                             <p class="text-sm">Seleziona un cliente per visualizzare i dettagli</p>
                         </div>
-                    </div>
-
-                    <!-- Pulsante Aggiungi Cliente -->
-                    <div class="mt-6">
-                        <button id="add-client-btn" onclick="showAddClientForm()" class="w-full bg-primary text-white rounded-lg py-3 text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined">add</span>
-                            Nuovo Cliente
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Scheda Rapida Cliente -->
-        <div id="modal-cliente-overlay" class="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm hidden flex items-center justify-center" onclick="closeSchedaCliente()">
-            <div class="bg-surface-container-lowest rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[85vh] overflow-y-auto" onclick="event.stopPropagation()">
-                <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-headline text-xl text-on-surface font-bold" id="modal-cliente-nome">Caricamento...</h3>
-                        <p class="text-sm text-on-surface-variant" id="modal-cliente-azienda"></p>
-                    </div>
-                    <button onclick="closeSchedaCliente()" class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container transition-colors"><span class="material-symbols-outlined">close</span></button>
-                </div>
-                <div class="p-6 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="p-4 bg-surface-container-low rounded-xl">
-                            <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Contatti</p>
-                            <div class="space-y-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">mail</span>
-                                    <span class="text-sm text-on-surface break-all" id="modal-cliente-email">-</span>
-                                </div>
-                                <div class="flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">call</span>
-                                    <span class="text-sm text-on-surface" id="modal-cliente-telefono">-</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-surface-container-low rounded-xl">
-                            <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Indirizzo</p>
-                            <div class="flex items-start gap-2">
-                                <span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0 mt-0.5">location_on</span>
-                                <p class="text-sm text-on-surface" id="modal-cliente-indirizzo">-</p>
-                            </div>
-                        </div>
-                        <div class="p-4 bg-surface-container-low rounded-xl">
-                            <p class="text-[10px] uppercase tracking-widest font-bold text-outline mb-2">Azienda</p>
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-[16px] text-primary flex-shrink-0">business</span>
-                                <span class="text-sm text-on-surface" id="modal-cliente-azienda-display">-</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="copiaClientePerPratiche()" class="w-full bg-primary text-on-primary px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
-                            <span class="material-symbols-outlined text-[18px]">content_copy</span> Copia per SCIA/CILA
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/portal-config.js"></script>
-    <script>
-        PORTAL_PAGE_CONFIG = {
-            allowedRoles: ['senior', 'admin', 'operator', 'architect'],
-            defaultActiveMenu: 'clienti',
-            pageName: 'Anagrafica Clienti'
-        };
-    </script>
-    <script src="assets/js/portal-init.js"></script>
-
-    <!-- Avatar Dropdown Script -->
-    <script>
-        // Stato globale per editing
-        let isEditMode = false;
-        let currentEditingId = null;
-        let originalValues = {};
-
-        async function loadClienti() {
-            try {
-                var { data: clienti, error } = await supabase
-                    .from('clienti_profiles')
-                    .select('*')
-                    .order('nome', { ascending: true });
-
-                if (error) throw error;
-
-                renderClienti(clienti || []);
-
-            } catch (err) {
-                console.error('Errore caricamento clienti:', err);
-                showNotification('Errore nel caricamento dei clienti');
-            }
-        }
-
-        function normalizzaCliente(c) {
-            return {
-                id: c.id,
-                nome: c.nome || '',
-                email: c.email || '',
-                telefono: c.telefono || '',
-                azienda: c.azienda || '',
-                indirizzo: c.indirizzo || ''
-            };
-        }
-
-        async function showDetail(clientId) {
-            if (!clientId) {
-                const detailPanel = document.getElementById('detail-panel');
-                detailPanel.innerHTML = `
-                    <div class="text-center text-on-surface-variant py-12">
-                        <span class="material-symbols-outlined text-4xl mb-2">person</span>
-                        <p class="text-sm">Seleziona un cliente per visualizzare i dettagli</p>
-                    </div>
-                `;
-                return;
-            }
-
-            try {
-                const { data: cliente, error } = await supabase
-                    .from('clienti_profiles')
-                    .select('*')
-                    .eq('id', clientId)
-                    .single();
-
-                if (error) throw error;
-
-                const { data: progetti, error: progettiError } = await supabase
-                    .from('projects')
-                    .select('id, titolo, status')
-                    .eq('cliente_id', clientId)
-                    .order('created_at', { ascending: false });
-
-                renderDetailPanel(cliente, progetti || []);
-
-            } catch (err) {
-                console.error('Errore caricamento dettaglio cliente:', err);
-                showNotification('Errore nel caricamento dei dettagli');
-            }
-        }
-
-        // Renderizza pannello dettaglio
-        function renderDetailPanel(cliente, progetti) {
-            const detailPanel = document.getElementById('detail-panel');
-            
-            detailPanel.innerHTML = `
-                <div class="space-y-6">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h2 class="text-xl font-headline font-bold text-on-surface mb-1">${cliente.nome}</h2>
-                            <p class="text-sm text-on-surface-variant">${cliente.azienda ? 'Azienda' : 'Privato'}</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <a href="dettaglio-cliente.html?id=${cliente.id}" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-bold uppercase hover:bg-primary/90 transition-colors flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">open_in_new</span>
-                                Scheda Completa
-                            </a>
-                            <button onclick="inviaInvitoCliente('${cliente.email}')" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold uppercase hover:bg-emerald-700 transition-colors flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">mail</span>
-                                Invia Invito
-                            </button>
-                            <button id="edit-client-btn" onclick="toggleClientEdit('${cliente.id}')" class="px-3 py-1.5 bg-slate-700 text-white rounded-lg text-xs font-bold uppercase hover:bg-slate-800 transition-colors flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[14px]">edit</span>
-                                Modifica
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary">business</span>
-                            <div class="client-azienda text-sm text-on-surface">${cliente.azienda ? cliente.azienda : 'Privato'}</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary">mail</span>
-                            <div class="client-email text-sm text-on-surface">${cliente.email || '-'}</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary">phone</span>
-                            <div class="client-telefono text-sm text-on-surface">${cliente.telefono || '-'}</div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary">location_on</span>
-                            <div class="client-indirizzo text-sm text-on-surface">${cliente.indirizzo || '-'}</div>
-                        </div>
-                    </div>
-
-                    ${progetti.length > 0 ? `
-                        <div class="border-t border-outline-variant/20 pt-4">
-                            <h3 class="text-sm font-bold uppercase tracking-widest text-outline mb-3">Progetti Associati</h3>
-                            <div class="space-y-2">
-                                ${progetti.map(progetto => `
-                                    <div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">
-                                        <a href="dettaglio-progetto.html?id=${progetto.id}" class="text-sm font-medium text-primary hover:text-primary/80">
-                                            ${progetto.titolo}
-                                        </a>
-                                        <span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">
-                                            ${progetto.status}
-                                        </span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
+    <!-- Modal Scheda Rapida Cliente -->
+    <div id="modal-cliente-overlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/40 backdrop-blur-sm" onclick="if(event.target===this)closeSchedaCliente()">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-xl font-headline font-bold text-on-surface" id="modal-cliente-nome">-</h2>
+                    <p class="text-sm text-on-surface-variant" id="modal-cliente-tipo"></p>
                 </div>
-            `;
+                <button onclick="closeSchedaCliente()" class="text-stone-400 hover:text-stone-600 transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">badge</span>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-outline">Partita IVA / CF</p>
+                        <p class="text-sm text-on-surface" id="modal-cliente-partita-iva">-</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">mail</span>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-outline">Email</p>
+                        <p class="text-sm text-on-surface" id="modal-cliente-email">-</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">phone</span>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-outline">Telefono</p>
+                        <p class="text-sm text-on-surface" id="modal-cliente-telefono">-</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary text-lg">location_on</span>
+                    <div>
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-outline">Indirizzo</p>
+                        <p class="text-sm text-on-surface" id="modal-cliente-indirizzo">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-outline-variant/20 flex gap-3">
+                <button onclick="copiaClientePerPratiche()" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors">
+                    Copia per Pratiche
+                </button>
+                <button onclick="closeSchedaCliente()" class="flex-1 px-4 py-2 bg-stone-200 text-stone-700 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-stone-300 transition-colors">
+                    Chiudi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/portal-config.js"></script>
+    <script src="assets/js/portal-init.js"></script>
+    <script src="assets/js/cookie-banner.js"></script>
+
+    <script>
+    var isEditMode = false;
+    var currentEditingId = null;
+    var originalValues = {};
+    var clientiCache = [];
+
+    function formatClienti(cliente) {
+        return {
+            id: cliente.id,
+            nome: cliente.nome || '',
+            tipo_cliente: cliente.tipo_cliente || 'privato',
+            partita_iva: cliente.partita_iva || '',
+            codice_fiscale: cliente.codice_fiscale || '',
+            email: cliente.email || '',
+            telefono: cliente.telefono || '',
+            indirizzo: cliente.indirizzo || ''
+        };
+    }
+
+    function getTipoBadge(tipo) {
+        if (tipo === 'societa') return '<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200"><span class="material-symbols-outlined text-[10px]">business</span> Società</span>';
+        return '<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-stone-50 text-stone-600 text-[10px] font-bold rounded-full border border-stone-200"><span class="material-symbols-outlined text-[10px]">person</span> Privato</span>';
+    }
+
+    function getTipoLabel(tipo) {
+        return tipo === 'societa' ? 'Società' : 'Privato';
+    }
+
+    async function loadClienti() {
+        try {
+            var { data, error } = await supabase
+                .from('clienti_profiles')
+                .select('*')
+                .order('nome', { ascending: true });
+
+            if (error) throw error;
+            clientiCache = (data || []).map(formatClienti);
+            renderClienti(clientiCache);
+        } catch (err) {
+            console.error('Errore caricamento clienti:', err);
+        }
+    }
+
+    async function renderClienti(clienti) {
+        var tbody = document.getElementById('clienti-tbody');
+        var emptyState = document.getElementById('empty-state');
+
+        if (!clienti || clienti.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.classList.remove('hidden');
+            return;
         }
 
-        // Toggle editing cliente
-        function toggleClientEdit(clientId) {
-            if (isEditMode) {
-                saveClientEdit();
-            } else {
-                startClientEdit(clientId);
-            }
+        emptyState.classList.add('hidden');
+
+        var html = '';
+        for (var i = 0; i < clienti.length; i++) {
+            var c = clienti[i];
+            var { data: progetti } = await supabase.from('projects').select('id').eq('cliente_id', c.id);
+            var numProgetti = progetti ? progetti.length : 0;
+
+            var fiscalLabel = c.tipo_cliente === 'societa' ? (c.partita_iva || '-') : (c.codice_fiscale || '-');
+
+            html += '<tr data-client-id="' + c.id + '" class="hover:bg-surface-container-low/50 transition-colors cursor-pointer" onclick="window.location.href=\'dettaglio-cliente.html?id=' + c.id + '\'">';
+            html += '<td class="px-6 py-4"><div class="font-medium text-on-surface hover:text-primary transition-colors">' + c.nome + '</div><div class="text-[11px] text-on-surface-variant">' + fiscalLabel + '</div></td>';
+            html += '<td class="px-6 py-4">' + getTipoBadge(c.tipo_cliente) + '</td>';
+            html += '<td class="px-6 py-4"><div class="text-sm text-on-surface-variant">' + c.email + '</div></td>';
+            html += '<td class="px-6 py-4"><div class="text-sm text-on-surface-variant">' + c.telefono + '</div></td>';
+            html += '<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full"><span class="material-symbols-outlined text-[12px]">architecture</span>' + numProgetti + ' progetti</span></td>';
+            html += '<td class="px-6 py-4 text-center"><div class="flex items-center justify-center gap-2">';
+            html += '<button onclick="event.stopPropagation(); openSchedaCliente(\'' + c.id + '\')" class="text-primary hover:text-primary/80 transition-colors" title="Scheda Rapida"><span class="material-symbols-outlined text-[18px]">badge</span></button>';
+            html += '<button onclick="event.stopPropagation(); window.location.href=\'dettaglio-cliente.html?id=' + c.id + '\'" class="text-primary hover:text-primary/80 transition-colors" title="Gestisci"><span class="material-symbols-outlined text-[18px]">manage_accounts</span></button>';
+            html += '<button onclick="event.stopPropagation(); deleteClient(\'' + c.id + '\')" class="text-stone-500 hover:text-stone-700 transition-colors" title="Elimina"><span class="material-symbols-outlined text-[18px]">delete</span></button>';
+            html += '</div></td></tr>';
         }
 
-        // Inizia editing cliente
-        function startClientEdit(clientId) {
-            const elements = ['client-azienda', 'client-email', 'client-telefono', 'client-indirizzo'];
-            
-            elements.forEach(elId => {
-                const element = document.querySelector(`.${elId}`);
-                if (element) {
-                    originalValues[elId] = element.textContent.trim();
-                    const currentValue = originalValues[elId];
-                    element.innerHTML = `<input type="text" class="w-full px-2 py-1 border border-cyan-300 rounded focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-cyan-50 text-sm" value="${currentValue}" />`;
-                    element.classList.add('ring-2', 'ring-cyan-500', 'bg-cyan-50');
-                }
-            });
+        tbody.innerHTML = html;
+    }
 
-            currentEditingId = clientId;
-            isEditMode = true;
-            
-            const editBtn = document.getElementById('edit-client-btn');
-            editBtn.innerHTML = '<span class="material-symbols-outlined text-[14px]">save</span> Salva';
-            editBtn.className = 'px-3 py-1.5 bg-emerald-500 text-white rounded-lg text-xs font-bold uppercase hover:bg-emerald-600 transition-colors flex items-center gap-1';
-        }
+    function showAddClientForm() {
+        var panel = document.getElementById('detail-panel');
+        panel.innerHTML = getClientFormHtml(null);
+        setupTipoToggle();
+    }
 
-        async function saveClientEdit() {
-            try {
-                const updateData = {
-                    azienda: document.querySelector('.client-azienda input')?.value,
-                    email: document.querySelector('.client-email input')?.value,
-                    telefono: document.querySelector('.client-telefono input')?.value,
-                    indirizzo: document.querySelector('.client-indirizzo input')?.value
-                };
+    function getClientFormHtml(cliente) {
+        var isEdit = !!cliente;
+        var tipo = cliente ? (cliente.tipo_cliente || 'privato') : 'privato';
+        var nome = cliente ? (cliente.nome || '') : '';
+        var partitaIva = cliente ? (cliente.partita_iva || '') : '';
+        var codiceFiscale = cliente ? (cliente.codice_fiscale || '') : '';
+        var email = cliente ? (cliente.email || '') : '';
+        var telefono = cliente ? (cliente.telefono || '') : '';
+        var indirizzo = cliente ? (cliente.indirizzo || '') : '';
 
-                const { error } = await supabase
-                    .from('clienti_profiles')
-                    .update(updateData)
-                    .eq('id', currentEditingId);
+        return '<div class="space-y-6">' +
+            '<h2 class="text-xl font-headline font-bold text-on-surface">' + (isEdit ? 'Modifica Cliente' : 'Nuovo Cliente') + '</h2>' +
 
+            '<div>' +
+            '<label class="block text-sm font-medium text-on-surface mb-2">Tipo Cliente</label>' +
+            '<div class="flex rounded-lg overflow-hidden border border-outline-variant" id="tipo-toggle">' +
+            '<button type="button" class="tipo-btn flex-1 px-4 py-2.5 text-sm font-semibold transition-colors ' + (tipo === 'privato' ? 'active' : '') + '" data-tipo="privato" onclick="setTipo(\'privato\')"><span class="material-symbols-outlined text-sm align-middle mr-1">person</span> Privato</button>' +
+            '<button type="button" class="tipo-btn flex-1 px-4 py-2.5 text-sm font-semibold transition-colors ' + (tipo === 'societa' ? 'active' : '') + '" data-tipo="societa" onclick="setTipo(\'societa\')"><span class="material-symbols-outlined text-sm align-middle mr-1">business</span> Società</button>' +
+            '</div></div>' +
+
+            '<div id="privato-fields" class="space-y-4"' + (tipo === 'societa' ? ' style="display:none"' : '') + '>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Nome e Cognome</label>' +
+            '<input type="text" id="cliente-nome" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Mario Rossi" value="' + nome.replace(/"/g, '&quot;') + '" /></div>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Codice Fiscale</label>' +
+            '<input type="text" id="cliente-codice-fiscale" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm uppercase" placeholder="RSSMRA85M10A271S" value="' + codiceFiscale.replace(/"/g, '&quot;') + '" /></div>' +
+            '</div>' +
+
+            '<div id="societa-fields" class="space-y-4"' + (tipo === 'privato' ? ' style="display:none"' : '') + '>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Ragione Sociale</label>' +
+            '<input type="text" id="cliente-nome" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Home Design Lab S.r.l." value="' + nome.replace(/"/g, '&quot;') + '" /></div>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Partita IVA</label>' +
+            '<input type="text" id="cliente-partita-iva" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="01234567890" value="' + partitaIva.replace(/"/g, '&quot;') + '" /></div>' +
+            '</div>' +
+
+            '<div class="border-t border-outline-variant/20 pt-4 space-y-4">' +
+            '<p class="text-xs font-bold uppercase tracking-widest text-outline">Contatti</p>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Email</label>' +
+            '<input type="email" id="cliente-email" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="email@esempio.com" value="' + email.replace(/"/g, '&quot;') + '" /></div>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Telefono</label>' +
+            '<input type="tel" id="cliente-telefono" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="+39 012 345678" value="' + telefono.replace(/"/g, '&quot;') + '" /></div>' +
+            '<div><label class="block text-sm font-medium text-on-surface mb-1">Indirizzo</label>' +
+            '<input type="text" id="cliente-indirizzo" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Via Roma, 123 - Città (NA)" value="' + indirizzo.replace(/"/g, '&quot;') + '" /></div>' +
+            '</div>' +
+
+            (!isEdit ? '<div class="flex items-center gap-3 pt-2 border-t border-outline-variant/20">' +
+            '<label class="relative inline-flex items-center cursor-pointer">' +
+            '<input type="checkbox" id="cliente-invite" class="sr-only peer" checked />' +
+            '<div class="w-9 h-5 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>' +
+            '</label>' +
+            '<div><span class="text-sm font-medium text-on-surface">Invia invito via email</span><p class="text-xs text-on-surface-variant">Il cliente riceverà un link per creare la password</p></div>' +
+            '</div>' : '') +
+
+            '<div class="flex gap-3 pt-2">' +
+            '<button onclick="saveClient()" class="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-bold hover:bg-primary/90 transition-colors">' + (isEdit ? 'Salva Modifiche' : 'Salva Cliente') + '</button>' +
+            '<button onclick="showDetail(' + (isEdit ? ('\'' + cliente.id + '\'') : 'null') + ')" class="flex-1 bg-stone-200 text-stone-700 rounded-lg py-2.5 text-sm font-bold hover:bg-stone-300 transition-colors">Annulla</button>' +
+            '</div></div>';
+    }
+
+    var selectedTipo = 'privato';
+
+    function setTipo(tipo) {
+        selectedTipo = tipo;
+        var privatoFields = document.getElementById('privato-fields');
+        var societaFields = document.getElementById('societa-fields');
+        var buttons = document.querySelectorAll('#tipo-toggle .tipo-btn');
+
+        buttons.forEach(function(btn) {
+            btn.classList.toggle('active', btn.getAttribute('data-tipo') === tipo);
+        });
+
+        privatoFields.style.display = tipo === 'privato' ? '' : 'none';
+        societaFields.style.display = tipo === 'societa' ? '' : 'none';
+    }
+
+    function setupTipoToggle() {
+        selectedTipo = 'privato';
+        var privatoFields = document.getElementById('privato-fields');
+        var societaFields = document.getElementById('societa-fields');
+        if (privatoFields) privatoFields.style.display = '';
+        if (societaFields) societaFields.style.display = 'none';
+    }
+
+    async function saveClient() {
+        try {
+            var nome = document.getElementById('cliente-nome').value.trim();
+            if (!nome) { showNotification('Il nome è obbligatorio'); return; }
+
+            var email = document.getElementById('cliente-email').value.trim();
+            var telefono = document.getElementById('cliente-telefono').value.trim();
+            var indirizzo = document.getElementById('cliente-indirizzo').value.trim();
+            var tipo = selectedTipo;
+            var partitaIva = document.getElementById('cliente-partita-iva') ? document.getElementById('cliente-partita-iva').value.trim() : '';
+            var codiceFiscale = document.getElementById('cliente-codice-fiscale') ? document.getElementById('cliente-codice-fiscale').value.trim().toUpperCase() : '';
+
+            var clientData = {
+                nome: nome,
+                tipo_cliente: tipo,
+                partita_iva: tipo === 'societa' ? partitaIva : '',
+                codice_fiscale: tipo === 'privato' ? codiceFiscale : '',
+                email: email,
+                telefono: telefono,
+                indirizzo: indirizzo
+            };
+
+            if (isEditMode && currentEditingId) {
+                var { error } = await supabase.from('clienti_profiles').update(clientData).eq('id', currentEditingId);
                 if (error) throw error;
-
-                showNotification('Cliente aggiornato con successo!');
-                showDetail(currentEditingId);
-                loadClienti();
+                showNotification('Cliente aggiornato!');
                 isEditMode = false;
                 currentEditingId = null;
-
-            } catch (err) {
-                console.error('Errore salvataggio cliente:', err);
-                showNotification('Errore nel salvataggio');
-            }
-        }
-
-        // Mostra form nuovo cliente
-        function showAddClientForm() {
-            const detailPanel = document.getElementById('detail-panel');
-            
-            detailPanel.innerHTML = `
-                <div class="space-y-6">
-                    <h2 class="text-xl font-headline font-bold text-on-surface mb-4">Nuovo Cliente</h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface mb-1">Nome/Ragione Sociale</label>
-                            <input type="text" id="new-client-nome" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Inserisci nome..." />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface mb-1">Email</label>
-                            <input type="email" id="new-client-email" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="email@esempio.com" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface mb-1">Telefono</label>
-                            <input type="tel" id="new-client-telefono" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="+39 012 345678" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface mb-1">Indirizzo</label>
-                            <input type="text" id="new-client-indirizzo" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Via Roma, 123" />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-on-surface mb-1">Azienda</label>
-                            <input type="text" id="new-client-azienda" class="w-full px-3 py-2 border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-sm" placeholder="Nome azienda (opzionale)" />
-                        </div>
-                        <div class="flex items-center gap-3 pt-2 border-t border-outline-variant/20">
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="new-client-invite" class="sr-only peer" checked />
-                                <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
-                            </label>
-                            <div>
-                                <span class="text-sm font-medium text-on-surface">Invia invito via email</span>
-                                <p class="text-xs text-on-surface-variant">Il cliente riceverà un link per creare la password e accedere al portale</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-3">
-                        <button onclick="saveNewClient()" class="flex-1 bg-primary text-white rounded-lg py-2.5 text-sm font-bold hover:bg-primary/90 transition-colors">
-                            Salva Cliente
-                        </button>
-                        <button onclick="showDetail(null)" class="flex-1 bg-slate-700 text-white rounded-lg py-2.5 text-sm font-bold hover:bg-slate-800 transition-colors">
-                            Annulla
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        async function saveNewClient() {
-            try {
-                const email = document.getElementById('new-client-email').value.trim();
-                const clientData = {
-                    nome: document.getElementById('new-client-nome').value.trim(),
-                    email: email,
-                    telefono: document.getElementById('new-client-telefono').value.trim(),
-                    azienda: document.getElementById('new-client-azienda').value.trim(),
-                    indirizzo: document.getElementById('new-client-indirizzo').value.trim()
-                };
-
-                if (!clientData.nome) {
-                    showNotification('Il nome è obbligatorio');
-                    return;
-                }
-
-                if (!email) {
-                    showNotification('L\'email è obbligatoria per inviare l\'invito');
-                    return;
-                }
-
-                const { data, error } = await supabase
-                    .from('clienti_profiles')
-                    .insert([clientData])
-                    .select();
-
+            } else {
+                if (!email) { showNotification('L\'email è obbligatoria'); return; }
+                var { data, error } = await supabase.from('clienti_profiles').insert([clientData]).select();
                 if (error) throw error;
+                var newId = data[0]?.id;
 
-                const newClientId = data[0]?.id;
-                if (!newClientId) {
-                    showNotification('Errore: impossibile recuperare ID del nuovo cliente');
-                    return;
-                }
-
-                const sendInvite = document.getElementById('new-client-invite').checked;
-                if (sendInvite) {
+                var sendInvite = document.getElementById('cliente-invite');
+                if (sendInvite && sendInvite.checked && newId) {
                     try {
-                        const inviteRes = await fetch('/api/primo-accesso', {
+                        var res = await fetch('/api/primo-accesso', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ email: email })
                         });
-                        const inviteData = await inviteRes.json();
-                        if (inviteRes.ok) {
-                            if (inviteData.emailSent) {
-                                showNotification('Cliente creato! Email di invito inviata a ' + email);
-                            } else if (inviteData.emailError) {
-                                showNotification('Cliente creato! Ma email non inviata: ' + inviteData.emailError, 'error');
-                            } else {
-                                showNotification('Cliente creato! SMTP non configurato, invito non inviato.', 'info');
-                            }
-                        } else {
-                            showNotification('Cliente creato! Ma invito email: ' + (inviteData.error || 'errore'), 'error');
-                        }
-                    } catch (inviteErr) {
-                        console.error('Errore invio invito:', inviteErr);
-                        showNotification('Cliente creato! Impossibile inviare email (SMTP configurato?)', 'error');
+                        var inviteData = await res.json();
+                        if (inviteData.emailSent) showNotification('Cliente creato! Invito inviato a ' + email);
+                        else showNotification('Cliente creato!', 'info');
+                    } catch(e) {
+                        showNotification('Cliente creato!', 'info');
                     }
                 } else {
-                    showNotification('Cliente creato con successo!');
+                    showNotification('Cliente creato!');
                 }
 
-                showDetail(newClientId);
-                loadClienti();
-
-            } catch (err) {
-                console.error('Errore creazione cliente:', err);
-                showNotification('Errore nella creazione del cliente');
+                if (newId) showDetail(newId);
             }
+
+            loadClienti();
+
+        } catch(err) {
+            console.error('Errore salvataggio cliente:', err);
+            showNotification('Errore nel salvataggio');
+        }
+    }
+
+    async function showDetail(clientId) {
+        var panel = document.getElementById('detail-panel');
+        if (!clientId) {
+            panel.innerHTML = '<div class="text-center text-on-surface-variant py-12"><span class="material-symbols-outlined text-4xl mb-2">person</span><p class="text-sm">Seleziona un cliente per visualizzare i dettagli</p></div>';
+            return;
         }
 
-        // Renderizza clienti nella tabella
-        async function renderClienti(clienti) {
-            const tbody = document.getElementById('clienti-tbody');
-            const emptyState = document.getElementById('empty-state');
+        try {
+            var { data: cliente, error } = await supabase.from('clienti_profiles').select('*').eq('id', clientId).single();
+            if (error) throw error;
+            var { data: progetti } = await supabase.from('projects').select('id, titolo, status').eq('cliente_id', clientId).order('created_at', { ascending: false });
 
-            if (!clienti || clienti.length === 0) {
-                tbody.innerHTML = '';
-                emptyState.classList.remove('hidden');
-                return;
+            panel.innerHTML = getDetailHtml(cliente, progetti || []);
+
+        } catch(err) {
+            console.error(err);
+            panel.innerHTML = '<div class="text-center text-error py-12"><p>Errore caricamento</p></div>';
+        }
+    }
+
+    function getDetailHtml(cliente, progetti) {
+        var tipo = cliente.tipo_cliente || 'privato';
+        var fiscalLabel = tipo === 'societa' ? 'Partita IVA' : 'Codice Fiscale';
+        var fiscalValue = tipo === 'societa' ? (cliente.partita_iva || '-') : (cliente.codice_fiscale || '-');
+
+        var progettiHtml = '';
+        if (progetti.length > 0) {
+            progettiHtml = '<div class="border-t border-outline-variant/20 pt-4"><h3 class="text-sm font-bold uppercase tracking-widest text-outline mb-3">Progetti Associati</h3><div class="space-y-2">';
+            for (var i = 0; i < progetti.length; i++) {
+                progettiHtml += '<div class="flex items-center justify-between p-2 bg-surface-container-low rounded-lg hover:bg-surface-container transition-colors">' +
+                    '<a href="dettaglio-progetto.html?id=' + progetti[i].id + '" class="text-sm font-medium text-primary hover:text-primary/80">' + progetti[i].titolo + '</a>' +
+                    '<span class="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full">' + progetti[i].status + '</span></div>';
             }
-
-            emptyState.classList.add('hidden');
-            
-            let html = '';
-            for (const cliente of clienti) {
-                // Conta progetti associati
-                const { data: progetti, error: progettiError } = await supabase
-                    .from('projects')
-                    .select('id')
-                    .eq('cliente_id', cliente.id);
-
-                const numProgetti = progettiError ? 0 : (progetti?.length || 0);
-
-                html += `
-                    <tr data-client-id="${cliente.id}" class="hover:bg-surface-container-low/50 transition-colors cursor-pointer" onclick="window.location.href='dettaglio-cliente.html?id=${cliente.id}'">
-                        <td class="px-6 py-4">
-                            <div class="ragione-sociale font-medium text-on-surface hover:text-primary transition-colors block">
-                                ${cliente.nome || '-'}
-                                ${cliente.azienda ? `<div class="text-xs text-on-surface-variant">${cliente.azienda}</div>` : ''}
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="email text-sm text-on-surface-variant">${cliente.email || '-'}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="telefono text-sm text-on-surface-variant">${cliente.telefono || '-'}</div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full">
-                                <span class="material-symbols-outlined text-[12px]">architecture</span>
-                                ${numProgetti} progetti
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <div class="flex items-center justify-center gap-2">
-                                <button onclick="event.stopPropagation(); openSchedaCliente('${cliente.id}')" class="text-primary hover:text-primary/80 transition-colors" title="Scheda Rapida Cliente">
-                                    <span class="material-symbols-outlined text-[18px]">badge</span>
-                                </button>
-                                <button onclick="event.stopPropagation(); window.location.href='dettaglio-cliente.html?id=${cliente.id}'" class="text-primary hover:text-primary/80 transition-colors" title="Gestisci cliente">
-                                    <span class="material-symbols-outlined text-[18px]">manage_accounts</span>
-                                </button>
-                                <button onclick="event.stopPropagation(); deleteClient('${cliente.id}')" class="text-slate-600 hover:text-slate-800 transition-colors" title="Elimina cliente">
-                                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
-
-            tbody.innerHTML = html;
+            progettiHtml += '</div></div>';
         }
 
-        async function deleteClient(clientId) {
-            if (!confirm('Sei sicuro di voler eliminare questo cliente?')) return;
+        return '<div class="space-y-6">' +
+            '<div class="flex justify-between items-start">' +
+            '<div><h2 class="text-xl font-headline font-bold text-on-surface mb-1">' + cliente.nome + '</h2>' + getTipoBadge(tipo) + '</div>' +
+            '<div class="flex gap-2">' +
+            '<a href="dettaglio-cliente.html?id=' + cliente.id + '" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-bold uppercase hover:bg-primary/90 transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">open_in_new</span> Scheda</a>' +
+            '<button onclick="showEditClientForm(\'' + cliente.id + '\')" class="px-3 py-1.5 bg-stone-600 text-white rounded-lg text-xs font-bold uppercase hover:bg-stone-700 transition-colors flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">edit</span> Modifica</button>' +
+            '</div></div>' +
 
-            try {
-                const { error } = await supabase
-                    .from('clienti_profiles')
-                    .delete()
-                    .eq('id', clientId);
+            '<div class="space-y-4">' +
+            '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">badge</span><div><p class="text-[10px] font-bold uppercase tracking-widest text-outline">' + fiscalLabel + '</p><p class="text-sm text-on-surface">' + fiscalValue + '</p></div></div>' +
+            '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">mail</span><div><p class="text-[10px] font-bold uppercase tracking-widest text-outline">Email</p><p class="text-sm text-on-surface">' + (cliente.email || '-') + '</p></div></div>' +
+            '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">phone</span><div><p class="text-[10px] font-bold uppercase tracking-widest text-outline">Telefono</p><p class="text-sm text-on-surface">' + (cliente.telefono || '-') + '</p></div></div>' +
+            '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-lg">location_on</span><div><p class="text-[10px] font-bold uppercase tracking-widest text-outline">Indirizzo</p><p class="text-sm text-on-surface">' + (cliente.indirizzo || '-') + '</p></div></div>' +
+            '</div>' +
+            progettiHtml +
+            '</div>';
+    }
 
-                if (error) throw error;
+    function showEditClientForm(clientId) {
+        var panel = document.getElementById('detail-panel');
+        isEditMode = true;
+        currentEditingId = clientId;
 
-                showNotification('Cliente eliminato con successo!');
-                loadClienti();
-                showDetail(null);
-
-            } catch (err) {
-                console.error('Errore eliminazione cliente:', err);
-                showNotification('Errore nell\'eliminazione del cliente');
-            }
-        }
-
-        // Mostra notifica
-        function showNotification(message, type) {
-            const bgColor = type === 'error' ? '#b91c1c' : type === 'info' ? '#1e40af' : '#166534';
-            const icon = type === 'error' ? 'error' : 'check_circle';
-            const notif = document.createElement('div');
-            notif.className = 'fixed bottom-4 right-4 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in';
-            notif.style.background = bgColor;
-            notif.innerHTML = `<span class="material-symbols-outlined align-middle mr-2">${icon}</span>${message}`;
-            document.body.appendChild(notif);
-            setTimeout(() => notif.remove(), 3500);
-        }
-
-        // Invia invito email al cliente per creare account
-        async function inviaInvitoCliente(email) {
-            if (!email || email === '-') {
-                showNotification('Email cliente non disponibile');
-                return;
-            }
-            if (!confirm('Inviare un invito via email a ' + email + ' per accedere al portale?')) return;
-
-            try {
-                const res = await fetch('/api/primo-accesso', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    if (data.emailSent) {
-                        showNotification('Invito inviato con successo a ' + email);
-                    } else if (data.emailError) {
-                        showNotification('Email non inviata: ' + data.emailError, 'error');
-                    } else {
-                        showNotification('SMTP non configurato. Utente creato ma email non inviata.', 'info');
-                    }
-                } else {
-                    showNotification('Errore invito: ' + (data.error || 'errore'), 'error');
-                }
-            } catch (err) {
-                console.error('Errore invio invito:', err);
-                showNotification('Errore di rete. SMTP configurato?', 'error');
-            }
-        }
-
-        // Attende inizializzazione Supabase prima di caricare clienti
-        function waitForSupabaseAndLoad() {
-            if (window.supabase && typeof window.supabase.from === 'function') {
-                loadClienti();
-            } else {
-                setTimeout(waitForSupabaseAndLoad, 100);
-            }
-        }
-
-        // Avvia caricamento quando portal-init.js è pronto
-        document.addEventListener('DOMContentLoaded', waitForSupabaseAndLoad);
-    </script>
-
-    <!-- Avatar Dropdown Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const avatarBtn = document.getElementById('avatar-btn');
-            const avatarDropdown = document.getElementById('avatar-dropdown');
-            const dropdownLogout = document.getElementById('dropdown-logout');
-            
-            if (avatarBtn) {
-                avatarBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    avatarDropdown.classList.toggle('hidden');
-                });
-            }
-            
-            document.addEventListener('click', function() {
-                if (avatarDropdown) avatarDropdown.classList.add('hidden');
-            });
-            
-            if (dropdownLogout) {
-                dropdownLogout.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (window.portalLogout) {
-                        window.portalLogout();
-                    } else {
-                        window.location.href = '/login';
-                    }
-                });
-            }
+        supabase.from('clienti_profiles').select('*').eq('id', clientId).single().then(function(res) {
+            if (res.error) { showNotification('Errore caricamento'); return; }
+            panel.innerHTML = getClientFormHtml(res.data);
+            selectedTipo = res.data.tipo_cliente || 'privato';
+            setTipo(selectedTipo);
         });
-    </script>
+    }
 
-    <!-- Scheda Rapida Cliente -->
-    <script>
-    window._clienteModalId = null;
+    async function deleteClient(clientId) {
+        if (!confirm('Eliminare questo cliente?')) return;
+        try {
+            await supabase.from('clienti_profiles').delete().eq('id', clientId);
+            showNotification('Cliente eliminato');
+            loadClienti();
+            showDetail(null);
+        } catch(err) {
+            showNotification('Errore eliminazione');
+        }
+    }
+
+    function showNotification(message, type) {
+        var bg = type === 'error' ? '#b91c1c' : type === 'info' ? '#1e40af' : '#166534';
+        var notif = document.createElement('div');
+        notif.className = 'fixed bottom-4 right-4 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        notif.style.background = bg;
+        notif.innerHTML = message;
+        document.body.appendChild(notif);
+        setTimeout(function() { notif.remove(); }, 3500);
+    }
+
+    // ─── Scheda Rapida Modal ──────────────────────────────────────────────────
+
+    var _clienteModalId = null;
 
     async function openSchedaCliente(id) {
-        window._clienteModalId = id;
+        _clienteModalId = id;
         var overlay = document.getElementById('modal-cliente-overlay');
         overlay.classList.remove('hidden');
         overlay.classList.add('flex');
 
         try {
-            var { data: c, error } = await supabase
-                .from('clienti_profiles')
-                .select('*')
-                .eq('id', id)
-                .single();
-
+            var { data: c, error } = await supabase.from('clienti_profiles').select('*').eq('id', id).single();
             if (error) throw error;
+            var tipo = c.tipo_cliente || 'privato';
+            var fiscalValue = tipo === 'societa' ? (c.partita_iva || '-') : (c.codice_fiscale || '-');
 
             document.getElementById('modal-cliente-nome').textContent = c.nome || 'N/D';
-            document.getElementById('modal-cliente-azienda').textContent = c.azienda || '';
+            document.getElementById('modal-cliente-tipo').textContent = getTipoLabel(tipo);
+            document.getElementById('modal-cliente-partita-iva').textContent = fiscalValue;
             document.getElementById('modal-cliente-email').textContent = c.email || '-';
             document.getElementById('modal-cliente-telefono').textContent = c.telefono || '-';
             document.getElementById('modal-cliente-indirizzo').textContent = c.indirizzo || '-';
-            document.getElementById('modal-cliente-azienda-display').textContent = c.azienda || 'Privato';
         } catch(err) {
             document.getElementById('modal-cliente-nome').textContent = 'Errore caricamento.';
-            console.error('[SchedaCliente]', err);
         }
     }
 
@@ -763,21 +558,23 @@
 
     function copiaClientePerPratiche() {
         var nome = document.getElementById('modal-cliente-nome').textContent;
-        var azienda = document.getElementById('modal-cliente-azienda-display').textContent;
+        var tipo = document.getElementById('modal-cliente-tipo').textContent;
+        var fiscal = document.getElementById('modal-cliente-partita-iva').textContent;
         var email = document.getElementById('modal-cliente-email').textContent;
         var tel = document.getElementById('modal-cliente-telefono').textContent;
         var indirizzo = document.getElementById('modal-cliente-indirizzo').textContent;
 
         var txt = 'DATI COMMITTENTE PER PRATICHE EDILIZIE\n';
         txt += '=====================================\n\n';
-        txt += 'Nome/Ragione Sociale: ' + nome + '\n';
-        if (azienda && azienda !== '-' && azienda !== 'Privato') txt += 'Azienda: ' + azienda + '\n';
+        txt += 'Tipo: ' + tipo + '\n';
+        txt += 'Nome: ' + nome + '\n';
+        if (fiscal && fiscal !== '-') txt += (tipo === 'Società' ? 'Partita IVA: ' : 'Codice Fiscale: ') + fiscal + '\n';
         txt += 'Email: ' + email + '\n';
         txt += 'Telefono: ' + tel + '\n';
         txt += 'Indirizzo: ' + indirizzo + '\n';
 
         navigator.clipboard.writeText(txt).then(function() {
-            showToast('Dati copiati! Incollali nella pratica edilizia.', 'success');
+            showNotification('Dati copiati!');
         }).catch(function() {
             var ta = document.createElement('textarea');
             ta.value = txt;
@@ -785,58 +582,51 @@
             ta.select();
             document.execCommand('copy');
             ta.remove();
-            showToast('Dati copiati!', 'success');
+            showNotification('Dati copiati!');
         });
     }
 
-    function showToast(msg, type) {
-        var old = document.querySelector('.hdl-notification');
-        if (old) old.remove();
-        var colors = { error: '#b91c1c', success: '#166534', info: '#1e40af' };
-        var icons = { error: 'error', success: 'check_circle', info: 'info' };
-        var el = document.createElement('div');
-        el.className = 'hdl-notification';
-        el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
-        el.innerHTML = '<span class="material-symbols-outlined" style="font-size:20px">' + (icons[type] || 'info') + '</span><p style="flex:1">' + msg + '</p><button onclick="this.parentElement.remove()" style="margin-left:8px;opacity:.7"><span class="material-symbols-outlined" style="font-size:16px">close</span></button>';
-        document.body.appendChild(el);
-        setTimeout(function() { if (el.parentElement) el.remove(); }, 5000);
+    // ─── Init ─────────────────────────────────────────────────────────────────
+
+    function waitForSupabase() {
+        if (window.supabase && typeof window.supabase.from === 'function') {
+            loadClienti();
+        } else {
+            setTimeout(waitForSupabase, 100);
+        }
     }
-    // Mobile sidebar toggle
+
+    document.addEventListener('DOMContentLoaded', waitForSupabase);
+
+    // Search
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                var q = this.value.toLowerCase().trim();
+                if (!q) { renderClienti(clientiCache); return; }
+                var filtered = clientiCache.filter(function(c) {
+                    return c.nome.toLowerCase().includes(q) || c.email.toLowerCase().includes(q) || c.partita_iva.toLowerCase().includes(q) || c.codice_fiscale.toLowerCase().includes(q);
+                });
+                renderClienti(filtered);
+            });
+        }
+    });
+
+    // Mobile sidebar
     var menuToggle = document.getElementById('mobile-menu-toggle');
     var sidebar = document.getElementById('sidebar-menu');
     var overlay = document.getElementById('mobile-sidebar-overlay');
-    function openSidebar() {
-        sidebar.classList.remove('-translate-x-full');
-        sidebar.classList.add('translate-x-0');
-        overlay.classList.remove('hidden');
-        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
-    }
-    function closeSidebar() {
-        sidebar.classList.add('-translate-x-full');
-        sidebar.classList.remove('translate-x-0');
-        overlay.classList.add('hidden');
-        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
-    }
+    function openSidebar() { sidebar.classList.remove('-translate-x-full'); sidebar.classList.add('translate-x-0'); overlay.classList.remove('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close'; }
+    function closeSidebar() { sidebar.classList.add('-translate-x-full'); sidebar.classList.remove('translate-x-0'); overlay.classList.add('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu'; }
     if (menuToggle) {
-        menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var isOpen = !sidebar.classList.contains('-translate-x-full');
-            if (isOpen) closeSidebar();
-            else openSidebar();
-        });
+        menuToggle.addEventListener('click', function(e) { e.stopPropagation(); var isOpen = !sidebar.classList.contains('-translate-x-full'); if (isOpen) closeSidebar(); else openSidebar(); });
     }
     if (overlay) overlay.addEventListener('click', closeSidebar);
     function checkScreenSize() {
-        if (window.innerWidth >= 1024) {
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.remove('translate-x-0');
-            overlay.classList.add('hidden');
-            if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
-        } else {
-            closeSidebar();
-        }
+        if (window.innerWidth >= 1024) { sidebar.classList.remove('-translate-x-full'); sidebar.classList.remove('translate-x-0'); overlay.classList.add('hidden'); if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu'; } else { closeSidebar(); }
     }
     window.addEventListener('resize', checkScreenSize);
-</script>
+    </script>
 </body>
 </html>
