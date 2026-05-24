@@ -78,7 +78,7 @@ Area Riservata
 </button>
 </div>
 </div>
-<div id="mobile-menu" class="hidden md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
+<div id="mobile-menu" class="md:hidden bg-[#fbf9f8]/95 backdrop-blur-xl border-b border-primary/10">
 <div class="max-w-7xl mx-auto px-8 py-4 space-y-3">
 <a class="block text-primary font-bold border-b-2 border-primary pb-1" href="index.html">Home</a>
 <a class="block text-on-surface/70 hover:text-primary transition-colors text-sm uppercase tracking-widest font-semibold" href="servizi-lab.html">Lab</a>
@@ -277,17 +277,4 @@ Contattaci
 <script src="assets/js/public-nav.js"></script>
 <script src="assets/js/public-footer.js"></script>
 <script defer src="assets/js/dynamic-site.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.getElementById('mobile-menu-button');
-    var menu = document.getElementById('mobile-menu');
-    if (btn && menu) {
-        btn.addEventListener('click', function() {
-            menu.classList.toggle('hidden');
-            var icon = btn.querySelector('.material-symbols-outlined');
-            if (icon) icon.textContent = menu.classList.contains('hidden') ? 'menu' : 'close';
-        });
-    }
-});
-</script>
 <script src="assets/js/cookie-banner.js"></script>
