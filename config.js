@@ -9,7 +9,8 @@ const CONFIG = {
         VERSION: '1.0.0',
         ENVIRONMENT: process.env.NODE_ENV || 'development',
         DEBUG: process.env.NODE_ENV === 'development',
-        PORT: toInt(process.env.PORT, 3000)
+        PORT: toInt(process.env.PORT, 3000),
+        SITE_URL: process.env.SITE_URL || ''
     },
     API: {
         BASE_PATH: '/api',

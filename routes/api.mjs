@@ -256,7 +256,7 @@ router.post('/primo-accesso', async (req, res, next) => {
         const adminClient = getAdminClient();
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const host = req.headers['x-forwarded-host'] || req.get('host') || 'localhost:3000';
-        const siteUrl = `${protocol}://${host}`;
+        const siteUrl = CONFIG.APP.SITE_URL || `${protocol}://${host}`;
         const redirectTo = `${siteUrl}/imposta-password.html`;
 
         // 1. Crea l'utente auth se non esiste, oppure genera link di recovery
@@ -392,7 +392,7 @@ router.post('/reset-password', async (req, res, next) => {
 
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const host = req.headers['x-forwarded-host'] || req.get('host') || 'localhost:3000';
-        const siteUrl = `${protocol}://${host}`;
+        const siteUrl = CONFIG.APP.SITE_URL || `${protocol}://${host}`;
         const supabase = createClient(CONFIG.SUPABASE.URL, CONFIG.SUPABASE.ANON_KEY);
 
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
