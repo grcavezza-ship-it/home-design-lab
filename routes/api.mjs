@@ -377,7 +377,7 @@ router.post('/primo-accesso', async (req, res, next) => {
     }
 });
 
-// ─── RESET PASSWORD (con email brandizzata via SMTP) ────────────────────────
+// ─── RESET PASSWORD (Supabase built-in + nostra email brandizzata) ──────────
 
 router.post('/reset-password', async (req, res, next) => {
     try {
@@ -386,46 +386,49 @@ router.post('/reset-password', async (req, res, next) => {
             return res.status(400).json({ error: 'Email non valida' });
         }
 
-        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
+        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.ANON_KEY) {
             return res.status(503).json({ error: 'Supabase non configurato' });
         }
 
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const host = req.headers['x-forwarded-host'] || req.get('host') || 'localhost:3000';
         const siteUrl = CONFIG.APP.SITE_URL || `${protocol}://${host}`;
-        const adminClient = getAdminClient();
+        const supabase = createClient(CONFIG.SUPABASE.URL, CONFIG.SUPABASE.ANON_KEY);
 
-        let authUserId = null;
-        let actionLink = null;
-
-        const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
-            type: 'recovery', email, options: { redirectTo: `${siteUrl}/imposta-password.html` }
+        // 1. Chiamata Supabase built-in (invia la sua email di default)
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${siteUrl}/imposta-password.html`
         });
-        if (linkError) throw linkError;
-        authUserId = linkData.user?.id;
-        actionLink = linkData.properties?.action_link;
 
-        if (!authUserId) {
-            return res.status(404).json({ error: 'Utente non trovato' });
-        }
+        if (error) throw error;
 
-        let resetLink = siteUrl + '/imposta-password.html';
-        if (actionLink) {
-            try {
-                const actionUrl = new URL(actionLink);
-                const tokenHash = actionUrl.searchParams.get('token');
-                if (tokenHash) {
-                    resetLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
-                }
-            } catch (e) {
-                console.warn('Errore parsing action_link:', e.message);
-            }
-        }
-
+        // 2. Inoltre inviamo la nostra email brandizzata via SMTP
         let emailSent = false;
         let emailError = null;
         if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
             try {
+                // Genera il link di reset usando la service role key (se disponibile)
+                let resetLink = `${siteUrl}/imposta-password.html`;
+                if (CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
+                    try {
+                        const adminClient = getAdminClient();
+                        const { data: linkData } = await adminClient.auth.admin.generateLink({
+                            type: 'recovery', email, options: { redirectTo: `${siteUrl}/imposta-password.html` }
+                        });
+                        const actionLink = linkData?.properties?.action_link;
+                        const authUserId = linkData?.user?.id;
+                        if (actionLink && authUserId) {
+                            const actionUrl = new URL(actionLink);
+                            const tokenHash = actionUrl.searchParams.get('token');
+                            if (tokenHash) {
+                                resetLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Impossibile generare link admin, uso fallback:', e.message);
+                    }
+                }
+
                 const transporter = nodemailer.createTransport({
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
@@ -439,13 +442,11 @@ router.post('/reset-password', async (req, res, next) => {
                     html: recuperoPassword(resetLink)
                 });
                 emailSent = true;
-                console.log(`Email reset password inviata a ${email}`);
+                console.log(`Email reset brandizzata inviata a ${email}`);
             } catch (err) {
                 emailError = err.message;
-                console.error('Errore invio email reset:', err.message);
+                console.error('Errore invio email brandizzata:', err.message);
             }
-        } else {
-            console.warn('SMTP non configurato, skip invio email reset');
         }
 
         res.json({ success: true, emailSent, emailError });
