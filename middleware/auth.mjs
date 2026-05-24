@@ -232,3 +232,20 @@ export function requireClientAccess(req, res, next) {
     // client role: può accedere solo alla propria risorsa (gestita a livello di query RLS)
     return next();
 }
+
+// ─── requireImpresa ──────────────────────────────────────────────────────────
+/**
+ * Permette accesso a staff (senior, admin, operator, architect) E al ruolo impresa.
+ * Usato per route della dashboard imprese e documenti cantieri.
+ */
+export function requireImpresa(req, res, next) {
+    if (!req.user) {
+        return res.status(401).json({ error: 'Non autenticato' });
+    }
+
+    if (['senior', 'admin', 'operator', 'architect', 'impresa'].includes(req.user.role)) {
+        return next();
+    }
+
+    return res.status(403).json({ error: 'Accesso riservato a imprese e staff' });
+}

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Portale Imprese | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+                    fontFamily: { headline: ["Noto Serif"], body: ["Manrope"], label: ["Manrope"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+    <div class="flex items-center gap-3 flex-1">
+        <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none">Portale Imprese</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <span id="user-name" class="hidden md:block text-sm text-on-surface font-medium"></span>
+        <div class="relative">
+            <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <img id="avatar-img" alt="Avatar" class="w-full h-full object-cover"/>
+            </button>
+            <div id="avatar-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-surface-container-lowest border border-stone-200 dark:border-stone-700 rounded-xl shadow-xl hidden z-50 overflow-hidden">
+                <div class="px-4 py-3 border-b border-stone-100 dark:border-stone-800">
+                    <p id="dropdown-user-name" class="text-sm font-semibold text-on-surface truncate"></p>
+                    <p id="dropdown-user-role" class="text-[10px] uppercase tracking-widest text-on-surface-variant">Impresa</p>
+                </div>
+                <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span> Il Mio Profilo</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">settings</span> Impostazioni</a>
+                <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+                <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors"><span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="lg:ml-64 pt-24 md:pt-28 px-4 md:px-12 pb-24 bg-surface min-h-screen">
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <!-- Intestazione -->
+        <section class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Portale Imprese</span>
+                <h2 class="font-headline text-3xl md:text-4xl tracking-tight text-on-surface" id="impresa-title">La Tua Dashboard</h2>
+                <p class="text-on-surface-variant mt-2 text-sm" id="impresa-subtitle">Cantieri e documenti aziendali</p>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-lg">
+                <span class="material-symbols-outlined text-[18px]">business</span>
+                <span id="impresa-name">---</span>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <div id="loading-section" class="text-center py-20">
+            <span class="material-symbols-outlined text-5xl text-primary block mb-4 animate-pulse">handyman</span>
+            <p class="text-on-surface-variant">Caricamento portale imprese...</p>
+        </div>
+
+        <!-- Dashboard Content (hidden initially) -->
+        <div id="dashboard-content" class="hidden space-y-8">
+
+            <!-- Cantieri -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">handyman</span> I Miei Cantieri
+                    </h3>
+                    <span id="cantieri-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <div id="cantieri-list" class="space-y-3">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Nessun cantiere assegnato</div>
+                </div>
+            </section>
+
+            <div class="border-t border-stone-200/50"></div>
+
+            <!-- Documenti Condivisi -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">folder_open</span> Documenti Condivisi
+                    </h3>
+                    <span id="condivisi-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Documenti del cantiere visibili a tutte le imprese coinvolte</p>
+                <div id="condivisi-list" class="space-y-2">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento condiviso</div>
+                </div>
+            </section>
+
+            <div class="border-t border-stone-200/50"></div>
+
+            <!-- Area Privata -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">lock</span> Area Privata
+                    </h3>
+                    <span id="privati-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Documenti accessibili solo alla tua impresa</p>
+
+                <!-- Upload form -->
+                <div class="bg-white rounded-xl p-4 md:p-6 shadow-[0px_4px_16px_rgba(27,28,28,0.04)] mb-4">
+                    <h4 class="font-label text-sm font-semibold text-on-surface mb-3">Carica un documento</h4>
+                    <div class="flex flex-col md:flex-row gap-3 items-start md:items-center">
+                        <select id="upload-cantiere" class="w-full md:w-48 bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                            <option value="">Seleziona cantiere</option>
+                        </select>
+                        <select id="upload-tipo" class="w-full md:w-40 bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                            <option value="privato">Area privata</option>
+                            <option value="condiviso">Documento condiviso</option>
+                        </select>
+                        <input type="file" id="upload-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" class="flex-1 text-sm text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-label file:bg-primary file:text-on-primary hover:file:bg-primary-container transition-colors"/>
+                        <button id="btn-upload" class="bg-primary text-on-primary font-medium py-2 px-5 rounded-lg hover:bg-secondary transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[18px]">upload</span> Carica
+                        </button>
+                    </div>
+                    <div id="upload-error" class="text-xs text-error mt-2 hidden"></div>
+                </div>
+
+                <div id="privati-list" class="space-y-2">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento privato</div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect', 'impresa'], defaultActiveMenu: 'dashboard', pageName: 'Portale Imprese' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadDashboard();
+});
+
+async function loadDashboard() {
+    var loadingEl = document.getElementById('loading-section');
+    var contentEl = document.getElementById('dashboard-content');
+    var impresaTitle = document.getElementById('impresa-title');
+    var impresaName = document.getElementById('impresa-name');
+
+    try {
+        var token = null;
+        try {
+            var { data: { session } } = await window.supabaseClient.auth.getSession();
+            token = session?.access_token;
+        } catch(e) {}
+
+        if (!token) {
+            loadingEl.innerHTML = '<p class="text-error">Sessione scaduta. Effettua il login.</p>';
+            return;
+        }
+
+        var res = await fetch('/api/impresa/dashboard', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+            var errData = await res.json();
+            throw new Error(errData.error || 'Errore caricamento');
+        }
+        var data = await res.json();
+
+        loadingEl.classList.add('hidden');
+        contentEl.classList.remove('hidden');
+
+        impresaTitle.textContent = data.impresa.ragione_sociale;
+        impresaName.textContent = data.impresa.ragione_sociale;
+
+        renderCantieri(data.progetti, data.cantieri);
+        renderCondivisi(data.documenti_condivisi);
+        renderPrivati(data.documenti_privati);
+        populateUploadSelect(data.progetti);
+
+    } catch (err) {
+        loadingEl.innerHTML = '<p class="text-error">Errore: ' + err.message + '</p>';
+        console.error('[Imprese]', err);
+    }
+}
+
+function renderCantieri(progetti, cantieri) {
+    var list = document.getElementById('cantieri-list');
+    var count = document.getElementById('cantieri-count');
+
+    if (!progetti || progetti.length === 0) {
+        list.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun cantiere assegnato</div>';
+        count.textContent = '0 cantieri';
+        return;
+    }
+
+    count.textContent = progetti.length + ' cantieri';
+
+    var html = '';
+    progetti.forEach(function(p) {
+        var statusColor = 'bg-stone-200 text-stone-600';
+        if (p.status === 'in_corso' || p.stato === 'in_corso') statusColor = 'bg-blue-100 text-blue-700';
+        else if (p.status === 'completato' || p.stato === 'completato') statusColor = 'bg-green-100 text-green-700';
+        else if (p.status === 'sospeso' || p.stato === 'sospeso') statusColor = 'bg-amber-100 text-amber-700';
+
+        var cantiereInfo = cantieri.find(function(c) { return c.id_cantiere === p.id; });
+        var note = cantiereInfo ? cantiereInfo.note_incarico : '';
+        var dataInizio = cantiereInfo ? cantiereInfo.data_inizio_lavori : '';
+
+        html += '<div class="bg-white rounded-xl p-4 md:p-6 shadow-[0px_2px_12px_rgba(27,28,28,0.03)] hover:shadow-[0px_4px_20px_rgba(27,28,28,0.06)] transition-shadow">';
+        html += '<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">';
+        html += '<div class="flex-1">';
+        html += '<div class="flex items-center gap-2 mb-1">';
+        html += '<h4 class="font-headline text-base font-semibold text-on-surface">' + (p.titolo || 'Cantiere') + '</h4>';
+        html += '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ' + statusColor + '">' + (p.status || p.stato || 'n/a') + '</span>';
+        html += '</div>';
+        if (p.descrizione) html += '<p class="text-sm text-on-surface-variant line-clamp-2">' + p.descrizione + '</p>';
+        if (note) html += '<p class="text-xs text-stone-500 mt-1"><strong>Note incarico:</strong> ' + note + '</p>';
+        if (dataInizio) html += '<p class="text-xs text-stone-500 mt-1"><strong>Inizio lavori:</strong> ' + dataInizio + '</p>';
+        html += '</div>';
+        if (typeof p.avanzamento === 'number') {
+            html += '<div class="flex items-center gap-3 shrink-0">';
+            html += '<div class="w-24 bg-stone-100 rounded-full h-2 overflow-hidden"><div class="bg-primary h-2 rounded-full" style="width:' + p.avanzamento + '%"></div></div>';
+            html += '<span class="text-xs font-semibold text-on-surface-variant">' + p.avanzamento + '%</span>';
+            html += '</div>';
+        }
+        html += '</div></div>';
+    });
+    list.innerHTML = html;
+}
+
+function renderCondivisi(docs) {
+    var list = document.getElementById('condivisi-list');
+    var count = document.getElementById('condivisi-count');
+
+    if (!docs || docs.length === 0) {
+        list.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento condiviso</div>';
+        count.textContent = '0 documenti';
+        return;
+    }
+
+    count.textContent = docs.length + ' documenti';
+    list.innerHTML = docs.map(function(d) { return docItemHtml(d); }).join('');
+}
+
+function renderPrivati(docs) {
+    var list = document.getElementById('privati-list');
+    var count = document.getElementById('privati-count');
+
+    if (!docs || docs.length === 0) {
+        list.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento privato</div>';
+        count.textContent = '0 documenti';
+        return;
+    }
+
+    count.textContent = docs.length + ' documenti';
+    list.innerHTML = docs.map(function(d) { return docItemHtml(d); }).join('');
+}
+
+function docItemHtml(d) {
+    var icon = 'description';
+    if (d.mime_type && d.mime_type.indexOf('pdf') !== -1) icon = 'picture_as_pdf';
+    else if (d.mime_type && d.mime_type.indexOf('image') !== -1) icon = 'image';
+    else if (d.mime_type && d.mime_type.indexOf('word') !== -1) icon = 'text_snippet';
+    else if (d.mime_type && d.mime_type.indexOf('excel') !== -1) icon = 'table_chart';
+
+    var size = d.size_bytes ? (d.size_bytes / 1024).toFixed(1) + ' KB' : '';
+    var date = d.created_at ? new Date(d.created_at).toLocaleDateString('it-IT') : '';
+
+    return '<div class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow">' +
+        '<div class="flex items-center gap-3 min-w-0">' +
+        '<span class="material-symbols-outlined text-primary text-2xl shrink-0">' + icon + '</span>' +
+        '<div class="min-w-0">' +
+        '<p class="text-sm font-medium text-on-surface truncate">' + (d.title || 'Documento') + '</p>' +
+        '<p class="text-xs text-on-surface-variant">' + size + (date ? ' &middot; ' + date : '') + '</p>' +
+        '</div></div>' +
+        '<button onclick="downloadDoc(\'' + d.id + '\')" class="shrink-0 text-primary hover:text-secondary transition-colors p-1" title="Scarica">' +
+        '<span class="material-symbols-outlined text-xl">download</span></button></div>';
+}
+
+function populateUploadSelect(progetti) {
+    var select = document.getElementById('upload-cantiere');
+    if (!progetti || progetti.length === 0) return;
+    select.innerHTML = '<option value="">Seleziona cantiere</option>' +
+        progetti.map(function(p) { return '<option value="' + p.id + '">' + (p.titolo || 'Cantiere') + '</option>'; }).join('');
+}
+
+document.getElementById('btn-upload').addEventListener('click', async function() {
+    var fileInput = document.getElementById('upload-file-input');
+    var cantiereSelect = document.getElementById('upload-cantiere');
+    var tipoSelect = document.getElementById('upload-tipo');
+    var errorEl = document.getElementById('upload-error');
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        errorEl.textContent = 'Seleziona un file';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+    if (!cantiereSelect.value) {
+        errorEl.textContent = 'Seleziona un cantiere';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento...';
+
+    try {
+        var { data: { session } } = await window.supabaseClient.auth.getSession();
+        var token = session?.access_token;
+        if (!token) throw new Error('Sessione scaduta');
+
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('cantiere_id', cantiereSelect.value);
+        formData.append('tipo', tipoSelect.value);
+        formData.append('title', fileInput.files[0].name);
+
+        var res = await fetch('/api/impresa/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: formData
+        });
+
+        if (!res.ok) {
+            var errData = await res.json();
+            throw new Error(errData.error || 'Errore upload');
+        }
+
+        fileInput.value = '';
+        showNotification('Documento caricato con successo', 'success');
+        loadDashboard();
+
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">upload</span> Carica';
+    }
+});
+
+async function downloadDoc(docId) {
+    try {
+        var { data: { session } } = await window.supabaseClient.auth.getSession();
+        var token = session?.access_token;
+        if (!token) throw new Error('Sessione scaduta');
+
+        var res = await fetch('/api/impresa/documenti/' + docId + '/download', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('Errore download');
+
+        var data = await res.json();
+        if (data.url) window.open(data.url, '_blank');
+        else throw new Error('URL non valido');
+    } catch (err) {
+        showNotification('Errore download: ' + err.message, 'error');
+    }
+}
+
+function showNotification(msg, type) {
+    var old = document.querySelector('.hdl-notification');
+    if (old) old.remove();
+    var colors = { error: '#b91c1c', success: '#166534', info: '#1e40af' };
+    var icons = { error: 'error', success: 'check_circle', info: 'info' };
+    var el = document.createElement('div');
+    el.className = 'hdl-notification';
+    el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+    el.innerHTML = '<span class="material-symbols-outlined">' + (icons[type] || 'info') + '</span>' + msg;
+    document.body.appendChild(el);
+    setTimeout(function() { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 4000);
+}
+</script>
+</body>
+</html>

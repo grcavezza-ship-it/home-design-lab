@@ -160,23 +160,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('[Portal Init] Sidebar ri-renderizzata per ruolo:', role);
         }
         
-        // Carica profilo per nome e avatar (operatori_profiles per staff, clienti_profiles per clienti)
+        // Carica profilo per nome e avatar (operatori_profiles per staff, clienti_profiles per clienti, imprese per impresa)
         try {
             var profileTable = role === 'client' ? 'clienti_profiles' : 'operatori_profiles';
+            if (role === 'impresa') profileTable = 'imprese';
+            const selectFields = role === 'impresa' ? 'ragione_sociale, referente, telefono, partita_iva, email_principale' : 'nome, cognome, telefono, avatar_url';
             const { data: profile } = await window.supabase
                 .from(profileTable)
-                .select('nome, cognome, telefono, avatar_url')
+                .select(selectFields)
                 .eq('user_id', user.id)
                 .maybeSingle();
             if (profile) {
                 window.currentUserProfile = profile;
-                window.currentUserDisplayName = [profile.nome, profile.cognome].filter(Boolean).join(' ') || user.email;
+                window.currentUserDisplayName = profile.ragione_sociale || [profile.nome, profile.cognome].filter(Boolean).join(' ') || user.email;
             }
         } catch (e) {
             console.warn('[Portal Init] Impossibile caricare profilo:', e.message);
         }
         
-        // Blocca accesso se profilo incompleto (solo per operatori/architetti, non admin/senior/cliente)
+        // Blocca accesso se profilo incompleto (solo per operatori/architetti, non admin/senior/cliente/impresa)
         if (role && (role === 'operator' || role === 'architect')) {
             var prof = window.currentUserProfile;
             var isProfilePage = window.location.href.indexOf('profilo.html') !== -1;

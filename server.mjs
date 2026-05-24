@@ -656,6 +656,9 @@ app.get('/portale-cliente', (_req, res) => {
     });
 });
 
+// ─── Impresa portal (dashboard-impresa.html via express.static dalla root) ───
+// dashboard-impresa.html è servito automaticamente da express.static come file root
+
 // ─── Error handler ────────────────────────────────────────────────────────────
 app.use((err, _req, res, _next) => {
     console.error('[server]', err.message);

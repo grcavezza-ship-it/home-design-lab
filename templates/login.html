@@ -278,6 +278,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     userName = operatore.nome || '';
                 }
             }
+
+            // 3) Se ancora client, controlla la tabella imprese
+            if (role === 'client') {
+                const { data: impresa } = await supabaseClient
+                    .from('imprese')
+                    .select('ragione_sociale, referente')
+                    .eq('email_principale', data.user.email)
+                    .maybeSingle();
+
+                if (impresa) {
+                    role = 'impresa';
+                    userName = impresa.ragione_sociale || impresa.referente || '';
+                }
+            }
             
             // Salva info utente per riferimento
             localStorage.setItem('hdl_user_role', role);

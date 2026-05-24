@@ -13,7 +13,8 @@ import {
     requireSenior,
     requireOperator,
     requirePermission,
-    requireClientAccess
+    requireClientAccess,
+    requireImpresa
 } from '../middleware/auth.mjs';
 import { primoAccesso, recuperoPassword, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
 
@@ -1300,6 +1301,144 @@ router.get('/documenti/:id/download', authenticate, async (req, res, next) => {
             .from(CONFIG.STORAGE.BUCKET)
             .createSignedUrl(doc.storage_path, 3600);
 
+        if (urlError) throw urlError;
+        res.json({ url: signedUrl.signedUrl });
+    } catch (e) { next(e); }
+});
+
+// ─── PORTALE IMPRESE ─────────────────────────────────────────────────────────
+
+// Dashboard impresa: cantieri + documenti
+router.get('/impresa/dashboard', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        var admin = getAdminClient();
+        var userId = req.user.id;
+
+        // Trova l'impresa collegata all'utente
+        var { data: impresa } = await admin
+            .from('imprese')
+            .select('*')
+            .eq('user_id', userId)
+            .maybeSingle();
+
+        if (!impresa) {
+            return res.status(404).json({ error: 'Profilo impresa non trovato' });
+        }
+
+        // Trova i cantieri a cui l'impresa è associata
+        var { data: cantieri } = await admin
+            .from('cantiere_imprese')
+            .select('id_cantiere, data_inizio_lavori, note_incarico')
+            .eq('id_impresa', impresa.id);
+
+        var cantiereIds = (cantieri || []).map(function(c) { return c.id_cantiere; });
+
+        var progetti = [];
+        if (cantiereIds.length > 0) {
+            var { data: projs } = await admin
+                .from('projects')
+                .select('id, titolo, descrizione, status, avanzamento, created_at, data_inizio, data_consegna')
+                .in('id', cantiereIds)
+                .order('created_at', { ascending: false });
+            progetti = projs || [];
+        }
+
+        // Trova i documenti condivisi in questi cantieri
+        var documentiCondivisi = [];
+        var documentiPrivati = [];
+        if (cantiereIds.length > 0) {
+            var { data: docs } = await admin
+                .from('project_documents')
+                .select('*')
+                .in('project_id', cantiereIds);
+            (docs || []).forEach(function(d) {
+                if (d.storage_path && d.storage_path.indexOf('aree_private_imprese/' + impresa.id) !== -1) {
+                    documentiPrivati.push(d);
+                } else if (d.storage_path && d.storage_path.indexOf('documenti_condivisi') !== -1) {
+                    documentiCondivisi.push(d);
+                }
+            });
+        }
+
+        res.json({
+            impresa: { id: impresa.id, ragione_sociale: impresa.ragione_sociale, partita_iva: impresa.partita_iva },
+            progetti: progetti,
+            cantieri: cantieri || [],
+            documenti_condivisi: documentiCondivisi,
+            documenti_privati: documentiPrivati
+        });
+    } catch (e) { next(e); }
+});
+
+// Upload file impresa (nella propria cartella privata o documenti condivisi)
+router.post('/impresa/upload', authenticate, requireImpresa, upload.single('file'), async (req, res, next) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'Nessun file caricato' });
+        if (req.user.role !== 'impresa' && !['senior', 'admin'].includes(req.user.role)) {
+            return res.status(403).json({ error: 'Solo le imprese o admin possono caricare qui' });
+        }
+
+        var admin = getAdminClient();
+        var userId = req.user.id;
+        var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', userId).maybeSingle();
+        if (!impresa) return res.status(404).json({ error: 'Impresa non trovata' });
+
+        var cantiereId = req.body.cantiere_id;
+        var tipo = req.body.tipo || 'privato'; // 'privato' o 'condiviso'
+        var folderPath = tipo === 'condiviso'
+            ? cantiereId + '/documenti_condivisi/'
+            : cantiereId + '/aree_private_imprese/' + impresa.id + '/';
+        var storagePath = folderPath + Date.now() + '_' + req.file.originalname;
+
+        var { error: uploadError } = await admin.storage
+            .from(CONFIG.STORAGE.BUCKET)
+            .upload(storagePath, req.file.buffer, { contentType: req.file.mimetype, upsert: false });
+        if (uploadError) throw uploadError;
+
+        var { data: doc, error: dbError } = await admin
+            .from('project_documents')
+            .insert({
+                project_id: cantiereId,
+                title: req.body.title || req.file.originalname,
+                storage_path: storagePath,
+                mime_type: req.file.mimetype,
+                size_bytes: req.file.size,
+                visibility: 'internal',
+                tipo_upload: 'impresa'
+            })
+            .select()
+            .single();
+        if (dbError) throw dbError;
+
+        res.status(201).json(doc);
+    } catch (e) { next(e); }
+});
+
+// Download documenti per impresa (con controllo accesso)
+router.get('/impresa/documenti/:id/download', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        var admin = getAdminClient();
+        var { data: doc } = await admin
+            .from('project_documents')
+            .select('*')
+            .eq('id', req.params.id)
+            .maybeSingle();
+        if (!doc) return res.status(404).json({ error: 'Documento non trovato' });
+
+        if (req.user.role === 'impresa') {
+            var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', req.user.id).maybeSingle();
+            var path = doc.storage_path || '';
+            var impresaId = impresa ? impresa.id : '0';
+            var isCondiviso = path.indexOf('documenti_condivisi') !== -1;
+            var isProprio = path.indexOf('aree_private_imprese/' + impresaId) !== -1;
+            if (!isCondiviso && !isProprio) {
+                return res.status(403).json({ error: 'Accesso negato a questo documento' });
+            }
+        }
+
+        var { data: signedUrl, error: urlError } = await admin.storage
+            .from(CONFIG.STORAGE.BUCKET)
+            .createSignedUrl(doc.storage_path, 3600);
         if (urlError) throw urlError;
         res.json({ url: signedUrl.signedUrl });
     } catch (e) { next(e); }

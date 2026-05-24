@@ -18,7 +18,8 @@ let PORTAL_CONFIG = {
         CLIENT: 'client',
         OPERATOR: 'operator', 
         SENIOR: 'senior',
-        ADMIN: 'admin'
+        ADMIN: 'admin',
+        IMPRESA: 'impresa'
     },
     
     // 🔄 Pagine per ruolo - Redirect corretti a file HTML fisici
@@ -27,7 +28,8 @@ let PORTAL_CONFIG = {
         operator: 'dashboard-operatore.html',
         architect: 'dashboard-operatore.html',
         senior: 'dashboard-senior.html',
-        admin: 'dashboard-senior.html'
+        admin: 'dashboard-senior.html',
+        impresa: 'dashboard-impresa.html'
     },
     
     // 🔗 URL di login
@@ -79,6 +81,10 @@ let PORTAL_CONFIG = {
             { id: 'journal', label: 'Journal', icon: 'menu_book', href: 'gestione-journal.html' },
             { id: 'team', label: 'Team', icon: 'groups', href: 'gestione-team.html' },
             { id: 'compiti', label: 'Compiti', icon: 'assignment', href: 'gestione-compiti.html' }
+        ],
+        impresa: [
+            { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: 'dashboard-impresa.html' },
+            { id: 'cantieri', label: 'I Miei Cantieri', icon: 'handyman', href: 'dashboard-impresa.html' }
         ]
     }
 };
@@ -170,6 +176,18 @@ async function getUserRole() {
             window.currentUserAssignedProjects = [];
         }
         return operatore.ruolo === 'admin' ? 'admin' : 'architect';
+    }
+
+    // 3) Controlla se è un'impresa
+    const { data: impresa } = await supabase
+        .from('imprese')
+        .select('ragione_sociale, referente')
+        .eq('email_principale', user.email)
+        .maybeSingle();
+
+    if (impresa) {
+        window.currentUserDisplayName = impresa.ragione_sociale || impresa.referente || user.email;
+        return PORTAL_CONFIG.roles.IMPRESA;
     }
 
     return PORTAL_CONFIG.roles.CLIENT;
@@ -290,13 +308,14 @@ function generateAvatarUrl(user) {
     }
     
     const isStaff = ['senior', 'operator', 'admin', 'architect'].includes(user.role);
+    const isImpresa = user.role === 'impresa';
     const displayName = user.display_name || user.email || 'User';
     
     if (isStaff) {
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=186C32&color=fff&size=128`;
+    } else if (isImpresa) {
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=1e40af&color=fff&size=128`;
     } else {
-        // 👤 CLIENTI: Iniziali come lo staff, ma con colore diverso
-        // Se il cliente ha caricato una foto (avatar_url), verrà mostrata quella
         return `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=c0aede&color=fff&size=128`;
     }
 }
