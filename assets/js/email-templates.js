@@ -77,6 +77,25 @@ export function primoAccesso(link) {
 }
 
 /**
+ * Template per Recupero Password
+ * @param {string} link - URL per reimpostare la password
+ */
+export function recuperoPassword(link) {
+  const body = `
+    <h1>Recupero Password</h1>
+    <p>Hai richiesto il ripristino della password per il tuo account Home Design Lab.</p>
+    <p>Clicca sul pulsante qui sotto per crearne una nuova.</p>
+    <div class="cta">
+      <a href="${link}">Reimposta la Password</a>
+    </div>
+    <p style="font-size:13px;color:#707a6e;">Per motivi di sicurezza, questo link scadr&agrave; tra <strong>24 ore</strong>. Se non hai richiesto tu il recupero, ignora questa email.</p>
+    <div class="divider"></div>
+    <p style="font-size:13px;">A presto,<br/><strong>Il Team di Home Design Lab</strong></p>
+  `;
+  return wrapHtml(body);
+}
+
+/**
  * Template per notifica nuovo contatto dal sito
  * @param {object} data - { name, email, subject, message }
  */

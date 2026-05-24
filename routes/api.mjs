@@ -15,7 +15,7 @@ import {
     requirePermission,
     requireClientAccess
 } from '../middleware/auth.mjs';
-import { primoAccesso, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
+import { primoAccesso, recuperoPassword, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: CONFIG.STORAGE.MAX_FILE_SIZE } });
@@ -377,7 +377,7 @@ router.post('/primo-accesso', async (req, res, next) => {
     }
 });
 
-// ─── RESET PASSWORD (via Supabase built-in - funziona con anon key) ─────────
+// ─── RESET PASSWORD (con email brandizzata via SMTP) ────────────────────────
 
 router.post('/reset-password', async (req, res, next) => {
     try {
@@ -386,22 +386,69 @@ router.post('/reset-password', async (req, res, next) => {
             return res.status(400).json({ error: 'Email non valida' });
         }
 
-        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.ANON_KEY) {
+        if (!CONFIG.SUPABASE.URL || !CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
             return res.status(503).json({ error: 'Supabase non configurato' });
         }
 
         const protocol = req.headers['x-forwarded-proto'] || req.protocol;
         const host = req.headers['x-forwarded-host'] || req.get('host') || 'localhost:3000';
         const siteUrl = CONFIG.APP.SITE_URL || `${protocol}://${host}`;
-        const supabase = createClient(CONFIG.SUPABASE.URL, CONFIG.SUPABASE.ANON_KEY);
+        const adminClient = getAdminClient();
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${siteUrl}/imposta-password.html`
+        let authUserId = null;
+        let actionLink = null;
+
+        const { data: linkData, error: linkError } = await adminClient.auth.admin.generateLink({
+            type: 'recovery', email, options: { redirectTo: `${siteUrl}/imposta-password.html` }
         });
+        if (linkError) throw linkError;
+        authUserId = linkData.user?.id;
+        actionLink = linkData.properties?.action_link;
 
-        if (error) throw error;
+        if (!authUserId) {
+            return res.status(404).json({ error: 'Utente non trovato' });
+        }
 
-        res.json({ success: true, message: 'Email inviata con successo' });
+        let resetLink = siteUrl + '/imposta-password.html';
+        if (actionLink) {
+            try {
+                const actionUrl = new URL(actionLink);
+                const tokenHash = actionUrl.searchParams.get('token');
+                if (tokenHash) {
+                    resetLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
+                }
+            } catch (e) {
+                console.warn('Errore parsing action_link:', e.message);
+            }
+        }
+
+        let emailSent = false;
+        let emailError = null;
+        if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
+            try {
+                const transporter = nodemailer.createTransport({
+                    host: CONFIG.SMTP.HOST,
+                    port: CONFIG.SMTP.PORT,
+                    secure: CONFIG.SMTP.PORT === 465,
+                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
+                });
+                await transporter.sendMail({
+                    from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
+                    to: email,
+                    subject: 'Recupero Password - Home Design Lab',
+                    html: recuperoPassword(resetLink)
+                });
+                emailSent = true;
+                console.log(`Email reset password inviata a ${email}`);
+            } catch (err) {
+                emailError = err.message;
+                console.error('Errore invio email reset:', err.message);
+            }
+        } else {
+            console.warn('SMTP non configurato, skip invio email reset');
+        }
+
+        res.json({ success: true, emailSent, emailError });
     } catch (error) {
         console.error('Reset password error:', error.message);
         res.status(500).json({ error: error.message });
