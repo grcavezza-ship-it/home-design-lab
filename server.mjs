@@ -649,30 +649,6 @@ for (const [route, file] of Object.entries(publicPages)) {
     app.get(route, (_req, res) => res.sendFile(join(templatesDir, file)));
 }
 
-// ─── Operator portal ──────────────────────────────────────────────────────────
-const operatorPages = {
-    '/operatore':             'operatore/dashboard.html',
-    '/operatore/dashboard':   'operatore/dashboard.html',
-    '/operatore/blog':        'operatore/blog.html',
-    '/operatore/portfolio':   'operatore/portfolio.html',
-    '/operatore/collection':  'operatore/collection.html',
-    '/operatore/clienti':     'operatore/clienti.html'
-};
-
-for (const [route, file] of Object.entries(operatorPages)) {
-    app.get(route, (_req, res) => {
-        res.sendFile(join(templatesDir, file), (err) => {
-            if (err) res.status(404).json({ error: 'Pagina non trovata' });
-        });
-    });
-}
-
-app.get('/operatore/clienti/:id', (_req, res) => {
-    res.sendFile(join(templatesDir, 'operatore/cliente-dettaglio.html'), (err) => {
-        if (err) res.status(404).json({ error: 'Pagina non trovata' });
-    });
-});
-
 // ─── Client portal ────────────────────────────────────────────────────────────
 app.get('/portale-cliente', (_req, res) => {
     res.sendFile(join(templatesDir, 'portale-cliente.html'), (err) => {
