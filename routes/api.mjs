@@ -19,6 +19,16 @@ import {
 } from '../middleware/auth.mjs';
 import { primoAccesso, recuperoPassword, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
 
+// pdf-parse: CommonJS module, import dinamico
+let _pdfParse = null;
+async function getPdfParse() {
+    if (!_pdfParse) {
+        const mod = await import('pdf-parse');
+        _pdfParse = mod.default || mod;
+    }
+    return _pdfParse;
+}
+
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: CONFIG.STORAGE.MAX_FILE_SIZE } });
 
@@ -1714,6 +1724,244 @@ router.get('/senior/imprese/:id/cantieri', authenticate, requireRole('senior', '
             .order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// ─── COMPUTI METRICI PER IMPRESA ─────────────────────────────────────────
+
+// Upload computo metrico PDF + parsing automatico
+router.post('/senior/imprese/computo/upload', authenticate, requireRole('senior', 'admin'), upload.single('file'), async (req, res, next) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'Nessun file caricato' });
+        var admin = getAdminClient();
+        var { cantiere_id, id_impresa, note } = req.body;
+        if (!cantiere_id || !id_impresa) return res.status(400).json({ error: 'cantiere_id e id_impresa richiesti' });
+
+        var storagePath = 'computi_metrici/' + id_impresa + '/' + Date.now() + '_' + req.file.originalname;
+        var { error: uploadError } = await admin.storage
+            .from(CONFIG.STORAGE.BUCKET)
+            .upload(storagePath, req.file.buffer, { contentType: req.file.mimetype, upsert: false });
+        if (uploadError) throw uploadError;
+
+        var { data: fileData } = admin.storage.from(CONFIG.STORAGE.BUCKET).getPublicUrl(storagePath);
+        var fileUrl = fileData?.publicUrl || '';
+
+        // Salva record computo
+        var { data: computo, error: dbError } = await admin
+            .from('computi_metrici')
+            .insert({
+                id_cantiere: parseInt(cantiere_id),
+                id_impresa: id_impresa,
+                nome_file: req.file.originalname,
+                file_url: fileUrl,
+                note: note || '',
+                stato: 'da_analizzare'
+            })
+            .select()
+            .single();
+        if (dbError) throw dbError;
+
+        // Tenta parsing PDF
+        var vociInserite = 0;
+        try {
+            var pdfData = await getPdfParse()(req.file.buffer);
+            var testo = pdfData.text;
+            if (testo && testo.length > 50) {
+                var voci = parseComputoText(testo);
+                if (voci && voci.length > 0) {
+                    var records = voci.map(function(v, i) {
+                        return {
+                            id_computo: computo.id,
+                            id_impresa: id_impresa,
+                            id_cantiere: parseInt(cantiere_id),
+                            numero_voce: i + 1,
+                            descrizione: v.descrizione,
+                            importo: v.importo,
+                            categoria: v.categoria || 'Lavori',
+                            quantita: v.quantita || null,
+                            unita_misura: v.unita_misura || 'a corpo',
+                            prezzo_unitario: v.prezzo_unitario || null,
+                            estratta_automaticamente: true
+                        };
+                    });
+                    var { error: insErr } = await admin.from('voci_computo').insert(records);
+                    if (!insErr) {
+                        vociInserite = records.length;
+                        await admin.from('computi_metrici').update({ stato: 'analizzato' }).eq('id', computo.id);
+
+                        // Aggiorna economia: somma voci come importo_contratto
+                        var { data: totali } = await admin
+                            .from('voci_computo')
+                            .select('SUM(importo) as totale')
+                            .eq('id_impresa', id_impresa)
+                            .eq('id_cantiere', parseInt(cantiere_id))
+                            .maybeSingle();
+                        if (totali && totali.totale) {
+                            var { data: esistente } = await admin
+                                .from('cantiere_impresa_economia')
+                                .select('id')
+                                .eq('id_impresa', id_impresa)
+                                .eq('id_cantiere', parseInt(cantiere_id))
+                                .maybeSingle();
+                            if (esistente) {
+                                await admin.from('cantiere_impresa_economia')
+                                    .update({ importo_contratto: totali.totale, updated_at: new Date().toISOString() })
+                                    .eq('id', esistente.id);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (parseErr) {
+            console.log('[computo] parse warning:', parseErr.message);
+        }
+
+        res.status(201).json({ computo: computo, voci_estratte: vociInserite });
+    } catch (e) { next(e); }
+});
+
+// Helper: parsing testo computo metrico
+function parseComputoText(testo) {
+    var righe = testo.split('\n').map(function(r) { return r.trim(); }).filter(Boolean);
+    var voci = [];
+    var categorie = ['Lavori', 'Materiali', 'Manodopera', 'Subappalto', 'Sicurezza', 'Altro', 'Somministrazioni', 'Trasporti', 'Noli'];
+    var categoriaCorrente = 'Lavori';
+
+    for (var i = 0; i < righe.length; i++) {
+        var r = righe[i];
+
+        // Riconosci categorie nel testo
+        var foundCat = categorie.find(function(c) { return r.toUpperCase().indexOf(c.toUpperCase()) >= 0; });
+        if (foundCat && r.length < 60) { categoriaCorrente = foundCat; continue; }
+
+        // Cerca pattern: descrizione + importo finale
+        // Pattern 1: "€ 1.234,56" o "€1234.56"
+        var match = r.match(/€\s*([\d.'.,\d]+)/);
+        if (!match) continue;
+
+        var importoStr = match[1].replace(/\./g, '').replace(',', '.');
+        var importo = parseFloat(importoStr);
+        if (isNaN(importo) || importo <= 0) continue;
+
+        // Cerca anche quantità e prezzo unitario
+        var qtyMatch = r.match(/(\d+[.,]?\d*)\s*(x|×|[*])\s*€/);
+        var quantita = null, prezzoUnitario = null;
+        if (qtyMatch) {
+            quantita = parseFloat(qtyMatch[1].replace(',', '.'));
+        }
+
+        var descrizione = r.substring(0, r.indexOf(match[0])).trim();
+        // Pulisci numeri di voce iniziali
+        descrizione = descrizione.replace(/^\d+[.)\s]+/, '').trim();
+        if (descrizione.length < 3) descrizione = 'Voce ' + (voci.length + 1);
+
+        voci.push({
+            descrizione: descrizione,
+            importo: Math.round(importo * 100) / 100,
+            categoria: categoriaCorrente,
+            quantita: quantita ? Math.round(quantita * 100) / 100 : null,
+            unita_misura: 'a corpo',
+            prezzo_unitario: prezzoUnitario
+        });
+    }
+
+    return voci;
+}
+
+// Elenca computi per un'impresa
+router.get('/senior/imprese/:id/computi', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('computi_metrici')
+            .select('*, projects!inner(id, titolo)')
+            .eq('id_impresa', req.params.id)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// Ottieni voci di un computo
+router.get('/senior/imprese/computi/:id/voci', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('voci_computo')
+            .select('*')
+            .eq('id_computo', req.params.id)
+            .order('numero_voce');
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// Aggiungi voce manuale
+router.post('/senior/imprese/computi/:id/voci', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { id_impresa, id_cantiere, descrizione, importo, categoria, quantita, unita_misura, prezzo_unitario } = req.body;
+        if (!descrizione || importo === undefined) return res.status(400).json({ error: 'descrizione e importo richiesti' });
+
+        // Se id_cantiere non fornito, lo ricavo dal computo
+        if (!id_cantiere) {
+            var { data: comp } = await admin.from('computi_metrici').select('id_cantiere').eq('id', req.params.id).maybeSingle();
+            if (!comp) return res.status(404).json({ error: 'Computo non trovato' });
+            id_cantiere = comp.id_cantiere;
+        }
+
+        // Conta voci esistenti per numero progressivo
+        var { data: existing } = await admin.from('voci_computo').select('numero_voce').eq('id_computo', req.params.id).order('numero_voce', { ascending: false }).limit(1);
+        var nextNum = (existing && existing.length > 0 ? (existing[0].numero_voce || 0) : 0) + 1;
+
+        const { data, error } = await admin
+            .from('voci_computo')
+            .insert({
+                id_computo: req.params.id,
+                id_impresa: id_impresa,
+                id_cantiere: id_cantiere,
+                numero_voce: nextNum,
+                descrizione: descrizione,
+                importo: parseFloat(importo) || 0,
+                categoria: categoria || 'Lavori',
+                quantita: quantita ? parseFloat(quantita) : null,
+                unita_misura: unita_misura || 'a corpo',
+                prezzo_unitario: prezzo_unitario ? parseFloat(prezzo_unitario) : null,
+                estratta_automaticamente: false
+            })
+            .select()
+            .single();
+        if (error) throw error;
+        res.status(201).json(data);
+    } catch (e) { next(e); }
+});
+
+// Modifica voce
+router.put('/senior/imprese/computi/voci/:id', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { descrizione, importo, categoria, quantita, unita_misura, prezzo_unitario } = req.body;
+        var updates = { updated_at: new Date().toISOString() };
+        if (descrizione !== undefined) updates.descrizione = descrizione;
+        if (importo !== undefined) updates.importo = parseFloat(importo);
+        if (categoria !== undefined) updates.categoria = categoria;
+        if (quantita !== undefined) updates.quantita = quantita ? parseFloat(quantita) : null;
+        if (unita_misura !== undefined) updates.unita_misura = unita_misura;
+        if (prezzo_unitario !== undefined) updates.prezzo_unitario = prezzo_unitario ? parseFloat(prezzo_unitario) : null;
+
+        const { data, error } = await admin.from('voci_computo').update(updates).eq('id', req.params.id).select().single();
+        if (error) throw error;
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
+// Elimina voce
+router.delete('/senior/imprese/computi/voci/:id', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { error } = await admin.from('voci_computo').delete().eq('id', req.params.id);
+        if (error) throw error;
+        res.json({ success: true });
     } catch (e) { next(e); }
 });
 

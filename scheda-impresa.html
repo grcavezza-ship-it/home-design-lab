@@ -189,6 +189,22 @@
                 </div>
             </section>
 
+            <!-- COMPUTI METRICI -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">description</span> Computi Metrici
+                    </h3>
+                    <button onclick="openUploadComputo()" class="text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary bg-primary/5 hover:bg-primary/10 py-2 px-4 rounded-lg transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">upload_file</span> Carica Computo
+                    </button>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Carica un computo metrico PDF — le voci vengono estratte automaticamente. Puoi modificarle, aggiungerle o eliminarle.</p>
+                <div id="computi-list" class="space-y-2">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Caricamento...</div>
+                </div>
+            </section>
+
             <!-- CANTIERI ASSEGNATI -->
             <section>
                 <div class="flex items-center justify-between mb-4">
@@ -236,6 +252,171 @@
                     <span class="material-symbols-outlined text-[18px]">link</span> Collega Impresa al Cantiere
                 </button>
                 <div id="collega-error" class="text-xs text-error hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE MODIFICA ECONOMIA -->
+<div id="economia-modal" class="hidden fixed inset-0 z-[60]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeEconomiaModal()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-surface shadow-2xl overflow-y-auto">
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline text-xl text-on-surface">Modifica Situazione Economica</h3>
+                <button onclick="closeEconomiaModal()" class="text-stone-400 hover:text-stone-600 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div>
+                <p class="text-sm text-on-surface-variant mb-1">Cantiere: <strong id="eco-modal-cantiere"></strong></p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Importo Contratto (€)</label>
+                    <input type="number" step="0.01" id="eco-importo-contratto" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Importo Lavorato (€)</label>
+                    <input type="number" step="0.01" id="eco-importo-lavorato" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Importo Fatturato (€)</label>
+                    <input type="number" step="0.01" id="eco-importo-fatturato" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Importo Percepito (€)</label>
+                    <input type="number" step="0.01" id="eco-importo-percepito" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Ritenute (€)</label>
+                    <input type="number" step="0.01" id="eco-ritenute" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Note Economiche</label>
+                    <textarea id="eco-note" rows="3" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary resize-none"></textarea>
+                </div>
+                <button id="btn-salva-economia" class="w-full bg-primary text-on-primary font-medium py-2.5 rounded-lg hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-[18px]">save</span> Salva Modifiche
+                </button>
+                <div id="economia-edit-error" class="text-xs text-error hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE UPLOAD COMPUTO -->
+<div id="upload-computo-modal" class="hidden fixed inset-0 z-[60]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeUploadComputo()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-surface shadow-2xl overflow-y-auto">
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline text-xl text-on-surface">Carica Computo Metrico</h3>
+                <button onclick="closeUploadComputo()" class="text-stone-400 hover:text-stone-600 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Cantiere</label>
+                    <select id="upload-computo-cantiere" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary">
+                        <option value="">Seleziona cantiere...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">File PDF</label>
+                    <input type="file" id="upload-computo-file" accept=".pdf" class="w-full text-sm text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-label file:bg-primary file:text-on-primary hover:file:bg-primary-container transition-colors"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Note</label>
+                    <input type="text" id="upload-computo-note" placeholder="Es. Computo metrico estimativo ristrutturazione" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <button id="btn-upload-computo" class="w-full bg-primary text-on-primary font-medium py-2.5 rounded-lg hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-[18px]">upload</span> Carica & Analizza
+                </button>
+                <div id="upload-computo-error" class="text-xs text-error hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE VOCI COMPUTO -->
+<div id="voci-computo-modal" class="hidden fixed inset-0 z-[60]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeVociComputo()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-2xl bg-surface shadow-2xl overflow-y-auto">
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h3 class="font-headline text-xl text-on-surface">Voci Computo</h3>
+                    <p id="voci-computo-title" class="text-sm text-on-surface-variant"></p>
+                </div>
+                <button onclick="closeVociComputo()" class="text-stone-400 hover:text-stone-600 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div id="voci-totale" class="text-right text-lg font-bold text-primary"></div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-stone-200 bg-surface-container-low">
+                            <th class="text-left px-3 py-2 font-label text-[10px] uppercase">#</th>
+                            <th class="text-left px-3 py-2 font-label text-[10px] uppercase">Descrizione</th>
+                            <th class="text-left px-3 py-2 font-label text-[10px] uppercase">Categoria</th>
+                            <th class="text-right px-3 py-2 font-label text-[10px] uppercase">Q.tà</th>
+                            <th class="text-right px-3 py-2 font-label text-[10px] uppercase">P.Unitario</th>
+                            <th class="text-right px-3 py-2 font-label text-[10px] uppercase">Importo</th>
+                            <th class="px-3 py-2"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="voci-rows"></tbody>
+                </table>
+            </div>
+            <button onclick="aggiungiVoceManuale()" class="text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">add</span> Aggiungi Voce
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALE VOCE SINGOLA -->
+<div id="voce-modal" class="hidden fixed inset-0 z-[70]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeVoceModal()"></div>
+    <div class="fixed right-0 top-0 h-full w-full max-w-lg bg-surface shadow-2xl overflow-y-auto z-[71]">
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 id="voce-modal-title" class="font-headline text-xl text-on-surface">Voce Computo</h3>
+                <button onclick="closeVoceModal()" class="text-stone-400 hover:text-stone-600 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="space-y-4">
+                <input type="hidden" id="voce-edit-id"/>
+                <input type="hidden" id="voce-edit-computo"/>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Descrizione</label>
+                    <input type="text" id="voce-descrizione" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Categoria</label>
+                        <select id="voce-categoria" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary">
+                            <option>Lavori</option><option>Materiali</option><option>Manodopera</option>
+                            <option>Subappalto</option><option>Sicurezza</option><option>Altro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Importo (€)</label>
+                        <input type="number" step="0.01" id="voce-importo" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Quantità</label>
+                        <input type="number" step="0.01" id="voce-quantita" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Unità Misura</label>
+                        <select id="voce-unita" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary">
+                            <option>a corpo</option><option>mq</option><option>ml</option><option>cad</option><option>ore</option><option>punti</option><option>kg</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="btn-salva-voce" class="w-full bg-primary text-on-primary font-medium py-2.5 rounded-lg hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-[18px]">save</span> Salva Voce
+                </button>
+                <div id="voce-error" class="text-xs text-error hidden"></div>
             </div>
         </div>
     </div>
@@ -323,6 +504,9 @@ async function loadImpresa() {
         // Economia
         loadEconomia();
 
+        // Computi Metrici
+        loadComputi();
+
         // Cantieri
         loadCantieri(impresa);
 
@@ -346,8 +530,11 @@ async function loadEconomia() {
             rowsEl.innerHTML = '';
             emptyEl.classList.remove('hidden');
             countEl.textContent = '0 cantieri';
+            window._economiaData = [];
             return;
         }
+
+        window._economiaData = data;
 
         countEl.textContent = data.length + ' cantieri';
         emptyEl.classList.add('hidden');
@@ -512,8 +699,285 @@ function fmt(n) {
 }
 
 function editEconomia(cantiereId) {
-    window.location.href = 'gestione-imprese.html?id=' + impresaId + '&cantiere=' + cantiereId;
+    // Trova il record economia
+    var economie = window._economiaData || [];
+    var eco = economie.find(function(e) { return String(e.id_cantiere) === String(cantiereId); });
+    var proj = eco ? (eco.projects || {}) : {};
+
+    document.getElementById('eco-modal-cantiere').textContent = (proj.titolo || 'Cantiere #' + cantiereId);
+    document.getElementById('eco-modal-cantiere').dataset.cantiere = cantiereId;
+    document.getElementById('eco-importo-contratto').value = eco ? (eco.importo_contratto || '') : '';
+    document.getElementById('eco-importo-lavorato').value = eco ? (eco.importo_lavorato || '') : '';
+    document.getElementById('eco-importo-fatturato').value = eco ? (eco.importo_fatturato || '') : '';
+    document.getElementById('eco-importo-percepito').value = eco ? (eco.importo_percepito || '') : '';
+    document.getElementById('eco-ritenute').value = eco ? (eco.ritenute || '') : '';
+    document.getElementById('eco-note').value = eco ? (eco.note_economiche || '') : '';
+    document.getElementById('economia-modal').classList.remove('hidden');
 }
+
+function closeEconomiaModal() {
+    document.getElementById('economia-modal').classList.add('hidden');
+}
+
+document.getElementById('btn-salva-economia').addEventListener('click', async function() {
+    var cantiereId = document.getElementById('eco-modal-cantiere').dataset.cantiere;
+    if (!cantiereId) return;
+    var errorEl = document.getElementById('economia-edit-error');
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Salvataggio...';
+
+    try {
+        var res = await authFetch('/api/senior/imprese/economia', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_cantiere: parseInt(cantiereId),
+                id_impresa: impresaId,
+                importo_contratto: parseFloat(document.getElementById('eco-importo-contratto').value) || 0,
+                importo_lavorato: parseFloat(document.getElementById('eco-importo-lavorato').value) || 0,
+                importo_fatturato: parseFloat(document.getElementById('eco-importo-fatturato').value) || 0,
+                importo_percepito: parseFloat(document.getElementById('eco-importo-percepito').value) || 0,
+                ritenute: parseFloat(document.getElementById('eco-ritenute').value) || 0,
+                note_economiche: document.getElementById('eco-note').value || ''
+            })
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        showNotification('Economia aggiornata', 'success');
+        closeEconomiaModal();
+        loadEconomia();
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span> Salva Modifiche';
+    }
+});
+
+// ─── COMPUTI METRICI ───────────────────────────────────────────────────
+
+async function loadComputi() {
+    try {
+        var res = await authFetch('/api/senior/imprese/' + impresaId + '/computi');
+        if (!res.ok) throw new Error('Errore');
+        var data = await res.json();
+        var listEl = document.getElementById('computi-list');
+
+        if (!data || data.length === 0) {
+            listEl.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun computo metrico caricato</div>';
+            return;
+        }
+
+        listEl.innerHTML = data.map(function(c) {
+            var proj = c.projects || {};
+            var statoClass = c.stato === 'analizzato' ? 'text-green-700 bg-green-100' : 'text-amber-700 bg-amber-100';
+            return '<div class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow">' +
+                '<div class="flex items-center gap-3 min-w-0">' +
+                '<span class="material-symbols-outlined text-primary text-xl shrink-0">description</span>' +
+                '<div class="min-w-0"><p class="text-sm font-medium text-on-surface truncate">' + (c.nome_file || 'Computo') + '</p>' +
+                '<p class="text-xs text-on-surface-variant">' + (proj.titolo || '') + ' <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ' + statoClass + '">' + (c.stato || 'da analizzare') + '</span></p></div></div>' +
+                '<div class="flex items-center gap-2 shrink-0">' +
+                (c.file_url ? '<a href="' + c.file_url + '" target="_blank" class="text-primary hover:text-secondary p-1" title="Scarica"><span class="material-symbols-outlined text-[18px]">download</span></a>' : '') +
+                '<button onclick="apriVoci(\'' + c.id + '\',\'' + (c.nome_file || '') + '\')" class="text-xs font-semibold text-primary hover:text-secondary uppercase tracking-wider">Voci</button>' +
+                '</div></div>';
+        }).join('');
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function openUploadComputo() {
+    document.getElementById('upload-computo-modal').classList.remove('hidden');
+    // Popola select cantieri
+    var sel = document.getElementById('upload-computo-cantiere');
+    authFetch('/api/senior/imprese/' + impresaId + '/cantieri').then(function(r) { return r.json(); }).then(function(data) {
+        sel.innerHTML = '<option value="">Seleziona cantiere...</option>' +
+            data.map(function(c) { return '<option value="' + c.id_cantiere + '">' + ((c.projects || {}).titolo || 'Cantiere #' + c.id_cantiere) + '</option>'; }).join('');
+    }).catch(function() {
+        sel.innerHTML = '<option value="">Caricamento fallito</option>';
+    });
+}
+
+function closeUploadComputo() {
+    document.getElementById('upload-computo-modal').classList.add('hidden');
+}
+
+document.getElementById('btn-upload-computo').addEventListener('click', async function() {
+    var cantiereId = document.getElementById('upload-computo-cantiere').value;
+    var fileInput = document.getElementById('upload-computo-file');
+    var note = document.getElementById('upload-computo-note').value;
+    var errorEl = document.getElementById('upload-computo-error');
+
+    if (!cantiereId) { errorEl.textContent = 'Seleziona un cantiere'; errorEl.classList.remove('hidden'); return; }
+    if (!fileInput.files || !fileInput.files[0]) { errorEl.textContent = 'Seleziona un file PDF'; errorEl.classList.remove('hidden'); return; }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento e analisi...';
+
+    try {
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('cantiere_id', cantiereId);
+        formData.append('id_impresa', impresaId);
+        formData.append('note', note);
+
+        var res = await authFetch('/api/senior/imprese/computo/upload', { method: 'POST', body: formData });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore upload');
+        var result = await res.json();
+
+        showNotification('Computo caricato! ' + (result.voci_estratte || 0) + ' voci estratte.', 'success');
+        closeUploadComputo();
+        loadComputi();
+        loadEconomia();
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">upload</span> Carica & Analizza';
+    }
+});
+
+// VOCI COMPUTO
+var _vociComputoId = null;
+
+function apriVoci(computoId, nomeFile) {
+    _vociComputoId = computoId;
+    document.getElementById('voci-computo-title').textContent = nomeFile || 'Voci computo';
+    document.getElementById('voci-computo-modal').classList.remove('hidden');
+    caricaVoci(computoId);
+}
+
+function closeVociComputo() {
+    document.getElementById('voci-computo-modal').classList.add('hidden');
+    _vociComputoId = null;
+}
+
+async function caricaVoci(computoId) {
+    try {
+        var res = await authFetch('/api/senior/imprese/computi/' + computoId + '/voci');
+        if (!res.ok) throw new Error('Errore');
+        var data = await res.json();
+        var rowsEl = document.getElementById('voci-rows');
+        var totaleEl = document.getElementById('voci-totale');
+
+        if (!data || data.length === 0) {
+            rowsEl.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-on-surface-variant text-sm">Nessuna voce — carica un computo o aggiungine manualmente</td></tr>';
+            totaleEl.textContent = '';
+            return;
+        }
+
+        var totale = 0;
+        rowsEl.innerHTML = data.map(function(v) {
+            totale += v.importo || 0;
+            var autoLabel = v.estratta_automaticamente ? '<span class="text-[10px] text-amber-600 ml-1" title="Estratta automaticamente">🤖</span>' : '';
+            return '<tr class="border-b border-stone-100 hover:bg-surface-container-low/50 transition-colors">' +
+                '<td class="px-3 py-2 text-on-surface-variant text-xs">' + (v.numero_voce || '-') + '</td>' +
+                '<td class="px-3 py-2 text-sm text-on-surface">' + v.descrizione + autoLabel + '</td>' +
+                '<td class="px-3 py-2"><span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-stone-100 text-stone-600">' + (v.categoria || 'Lavori') + '</span></td>' +
+                '<td class="text-right px-3 py-2 text-xs text-on-surface-variant">' + (v.quantita ? fmt(v.quantita) : '-') + '</td>' +
+                '<td class="text-right px-3 py-2 text-xs text-on-surface-variant">' + (v.prezzo_unitario ? '€ ' + fmt(v.prezzo_unitario) : '-') + '</td>' +
+                '<td class="text-right px-3 py-2 font-semibold">€ ' + fmt(v.importo) + '</td>' +
+                '<td class="px-3 py-2"><div class="flex items-center gap-1"><button onclick="modificaVoce(\'' + v.id + '\',\'' + v.descrizione.replace(/'/g, "\\'") + '\',\'' + v.importo + '\',\'' + (v.categoria || 'Lavori') + '\',\'' + (v.quantita || '') + '\',\'' + (v.unita_misura || 'a corpo') + '\')" class="text-primary hover:text-secondary text-xs uppercase tracking-wider font-semibold">Modifica</button><button onclick="eliminaVoce(\'' + v.id + '\')" class="text-red-400 hover:text-red-600 text-xs uppercase tracking-wider">✕</button></div></td>' +
+                '</tr>';
+        }).join('');
+
+        totaleEl.textContent = 'Totale: € ' + fmt(totale);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function modificaVoce(id, descrizione, importo, categoria, quantita, unitaMisura) {
+    document.getElementById('voce-modal-title').textContent = 'Modifica Voce';
+    document.getElementById('voce-edit-id').value = id;
+    document.getElementById('voce-edit-computo').value = _vociComputoId;
+    document.getElementById('voce-descrizione').value = descrizione;
+    document.getElementById('voce-importo').value = importo;
+    document.getElementById('voce-categoria').value = categoria;
+    document.getElementById('voce-quantita').value = quantita;
+    document.getElementById('voce-unita').value = unitaMisura || 'a corpo';
+    document.getElementById('voce-modal').classList.remove('hidden');
+}
+
+function aggiungiVoceManuale() {
+    document.getElementById('voce-modal-title').textContent = 'Nuova Voce';
+    document.getElementById('voce-edit-id').value = '';
+    document.getElementById('voce-edit-computo').value = _vociComputoId;
+    document.getElementById('voce-descrizione').value = '';
+    document.getElementById('voce-importo').value = '';
+    document.getElementById('voce-categoria').value = 'Lavori';
+    document.getElementById('voce-quantita').value = '';
+    document.getElementById('voce-unita').value = 'a corpo';
+    document.getElementById('voce-modal').classList.remove('hidden');
+}
+
+function closeVoceModal() {
+    document.getElementById('voce-modal').classList.add('hidden');
+}
+
+function eliminaVoce(id) {
+    if (!confirm('Eliminare questa voce dal computo?')) return;
+    authFetch('/api/senior/imprese/computi/voci/' + id, { method: 'DELETE' }).then(function(r) {
+        if (!r.ok) throw new Error('Errore');
+        showNotification('Voce eliminata', 'success');
+        caricaVoci(_vociComputoId);
+    }).catch(function(err) {
+        showNotification('Errore: ' + err.message, 'error');
+    });
+}
+
+document.getElementById('btn-salva-voce').addEventListener('click', async function() {
+    var id = document.getElementById('voce-edit-id').value;
+    var computoId = document.getElementById('voce-edit-computo').value;
+    var descrizione = document.getElementById('voce-descrizione').value;
+    var importo = document.getElementById('voce-importo').value;
+    var categoria = document.getElementById('voce-categoria').value;
+    var quantita = document.getElementById('voce-quantita').value;
+    var unita = document.getElementById('voce-unita').value;
+    var errorEl = document.getElementById('voce-error');
+
+    if (!descrizione || !importo) {
+        errorEl.textContent = 'Descrizione e importo obbligatori';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Salvataggio...';
+
+    try {
+        var url, method, body;
+        if (id) {
+            // Modifica
+            url = '/api/senior/imprese/computi/voci/' + id;
+            method = 'PUT';
+            body = JSON.stringify({ descrizione: descrizione, importo: parseFloat(importo), categoria: categoria, quantita: quantita ? parseFloat(quantita) : null, unita_misura: unita });
+        } else {
+            // Nuova
+            url = '/api/senior/imprese/computi/' + computoId + '/voci';
+            method = 'POST';
+            body = JSON.stringify({ id_impresa: impresaId, descrizione: descrizione, importo: parseFloat(importo), categoria: categoria, quantita: quantita ? parseFloat(quantita) : null, unita_misura: unita });
+        }
+
+        var res = await authFetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: body });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        showNotification(id ? 'Voce aggiornata' : 'Voce aggiunta', 'success');
+        closeVoceModal();
+        caricaVoci(computoId);
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span> Salva Voce';
+    }
+});
 
 function showNotification(msg, type) {
     var old = document.querySelector('.hdl-notification');
