@@ -1510,7 +1510,7 @@ router.get('/impresa/cantiere/:id', authenticate, requireImpresa, async (req, re
 
 // ─── AMMINISTRAZIONE: GESTIONE IMPRESE ──────────────────────────────────────
 
-// Lista tutte le imprese (per admin/senior)
+// Lista tutte le imprese (per admin/senior) — con conteggio cantieri
 router.get('/senior/imprese', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
@@ -1519,7 +1519,18 @@ router.get('/senior/imprese', authenticate, requireRole('senior', 'admin'), asyn
             .select('*')
             .order('ragione_sociale', { ascending: true });
         if (error) throw error;
-        res.json(data || []);
+
+        // Aggiungi conteggio cantieri per ogni impresa
+        var result = data || [];
+        for (var i = 0; i < result.length; i++) {
+            var { count } = await admin
+                .from('cantiere_imprese')
+                .select('*', { count: 'exact', head: true })
+                .eq('id_impresa', result[i].id);
+            result[i].cantieri_count = count || 0;
+        }
+
+        res.json(result);
     } catch (e) { next(e); }
 });
 
@@ -1648,6 +1659,58 @@ router.get('/impresa/economia', authenticate, requireImpresa, async (req, res, n
             .from('cantiere_impresa_economia')
             .select('*, projects!inner(titolo, status, avanzamento)')
             .eq('id_impresa', impresa.id)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// Collega impresa a un cantiere
+router.post('/senior/imprese/collega-cantiere', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { id_impresa, id_cantiere, data_inizio_lavori, note_incarico } = req.body;
+        if (!id_impresa || !id_cantiere) return res.status(400).json({ error: 'id_impresa e id_cantiere richiesti' });
+
+        const { data, error } = await admin
+            .from('cantiere_imprese')
+            .upsert({
+                id_cantiere, id_impresa,
+                data_inizio_lavori: data_inizio_lavori || null,
+                note_incarico: note_incarico || ''
+            }, { onConflict: 'id_cantiere, id_impresa' })
+            .select()
+            .single();
+        if (error) throw error;
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
+// Rimuovi collegamento impresa-cantiere
+router.delete('/senior/imprese/collega-cantiere', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { id_impresa, id_cantiere } = req.body;
+        if (!id_impresa || !id_cantiere) return res.status(400).json({ error: 'id_impresa e id_cantiere richiesti' });
+
+        const { error } = await admin
+            .from('cantiere_imprese')
+            .delete()
+            .eq('id_impresa', id_impresa)
+            .eq('id_cantiere', id_cantiere);
+        if (error) throw error;
+        res.json({ success: true });
+    } catch (e) { next(e); }
+});
+
+// Ottieni cantieri per impresa (per la scheda)
+router.get('/senior/imprese/:id/cantieri', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('cantiere_imprese')
+            .select('id_cantiere, data_inizio_lavori, note_incarico, projects!inner(id, titolo, status, avanzamento)')
+            .eq('id_impresa', req.params.id)
             .order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data || []);

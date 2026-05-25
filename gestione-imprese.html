@@ -223,7 +223,10 @@ async function loadImprese() {
                 (i.partita_iva ? '<p><strong>P.IVA:</strong> ' + i.partita_iva + '</p>' : '') +
                 (scadenzaHtml ? '<div class="mt-1">' + scadenzaHtml + '</div>' : '') +
                 '</div>' +
-                '<a href="scheda-impresa.html?id=' + i.id + '" class="block w-full text-center text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary bg-primary/5 hover:bg-primary/10 py-2 rounded-lg transition-colors">Apri Scheda</a>' +
+                '<div class="flex items-center justify-between gap-2 mb-2">' +
+                '<span class="text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant bg-surface-container-low px-2 py-1 rounded"><span class="material-symbols-outlined text-[14px] align-middle">handyman</span> ' + (i.cantieri_count || 0) + ' cantieri</span>' +
+                '<a href="scheda-impresa.html?id=' + i.id + '" class="text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary bg-primary/5 hover:bg-primary/10 py-1.5 px-3 rounded-lg transition-colors">Apri Scheda</a>' +
+                '</div>' +
                 '</div>';
         }).join('');
 

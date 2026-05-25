@@ -195,6 +195,9 @@
                     <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">handyman</span> Cantieri Assegnati
                     </h3>
+                    <button onclick="openCollegaModal()" class="text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary bg-primary/5 hover:bg-primary/10 py-2 px-4 rounded-lg transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">add_circle</span> Collega a Cantiere
+                    </button>
                 </div>
                 <div id="cantieri-list" class="space-y-3">
                     <div class="text-center py-8 text-on-surface-variant text-sm">Caricamento...</div>
@@ -204,6 +207,39 @@
         </div>
     </div>
 </main>
+
+<!-- MODALE COLLEGA CANTIERE -->
+<div id="collega-modal" class="hidden fixed inset-0 z-[60]">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeCollegaModal()"></div>
+    <div class="absolute right-0 top-0 h-full w-full max-w-lg bg-surface shadow-2xl overflow-y-auto">
+        <div class="p-6 md:p-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <h3 class="font-headline text-xl text-on-surface">Collega a Cantiere</h3>
+                <button onclick="closeCollegaModal()" class="text-stone-400 hover:text-stone-600 p-1"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Cantiere</label>
+                    <select id="collega-cantiere" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary">
+                        <option value="">Caricamento cantieri...</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Data Inizio Lavori</label>
+                    <input type="date" id="collega-data" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary"/>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold block mb-1">Note Incarico</label>
+                    <textarea id="collega-note" rows="3" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary resize-none" placeholder="Es. Ristrutturazione bagni, opere murarie..."></textarea>
+                </div>
+                <button id="btn-collega" class="w-full bg-primary text-on-primary font-medium py-2.5 rounded-lg hover:bg-secondary transition-colors flex items-center justify-center gap-2 text-sm">
+                    <span class="material-symbols-outlined text-[18px]">link</span> Collega Impresa al Cantiere
+                </button>
+                <div id="collega-error" class="text-xs text-error hidden"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect'], defaultActiveMenu: 'imprese', pageName: 'Scheda Impresa' };
@@ -361,30 +397,114 @@ async function loadEconomia() {
 
 async function loadCantieri(impresa) {
     try {
-        var res = await authFetch('/api/impresa/dashboard');
+        var res = await authFetch('/api/senior/imprese/' + impresaId + '/cantieri');
         if (!res.ok) throw new Error('Errore cantieri');
         var data = await res.json();
         var listEl = document.getElementById('cantieri-list');
 
-        if (!data.progetti || data.progetti.length === 0) {
+        if (!data || data.length === 0) {
             listEl.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun cantiere assegnato</div>';
             return;
         }
 
-        listEl.innerHTML = data.progetti.map(function(p) {
-            var cInfo = (data.cantieri || []).find(function(c) { return c.id_cantiere === p.id; });
-            var statusClass = p.stato === 'attivo' ? 'bg-blue-100 text-blue-700' : 'bg-stone-200 text-stone-600';
-            return '<a href="cantiere-impresa.html?id=' + p.id + '" class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow group">' +
-                '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-xl">handyman</span>' +
-                '<div><p class="text-sm font-medium text-on-surface">' + (p.titolo || 'Cantiere') + '</p>' +
-                (cInfo && cInfo.note_incarico ? '<p class="text-xs text-on-surface-variant">' + cInfo.note_incarico + '</p>' : '') +
-                '</div></div>' +
-                '<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_forward</span></a>';
+        listEl.innerHTML = data.map(function(c) {
+            var proj = c.projects || {};
+            var statusClass = proj.status === 'attivo' ? 'bg-blue-100 text-blue-700' : 'bg-stone-200 text-stone-600';
+            return '<div class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow group">' +
+                '<a href="cantiere-impresa.html?id=' + c.id_cantiere + '" class="flex items-center gap-3 flex-1 min-w-0">' +
+                '<span class="material-symbols-outlined text-primary text-xl shrink-0">handyman</span>' +
+                '<div class="min-w-0"><p class="text-sm font-medium text-on-surface truncate">' + (proj.titolo || 'Cantiere #' + c.id_cantiere) + '</p>' +
+                '<div class="flex flex-wrap gap-2 mt-1">' +
+                '<span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ' + statusClass + '">' + (proj.status || 'n/a') + '</span>' +
+                (c.data_inizio_lavori ? '<span class="text-[10px] text-on-surface-variant">📅 ' + c.data_inizio_lavori + '</span>' : '') +
+                '</div>' +
+                (c.note_incarico ? '<p class="text-xs text-on-surface-variant mt-1 truncate">' + c.note_incarico + '</p>' : '') +
+                '</div></a>' +
+                '<button onclick="rimuoviCantiere(' + c.id_cantiere + ')" class="shrink-0 text-red-400 hover:text-red-600 p-1 ml-2" title="Rimuovi"><span class="material-symbols-outlined text-[18px]">remove_circle_outline</span></button>' +
+                '</div>';
         }).join('');
     } catch (err) {
         console.error(err);
     }
 }
+
+function openCollegaModal() {
+    document.getElementById('collega-modal').classList.remove('hidden');
+    var sel = document.getElementById('collega-cantiere');
+    // Carica tutti i progetti disponibili
+    authFetch('/api/impresa/dashboard').then(function(r) { return r.json(); }).then(function(data) {
+        var progetti = data.progetti || [];
+        // Filtra solo quelli già non assegnati
+        sel.innerHTML = '<option value="">Seleziona cantiere...</option>' +
+            progetti.map(function(p) { return '<option value="' + p.id + '">' + (p.titolo || 'Cantiere') + '</option>'; }).join('');
+    }).catch(function() {
+        sel.innerHTML = '<option value="">Errore caricamento</option>';
+    });
+}
+
+function closeCollegaModal() {
+    document.getElementById('collega-modal').classList.add('hidden');
+}
+
+function rimuoviCantiere(cantiereId) {
+    if (!confirm('Rimuovere questa impresa dal cantiere?')) return;
+    authFetch('/api/senior/imprese/collega-cantiere', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_impresa: impresaId, id_cantiere: cantiereId })
+    }).then(function(r) {
+        if (!r.ok) throw new Error('Errore');
+        showNotification('Impresa rimossa dal cantiere', 'success');
+        loadCantieri();
+        loadEconomia();
+    }).catch(function(err) {
+        showNotification('Errore: ' + err.message, 'error');
+    });
+}
+
+document.getElementById('btn-collega').addEventListener('click', async function() {
+    var sel = document.getElementById('collega-cantiere');
+    var dataInizio = document.getElementById('collega-data').value;
+    var note = document.getElementById('collega-note').value;
+    var errorEl = document.getElementById('collega-error');
+
+    if (!sel.value) {
+        errorEl.textContent = 'Seleziona un cantiere';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Collegamento...';
+
+    try {
+        var res = await authFetch('/api/senior/imprese/collega-cantiere', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_impresa: impresaId,
+                id_cantiere: parseInt(sel.value),
+                data_inizio_lavori: dataInizio || null,
+                note_incarico: note
+            })
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+
+        showNotification('Impresa collegata al cantiere', 'success');
+        closeCollegaModal();
+        loadCantieri();
+        loadEconomia();
+
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">link</span> Collega Impresa al Cantiere';
+    }
+});
 
 function fmt(n) {
     if (n === null || n === undefined) return '0,00';
@@ -393,6 +513,19 @@ function fmt(n) {
 
 function editEconomia(cantiereId) {
     window.location.href = 'gestione-imprese.html?id=' + impresaId + '&cantiere=' + cantiereId;
+}
+
+function showNotification(msg, type) {
+    var old = document.querySelector('.hdl-notification');
+    if (old) old.remove();
+    var colors = { error: '#b91c1c', success: '#166534' };
+    var icons = { error: 'error', success: 'check_circle' };
+    var el = document.createElement('div');
+    el.className = 'hdl-notification';
+    el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || '#1e40af');
+    el.innerHTML = '<span class="material-symbols-outlined">' + (icons[type] || 'info') + '</span>' + msg;
+    document.body.appendChild(el);
+    setTimeout(function() { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 4000);
 }
 
 // Avatar dropdown
