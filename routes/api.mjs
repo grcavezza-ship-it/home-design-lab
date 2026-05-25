@@ -1595,6 +1595,65 @@ router.post('/senior/imprese/upload-privato', authenticate, requireRole('senior'
     } catch (e) { next(e); }
 });
 
+// ─── ECONOMIA CANTIERI PER IMPRESA ─────────────────────────────────────────
+
+// Ottieni economia di tutti i cantieri per una impresa
+router.get('/senior/imprese/:id/economia', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('cantiere_impresa_economia')
+            .select('*, projects!inner(titolo, status, avanzamento)')
+            .eq('id_impresa', req.params.id)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// Aggiorna economia per un cantiere/impresa (upsert)
+router.put('/senior/imprese/economia', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { id_cantiere, id_impresa, importo_contratto, importo_lavorato, importo_fatturato, importo_percepito, ritenute, note_economiche } = req.body;
+        if (!id_cantiere || !id_impresa) return res.status(400).json({ error: 'id_cantiere e id_impresa richiesti' });
+
+        const { data, error } = await admin
+            .from('cantiere_impresa_economia')
+            .upsert({
+                id_cantiere, id_impresa,
+                importo_contratto: importo_contratto || 0,
+                importo_lavorato: importo_lavorato || 0,
+                importo_fatturato: importo_fatturato || 0,
+                importo_percepito: importo_percepito || 0,
+                ritenute: ritenute || 0,
+                note_economiche: note_economiche || '',
+                updated_at: new Date().toISOString()
+            }, { onConflict: 'id_cantiere, id_impresa' })
+            .select()
+            .single();
+        if (error) throw error;
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
+// Ottieni economia per IMPRESA loggata (dashboard impresa)
+router.get('/impresa/economia', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', req.user.id).maybeSingle();
+        if (!impresa) return res.status(404).json({ error: 'Impresa non trovata' });
+
+        const { data, error } = await admin
+            .from('cantiere_impresa_economia')
+            .select('*, projects!inner(titolo, status, avanzamento)')
+            .eq('id_impresa', impresa.id)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
 // ─── GOOGLE DRIVE SYNC: Creazione automatica progetti da cartelle ────────────
 
 // Configurazione cartella root Drive (da env vars)

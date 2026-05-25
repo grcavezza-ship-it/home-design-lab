@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Scheda Impresa | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+                    fontFamily: { headline: ["Noto Serif"], body: ["Manrope"], label: ["Manrope"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+    <div class="flex items-center gap-3 flex-1">
+        <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="gestione-imprese.html" class="flex items-center gap-2 text-stone-500 hover:text-primary transition-colors text-sm font-label">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Imprese
+        </a>
+        <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none ml-2">Scheda Impresa</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <span id="user-name" class="hidden md:block text-sm text-on-surface font-medium"></span>
+        <div class="relative">
+            <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <img id="avatar-img" alt="Avatar" class="w-full h-full object-cover"/>
+            </button>
+            <div id="avatar-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-surface-container-lowest border border-stone-200 dark:border-stone-700 rounded-xl shadow-xl hidden z-50 overflow-hidden">
+                <div class="px-4 py-3 border-b border-stone-100 dark:border-stone-800">
+                    <p id="dropdown-user-name" class="text-sm font-semibold text-on-surface truncate"></p>
+                    <p id="dropdown-user-role" class="text-[10px] uppercase tracking-widest text-on-surface-variant">Admin</p>
+                </div>
+                <a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span> Il Mio Profilo</a>
+                <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 transition-colors"><span class="material-symbols-outlined text-[18px]">settings</span> Impostazioni</a>
+                <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
+                <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors"><span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="lg:ml-64 pt-24 md:pt-28 px-4 md:px-12 pb-24 bg-surface min-h-screen">
+    <div class="max-w-6xl mx-auto space-y-8">
+
+        <div id="loading-section" class="text-center py-20">
+            <span class="material-symbols-outlined text-5xl text-primary block mb-4 animate-pulse">business</span>
+            <p class="text-on-surface-variant">Caricamento impresa...</p>
+        </div>
+
+        <div id="content" class="hidden space-y-8">
+
+            <!-- HEADER -->
+            <section class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-1 block">Dettaglio Impresa</span>
+                    <h2 class="font-headline text-3xl md:text-4xl tracking-tight text-on-surface" id="impresa-nome"></h2>
+                    <span id="impresa-specializzazione" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary inline-block mt-1"></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="durc-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full"></span>
+                </div>
+            </section>
+
+            <!-- DATI ANAGRAFICI E FISCALI -->
+            <section class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">badge</span> Anagrafica</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Ragione Sociale</span><span id="d-ragione" class="font-medium"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Partita IVA</span><span id="d-piva"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Codice Fiscale</span><span id="d-cf"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Sede Legale</span><span id="d-sede"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Specializzazione</span><span id="d-spec"></span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">contact_mail</span> Contatti</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Referente</span><span id="d-ref"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Telefono</span><span id="d-tel"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Email</span><span id="d-email" class="break-all"></span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">receipt_long</span> Fatturazione</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">PEC</span><span id="d-pec" class="break-all"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Codice SDI</span><span id="d-sdi" class="font-mono"></span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">verified</span> Previdenza & Sicurezza</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Sede INPS</span><span id="d-inps"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Codice INPS</span><span id="d-codinps"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">INAIL</span><span id="d-inail"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">CCNL</span><span id="d-ccnl"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Cassa Edile</span><span id="d-cassa"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Matr. Cassa Edile</span><span id="d-matrcassa"></span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">account_balance</span> Dati Bancari</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Banca</span><span id="d-banca"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">IBAN</span><span id="d-iban" class="font-mono break-all"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Intestatario</span><span id="d-intest"></span></div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] fade-in">
+                    <h3 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2 mb-3"><span class="material-symbols-outlined text-[18px] text-primary">event</span> DURC</h3>
+                    <div class="space-y-2 text-sm">
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Stato</span><span id="d-durc-stato" class="font-semibold"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Scadenza</span><span id="d-durc-scad"></span></div>
+                        <div><span class="text-[10px] uppercase tracking-widest text-on-surface-variant block">Giorni rimanenti</span><span id="d-durc-giorni" class="font-semibold"></span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ECONOMIA CANTIERI -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">payments</span> Situazione Economica per Cantiere
+                    </h3>
+                    <span id="economia-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-5">Importi in € — contratti, fatturato e saldi per ogni cantiere</p>
+
+                <div id="economia-table-container" class="overflow-x-auto bg-white rounded-xl shadow-[0px_2px_12px_rgba(27,28,28,0.04)]">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-stone-200 bg-surface-container-low">
+                                <th class="text-left px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Cantiere</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Contratto</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Lavorato</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Fatturato</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Percepito</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant">Ritenute</th>
+                                <th class="text-right px-4 py-3 font-label text-[10px] uppercase tracking-widest text-on-surface-variant text-primary">Da Ricevere</th>
+                                <th class="text-left px-4 py-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="economia-rows"></tbody>
+                    </table>
+                    <div id="economia-empty" class="hidden text-center py-12 text-on-surface-variant text-sm">Nessun dato economico per questa impresa</div>
+                </div>
+            </section>
+
+            <!-- CANTIERI ASSEGNATI -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">handyman</span> Cantieri Assegnati
+                    </h3>
+                </div>
+                <div id="cantieri-list" class="space-y-3">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Caricamento...</div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect'], defaultActiveMenu: 'imprese', pageName: 'Scheda Impresa' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+var impresaId = new URLSearchParams(window.location.search).get('id');
+
+document.addEventListener('DOMContentLoaded', loadImpresa);
+
+async function loadImpresa() {
+    if (!impresaId) {
+        document.getElementById('loading-section').innerHTML = '<p class="text-error">Nessuna impresa specificata.</p>';
+        return;
+    }
+
+    var loadingEl = document.getElementById('loading-section');
+    var contentEl = document.getElementById('content');
+
+    try {
+        var res = await authFetch('/api/senior/imprese/' + impresaId);
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        var impresa = await res.json();
+
+        loadingEl.classList.add('hidden');
+        contentEl.classList.remove('hidden');
+
+        // Header
+        document.getElementById('impresa-nome').textContent = impresa.ragione_sociale || '---';
+        document.getElementById('impresa-specializzazione').textContent = impresa.specializzazione || 'Generica';
+
+        // DURC badge
+        var durcBadge = document.getElementById('durc-badge');
+        var durcColors = { 'Regolare': 'bg-green-100 text-green-700', 'Scaduto': 'bg-red-100 text-red-700', 'In Verifica': 'bg-amber-100 text-amber-700' };
+        durcBadge.textContent = (impresa.stato_durc || 'In Verifica').toUpperCase();
+        durcBadge.className = 'text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ' + (durcColors[impresa.stato_durc] || 'bg-stone-100 text-stone-600');
+
+        // Anagrafica
+        document.getElementById('d-ragione').textContent = impresa.ragione_sociale || '---';
+        document.getElementById('d-piva').textContent = impresa.partita_iva || '---';
+        document.getElementById('d-cf').textContent = impresa.codice_fiscale || '---';
+        document.getElementById('d-sede').textContent = impresa.sede_legale || '---';
+        document.getElementById('d-spec').textContent = impresa.specializzazione || '---';
+
+        // Contatti
+        document.getElementById('d-ref').textContent = impresa.referente_cantiere || impresa.referente || '---';
+        document.getElementById('d-tel').textContent = impresa.telefono || '---';
+        document.getElementById('d-email').textContent = impresa.email_principale || '---';
+
+        // Fatturazione
+        document.getElementById('d-pec').textContent = impresa.pec || '---';
+        document.getElementById('d-sdi').textContent = impresa.codice_sdi || '---';
+
+        // Previdenza
+        document.getElementById('d-inps').textContent = impresa.inps_sede || '---';
+        document.getElementById('d-codinps').textContent = impresa.codice_inps || '---';
+        document.getElementById('d-inail').textContent = impresa.inail_posizione || '---';
+        document.getElementById('d-ccnl').textContent = impresa.ccnl || '---';
+        document.getElementById('d-cassa').textContent = impresa.cassa_edile || '---';
+        document.getElementById('d-matrcassa').textContent = impresa.matricola_cassa_edile || '---';
+
+        // Bancari
+        document.getElementById('d-banca').textContent = impresa.cc_banca || '---';
+        document.getElementById('d-iban').textContent = impresa.cc_iban || '---';
+        document.getElementById('d-intest').textContent = impresa.cc_intestatario || '---';
+
+        // DURC
+        document.getElementById('d-durc-stato').textContent = impresa.stato_durc || 'In Verifica';
+        document.getElementById('d-durc-stato').className = 'font-semibold ' + (impresa.stato_durc === 'Regolare' ? 'text-green-600' : impresa.stato_durc === 'Scaduto' ? 'text-red-600' : 'text-amber-600');
+        if (impresa.scadenza_durc) {
+            var scad = new Date(impresa.scadenza_durc);
+            document.getElementById('d-durc-scad').textContent = scad.toLocaleDateString('it-IT');
+            var giorni = Math.ceil((scad - new Date()) / (1000*60*60*24));
+            document.getElementById('d-durc-giorni').textContent = giorni < 0 ? 'Scaduto da ' + Math.abs(giorni) + ' gg' : 'Mancano ' + giorni + ' gg';
+            document.getElementById('d-durc-giorni').className = 'font-semibold ' + (giorni < 0 ? 'text-red-600' : giorni <= 30 ? 'text-amber-600' : 'text-green-600');
+        } else {
+            document.getElementById('d-durc-scad').textContent = 'Non impostata';
+            document.getElementById('d-durc-giorni').textContent = '---';
+        }
+
+        // Economia
+        loadEconomia();
+
+        // Cantieri
+        loadCantieri(impresa);
+
+    } catch (err) {
+        loadingEl.innerHTML = '<p class="text-error">Errore: ' + err.message + '</p>';
+        console.error(err);
+    }
+}
+
+async function loadEconomia() {
+    try {
+        var res = await authFetch('/api/senior/imprese/' + impresaId + '/economia');
+        if (!res.ok) throw new Error('Errore economia');
+        var data = await res.json();
+
+        var countEl = document.getElementById('economia-count');
+        var rowsEl = document.getElementById('economia-rows');
+        var emptyEl = document.getElementById('economia-empty');
+
+        if (!data || data.length === 0) {
+            rowsEl.innerHTML = '';
+            emptyEl.classList.remove('hidden');
+            countEl.textContent = '0 cantieri';
+            return;
+        }
+
+        countEl.textContent = data.length + ' cantieri';
+        emptyEl.classList.add('hidden');
+
+        var totalContratto = 0, totalLavorato = 0, totalFatturato = 0, totalPercepito = 0, totalRitenute = 0, totalDaRicevere = 0;
+
+        rowsEl.innerHTML = data.map(function(e) {
+            var proj = e.projects || {};
+            var daRicevere = (e.importo_lavorato || 0) - (e.importo_percepito || 0) - (e.ritenute || 0);
+            totalContratto += e.importo_contratto || 0;
+            totalLavorato += e.importo_lavorato || 0;
+            totalFatturato += e.importo_fatturato || 0;
+            totalPercepito += e.importo_percepito || 0;
+            totalRitenute += e.ritenute || 0;
+            totalDaRicevere += daRicevere;
+
+            var statusClass = proj.status === 'attivo' ? 'bg-blue-100 text-blue-700' : 'bg-stone-200 text-stone-600';
+
+            return '<tr class="border-b border-stone-100 hover:bg-surface-container-low/50 transition-colors">' +
+                '<td class="px-4 py-3"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">handyman</span><span class="font-medium text-on-surface">' + (proj.titolo || 'Cantiere #' + e.id_cantiere) + '</span><span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full ' + statusClass + '">' + (proj.status || 'n/a') + '</span></div></td>' +
+                '<td class="text-right px-4 py-3 font-semibold">€ ' + fmt(e.importo_contratto) + '</td>' +
+                '<td class="text-right px-4 py-3">€ ' + fmt(e.importo_lavorato) + '</td>' +
+                '<td class="text-right px-4 py-3">€ ' + fmt(e.importo_fatturato) + '</td>' +
+                '<td class="text-right px-4 py-3">€ ' + fmt(e.importo_percepito) + '</td>' +
+                '<td class="text-right px-4 py-3 text-stone-500">€ ' + fmt(e.ritenute) + '</td>' +
+                '<td class="text-right px-4 py-3 font-bold ' + (daRicevere > 0 ? 'text-primary' : 'text-on-surface') + '">€ ' + fmt(daRicevere) + '</td>' +
+                '<td class="px-4 py-3"><button onclick="editEconomia(\'' + e.id_cantiere + '\')" class="text-primary hover:text-secondary transition-colors text-xs font-semibold uppercase tracking-wider">Modifica</button></td>' +
+                '</tr>';
+        }).join('');
+
+        // Totali
+        rowsEl.innerHTML += '<tr class="bg-surface-container-low font-semibold border-t-2 border-primary/30">' +
+            '<td class="px-4 py-3 text-on-surface font-label text-xs uppercase tracking-widest">TOTALI</td>' +
+            '<td class="text-right px-4 py-3">€ ' + fmt(totalContratto) + '</td>' +
+            '<td class="text-right px-4 py-3">€ ' + fmt(totalLavorato) + '</td>' +
+            '<td class="text-right px-4 py-3">€ ' + fmt(totalFatturato) + '</td>' +
+            '<td class="text-right px-4 py-3">€ ' + fmt(totalPercepito) + '</td>' +
+            '<td class="text-right px-4 py-3">€ ' + fmt(totalRitenute) + '</td>' +
+            '<td class="text-right px-4 py-3 text-primary">€ ' + fmt(totalDaRicevere) + '</td>' +
+            '<td></td></tr>';
+
+    } catch (err) {
+        console.error('Economia error:', err);
+        document.getElementById('economia-rows').innerHTML = '<tr><td colspan="8" class="text-center py-8 text-error text-sm">Errore caricamento economia</td></tr>';
+    }
+}
+
+async function loadCantieri(impresa) {
+    try {
+        var res = await authFetch('/api/impresa/dashboard');
+        if (!res.ok) throw new Error('Errore cantieri');
+        var data = await res.json();
+        var listEl = document.getElementById('cantieri-list');
+
+        if (!data.progetti || data.progetti.length === 0) {
+            listEl.innerHTML = '<div class="text-center py-8 text-on-surface-variant text-sm">Nessun cantiere assegnato</div>';
+            return;
+        }
+
+        listEl.innerHTML = data.progetti.map(function(p) {
+            var cInfo = (data.cantieri || []).find(function(c) { return c.id_cantiere === p.id; });
+            var statusClass = p.stato === 'attivo' ? 'bg-blue-100 text-blue-700' : 'bg-stone-200 text-stone-600';
+            return '<a href="cantiere-impresa.html?id=' + p.id + '" class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow group">' +
+                '<div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary text-xl">handyman</span>' +
+                '<div><p class="text-sm font-medium text-on-surface">' + (p.titolo || 'Cantiere') + '</p>' +
+                (cInfo && cInfo.note_incarico ? '<p class="text-xs text-on-surface-variant">' + cInfo.note_incarico + '</p>' : '') +
+                '</div></div>' +
+                '<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_forward</span></a>';
+        }).join('');
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+function fmt(n) {
+    if (n === null || n === undefined) return '0,00';
+    return Number(n).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function editEconomia(cantiereId) {
+    window.location.href = 'gestione-imprese.html?id=' + impresaId + '&cantiere=' + cantiereId;
+}
+
+// Avatar dropdown
+var avatarBtn = document.getElementById('avatar-btn');
+var avatarDropdown = document.getElementById('avatar-dropdown');
+if (avatarBtn) {
+    avatarBtn.addEventListener('click', function(e) { e.stopPropagation(); avatarDropdown.classList.toggle('hidden'); });
+    document.addEventListener('click', function() { avatarDropdown.classList.add('hidden'); });
+    if (avatarDropdown) avatarDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+}
+var logoutBtn = document.getElementById('logout-btn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        var sb = window.supabase || window.supabaseClient;
+        if (sb) { try { await sb.auth.signOut(); } catch(e) {} }
+        window.location.href = PORTAL_CONFIG.loginPage || 'login.html';
+    });
+}
+</script>
+</body>
+</html>
