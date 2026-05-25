@@ -57,7 +57,7 @@ export async function authenticate(req, res, next) {
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('id, role, display_name, avatar_url')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .maybeSingle();
 
         if (profileError) {
@@ -69,7 +69,7 @@ export async function authenticate(req, res, next) {
             const { data: perms } = await supabase
                 .from('operator_permissions')
                 .select('can_blog, can_portfolio, can_collection, can_clients, allowed_client_ids')
-                .eq('operator_id', user.id)
+                .eq('operator_id', profile.id)
                 .maybeSingle();
             permissions = perms;
         }
@@ -129,7 +129,7 @@ export async function optionalAuthenticate(req, res, next) {
         const { data: profile } = await supabase
             .from('profiles')
             .select('id, role, display_name, avatar_url')
-            .eq('id', user.id)
+            .eq('user_id', user.id)
             .maybeSingle();
 
         let role2 = profile?.role || 'client';
