@@ -477,6 +477,26 @@ async function downloadDoc(docId) {
     }
 }
 
+// Avatar dropdown toggle
+var avatarBtn = document.getElementById('avatar-btn');
+var avatarDropdown = document.getElementById('avatar-dropdown');
+if (avatarBtn) {
+    avatarBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        avatarDropdown.classList.toggle('hidden');
+    });
+    document.addEventListener('click', function() { avatarDropdown.classList.add('hidden'); });
+    avatarDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+}
+
+// Logout
+document.getElementById('logout-btn').addEventListener('click', async function(e) {
+    e.preventDefault();
+    var sb = window.supabase || window.supabaseClient;
+    if (sb) { try { await sb.auth.signOut(); } catch(e) {} }
+    window.location.href = PORTAL_CONFIG.loginPage || 'login.html';
+});
+
 function showNotification(msg, type) {
     var old = document.querySelector('.hdl-notification');
     if (old) old.remove();

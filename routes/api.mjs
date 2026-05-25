@@ -14,7 +14,8 @@ import {
     requireOperator,
     requirePermission,
     requireClientAccess,
-    requireImpresa
+    requireImpresa,
+    requireRole
 } from '../middleware/auth.mjs';
 import { primoAccesso, recuperoPassword, nuovoContatto, nuovaNewsletter } from '../assets/js/email-templates.js';
 
@@ -1462,12 +1463,15 @@ router.get('/impresa/cantiere/:id', authenticate, requireImpresa, async (req, re
         var admin = getAdminClient();
         var cantiereId = parseInt(req.params.id, 10);
 
-        var { data: cantiere } = await admin
+        var { data: cantiere, error: cErr } = await admin
             .from('projects')
             .select('id, titolo, descrizione, stato, data_inizio, data_consegna, avanzamento, cliente, location')
             .eq('id', cantiereId)
-            .single();
+            .maybeSingle();
+        if (cErr) throw cErr;
         if (!cantiere) return res.status(404).json({ error: 'Cantiere non trovato' });
+
+        console.log('[cantiere] trovato:', cantiere.id, cantiere.titolo, 'utente:', req.user.email);
 
         var impresaId = '0';
         var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', req.user.id).maybeSingle();
@@ -1506,8 +1510,8 @@ router.get('/impresa/cantiere/:id', authenticate, requireImpresa, async (req, re
 
 // ─── AMMINISTRAZIONE: GESTIONE IMPRESE ──────────────────────────────────────
 
-// Lista tutte le imprese (per admin)
-router.get('/senior/imprese', authenticate, requireSenior, async (req, res, next) => {
+// Lista tutte le imprese (per admin/senior)
+router.get('/senior/imprese', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
         const { data, error } = await admin
@@ -1520,7 +1524,7 @@ router.get('/senior/imprese', authenticate, requireSenior, async (req, res, next
 });
 
 // Dettaglio singola impresa
-router.get('/senior/imprese/:id', authenticate, requireSenior, async (req, res, next) => {
+router.get('/senior/imprese/:id', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
         const { data, error } = await admin
@@ -1535,7 +1539,7 @@ router.get('/senior/imprese/:id', authenticate, requireSenior, async (req, res, 
 });
 
 // Aggiorna impresa (dati anagrafici, fiscali, DURC)
-router.put('/senior/imprese/:id', authenticate, requireSenior, async (req, res, next) => {
+router.put('/senior/imprese/:id', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
         var updates = req.body;
@@ -1556,7 +1560,7 @@ router.put('/senior/imprese/:id', authenticate, requireSenior, async (req, res, 
 });
 
 // Upload admin — file nella cartella privata di una specifica impresa (per cantiere)
-router.post('/senior/imprese/upload-privato', authenticate, requireSenior, upload.single('file'), async (req, res, next) => {
+router.post('/senior/imprese/upload-privato', authenticate, requireRole('senior', 'admin'), upload.single('file'), async (req, res, next) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'Nessun file caricato' });
 
