@@ -1616,21 +1616,19 @@ router.post('/senior/imprese/upload-privato', authenticate, requireRole('senior'
     } catch (e) { next(e); }
 });
 
-// Helper: query sicura che non crasha se la tabella non esiste
+// Helper: query che gestisce tabelle inesistenti (Supabase non lancia -> controlla error oggetto)
 async function safeQuery(admin, table, queryFn) {
-    try {
-        return await queryFn(admin.from(table));
-    } catch (e) {
-        if (e.code === 'PGRST205' || (e.message && e.message.includes('does not exist'))) {
+    const result = await queryFn(admin.from(table));
+    if (result.error) {
+        const msg = (result.error.message || '').toLowerCase();
+        const code = result.error.code || '';
+        if (code === 'PGRST205' || msg.includes('does not exist') || msg.includes('could not find the table')) {
             console.log('[safeQuery] Tabella ' + table + ' non trovata, ritorno vuoto');
             return { data: [], error: null };
         }
-        if (e.details && e.details.includes('does not exist')) {
-            console.log('[safeQuery] Tabella ' + table + ' non trovata, ritorno vuoto');
-            return { data: [], error: null };
-        }
-        throw e;
+        return result; // errore reale, lascia che il chiamante lo gestisca
     }
+    return result;
 }
 
 // ─── ECONOMIA CANTIERI PER IMPRESA ─────────────────────────────────────────
