@@ -107,13 +107,13 @@ router.post('/auth/login', async (req, res) => {
     // 1) Tenta profiles
     const { data: profile } = await supabase
         .from('profiles')
-        .select('id, role, display_name, avatar_url')
-        .eq('id', data.user.id)
+        .select('id, role, nome, avatar_url')
+        .eq('user_id', data.user.id)
         .maybeSingle();
 
     if (profile && profile.role && profile.role !== 'client') {
         role = profile.role;
-        if (profile.display_name) displayName = profile.display_name;
+        if (profile.nome) displayName = profile.nome;
     }
 
     // 2) Se ancora client, controlla operatori_profiles
@@ -1121,7 +1121,7 @@ router.get('/senior/operatori', authenticate, requireSenior, async (req, res, ne
     try {
         const { data, error } = await getAdminClient()
             .from('profiles')
-            .select('id, display_name, avatar_url, created_at, operator_permissions(can_blog, can_portfolio, can_collection, can_clients, allowed_client_ids)')
+            .select('id, nome, avatar_url, created_at, operator_permissions(can_blog, can_portfolio, can_collection, can_clients, allowed_client_ids)')
             .eq('role', 'operator')
             .order('created_at');
         if (error) throw error;
@@ -1465,7 +1465,7 @@ router.get('/impresa/cantiere/:id', authenticate, requireImpresa, async (req, re
 
         var { data: cantiere, error: cErr } = await admin
             .from('projects')
-            .select('id, titolo, descrizione, stato, data_inizio, data_consegna, avanzamento, cliente, location')
+            .select('id, titolo, descrizione, stato, data_inizio, data_consegna, avanzamento, cliente')
             .eq('id', cantiereId)
             .maybeSingle();
         if (cErr) throw cErr;

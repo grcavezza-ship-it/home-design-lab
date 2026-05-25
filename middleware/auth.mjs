@@ -56,7 +56,7 @@ export async function authenticate(req, res, next) {
         // Carica profilo + permessi operatore in un'unica query
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
-            .select('id, role, display_name, avatar_url')
+            .select('id, role, nome, avatar_url')
             .eq('user_id', user.id)
             .maybeSingle();
 
@@ -75,7 +75,7 @@ export async function authenticate(req, res, next) {
         }
 
         let role = profile?.role || 'client';
-        let displayName = profile?.display_name || user.email;
+        let displayName = profile?.nome || user.email;
 
         // Se non ha ruolo staff, cerca nella tabella imprese
         if (!profile || role === 'client') {
@@ -128,12 +128,12 @@ export async function optionalAuthenticate(req, res, next) {
 
         const { data: profile } = await supabase
             .from('profiles')
-            .select('id, role, display_name, avatar_url')
+            .select('id, role, nome, avatar_url')
             .eq('user_id', user.id)
             .maybeSingle();
 
         let role2 = profile?.role || 'client';
-        let displayName2 = profile?.display_name || user.email;
+        let displayName2 = profile?.nome || user.email;
 
         if (!profile || role2 === 'client') {
             const { data: impresa2 } = await supabase
