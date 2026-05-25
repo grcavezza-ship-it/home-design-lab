@@ -1308,7 +1308,7 @@ router.get('/documenti/:id/download', authenticate, async (req, res, next) => {
 
 // ─── PORTALE IMPRESE ─────────────────────────────────────────────────────────
 
-// Dashboard impresa: cantieri + documenti
+// Dashboard impresa: cantieri + documenti + profilo impresa (con DURC)
 router.get('/impresa/dashboard', authenticate, requireImpresa, async (req, res, next) => {
     try {
         var admin = getAdminClient();
@@ -1361,7 +1361,19 @@ router.get('/impresa/dashboard', authenticate, requireImpresa, async (req, res, 
         }
 
         res.json({
-            impresa: { id: impresa.id, ragione_sociale: impresa.ragione_sociale, partita_iva: impresa.partita_iva },
+            impresa: {
+                id: impresa.id,
+                ragione_sociale: impresa.ragione_sociale,
+                partita_iva: impresa.partita_iva,
+                stato_durc: impresa.stato_durc,
+                scadenza_durc: impresa.scadenza_durc,
+                specializzazione: impresa.specializzazione,
+                pec: impresa.pec,
+                codice_sdi: impresa.codice_sdi,
+                referente_cantiere: impresa.referente_cantiere,
+                telefono: impresa.telefono,
+                email_principale: impresa.email_principale
+            },
             progetti: progetti,
             cantieri: cantieri || [],
             documenti_condivisi: documentiCondivisi,
@@ -1441,6 +1453,141 @@ router.get('/impresa/documenti/:id/download', authenticate, requireImpresa, asyn
             .createSignedUrl(doc.storage_path, 3600);
         if (urlError) throw urlError;
         res.json({ url: signedUrl.signedUrl });
+    } catch (e) { next(e); }
+});
+
+// Dettaglio cantiere (tutti i documenti condivisi + privati per questa impresa)
+router.get('/impresa/cantiere/:id', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        var admin = getAdminClient();
+        var cantiereId = parseInt(req.params.id, 10);
+
+        var { data: cantiere } = await admin
+            .from('projects')
+            .select('id, titolo, descrizione, stato, data_inizio, data_consegna, avanzamento, cliente, location')
+            .eq('id', cantiereId)
+            .single();
+        if (!cantiere) return res.status(404).json({ error: 'Cantiere non trovato' });
+
+        var impresaId = '0';
+        var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', req.user.id).maybeSingle();
+        if (impresa) impresaId = impresa.id;
+
+        var { data: incarico } = await admin
+            .from('cantiere_imprese')
+            .select('data_inizio_lavori, note_incarico')
+            .eq('id_cantiere', cantiereId)
+            .eq('id_impresa', impresaId)
+            .maybeSingle();
+
+        var { data: docs } = await admin
+            .from('project_documents')
+            .select('*')
+            .eq('project_id', cantiereId);
+
+        var documentiCondivisi = [];
+        var documentiPrivati = [];
+        (docs || []).forEach(function(d) {
+            if (d.storage_path && d.storage_path.indexOf('aree_private_imprese/' + impresaId) !== -1) {
+                documentiPrivati.push(d);
+            } else if (d.storage_path && d.storage_path.indexOf('documenti_condivisi') !== -1) {
+                documentiCondivisi.push(d);
+            }
+        });
+
+        res.json({
+            cantiere: cantiere,
+            incarico: incarico,
+            documenti_condivisi: documentiCondivisi,
+            documenti_privati: documentiPrivati
+        });
+    } catch (e) { next(e); }
+});
+
+// ─── AMMINISTRAZIONE: GESTIONE IMPRESE ──────────────────────────────────────
+
+// Lista tutte le imprese (per admin)
+router.get('/senior/imprese', authenticate, requireSenior, async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('imprese')
+            .select('*')
+            .order('ragione_sociale', { ascending: true });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
+// Dettaglio singola impresa
+router.get('/senior/imprese/:id', authenticate, requireSenior, async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('imprese')
+            .select('*')
+            .eq('id', req.params.id)
+            .single();
+        if (error) throw error;
+        if (!data) return res.status(404).json({ error: 'Impresa non trovata' });
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
+// Aggiorna impresa (dati anagrafici, fiscali, DURC)
+router.put('/senior/imprese/:id', authenticate, requireSenior, async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        var updates = req.body;
+        delete updates.id;
+        delete updates.user_id;
+        delete updates.created_at;
+        delete updates.updated_at;
+
+        const { data, error } = await admin
+            .from('imprese')
+            .update(updates)
+            .eq('id', req.params.id)
+            .select()
+            .single();
+        if (error) throw error;
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
+// Upload admin — file nella cartella privata di una specifica impresa (per cantiere)
+router.post('/senior/imprese/upload-privato', authenticate, requireSenior, upload.single('file'), async (req, res, next) => {
+    try {
+        if (!req.file) return res.status(400).json({ error: 'Nessun file caricato' });
+
+        var admin = getAdminClient();
+        var cantiereId = req.body.cantiere_id;
+        var impresaId = req.body.impresa_id;
+        if (!cantiereId || !impresaId) return res.status(400).json({ error: 'cantiere_id e impresa_id richiesti' });
+
+        var storagePath = cantiereId + '/aree_private_imprese/' + impresaId + '/' + Date.now() + '_' + req.file.originalname;
+
+        var { error: uploadError } = await admin.storage
+            .from(CONFIG.STORAGE.BUCKET)
+            .upload(storagePath, req.file.buffer, { contentType: req.file.mimetype, upsert: false });
+        if (uploadError) throw uploadError;
+
+        var { data: doc, error: dbError } = await admin
+            .from('project_documents')
+            .insert({
+                project_id: cantiereId,
+                title: req.body.title || req.file.originalname,
+                storage_path: storagePath,
+                mime_type: req.file.mimetype,
+                size_bytes: req.file.size,
+                visibility: 'internal',
+                tipo_upload: 'admin_impresa'
+            })
+            .select()
+            .single();
+        if (dbError) throw dbError;
+
+        res.status(201).json(doc);
     } catch (e) { next(e); }
 });
 

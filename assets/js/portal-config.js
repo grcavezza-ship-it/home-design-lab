@@ -71,7 +71,8 @@ let PORTAL_CONFIG = {
             { id: 'clienti', label: 'Clienti', icon: 'handshake', href: 'gestione-clienti.html' },
             { id: 'journal', label: 'Journal', icon: 'menu_book', href: 'gestione-journal.html' },
             { id: 'team', label: 'Team', icon: 'groups', href: 'gestione-team.html' },
-            { id: 'compiti', label: 'Compiti', icon: 'assignment', href: 'gestione-compiti.html' }
+            { id: 'compiti', label: 'Compiti', icon: 'assignment', href: 'gestione-compiti.html' },
+            { id: 'imprese', label: 'Imprese', icon: 'business', href: 'gestione-imprese.html' }
         ],
         admin: [
             { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: 'dashboard-senior.html' },
@@ -80,11 +81,12 @@ let PORTAL_CONFIG = {
             { id: 'clienti', label: 'Clienti', icon: 'handshake', href: 'gestione-clienti.html' },
             { id: 'journal', label: 'Journal', icon: 'menu_book', href: 'gestione-journal.html' },
             { id: 'team', label: 'Team', icon: 'groups', href: 'gestione-team.html' },
-            { id: 'compiti', label: 'Compiti', icon: 'assignment', href: 'gestione-compiti.html' }
+            { id: 'compiti', label: 'Compiti', icon: 'assignment', href: 'gestione-compiti.html' },
+            { id: 'imprese', label: 'Imprese', icon: 'business', href: 'gestione-imprese.html' }
         ],
         impresa: [
             { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', href: 'dashboard-impresa.html' },
-            { id: 'cantieri', label: 'I Miei Cantieri', icon: 'handyman', href: 'dashboard-impresa.html' }
+            { id: 'cantieri', label: 'I Miei Cantieri', icon: 'handyman', href: 'cantieri-impresa.html' }
         ]
     }
 };
@@ -366,7 +368,7 @@ function renderUserInfo(containerId, user) {
 // 🔄 FUNZIONE CRITICA: Ottieni token fresco da Supabase SDK nativo
 // Usare questa funzione per TUTTE le chiamate API autenticate
 async function getFreshToken() {
-    const supabase = initSupabase();
+    const supabase = await initSupabase();
     const { data: { session }, error } = await supabase.auth.getSession();
     
     if (error || !session) {
@@ -392,7 +394,13 @@ async function authFetch(url, options = {}) {
         'Authorization': `Bearer ${token}`,
         ...options.headers
     };
-    
+
+    // Non sovrascrivere Content-Type per FormData (browser lo imposta automaticamente con boundary)
+    const isFormData = options.body instanceof FormData;
+    if (isFormData) {
+        delete authHeaders['Content-Type'];
+    }
+
     const response = await fetch(url, {
         ...options,
         headers: authHeaders

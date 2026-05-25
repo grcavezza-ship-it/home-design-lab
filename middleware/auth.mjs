@@ -74,11 +74,27 @@ export async function authenticate(req, res, next) {
             permissions = perms;
         }
 
+        let role = profile?.role || 'client';
+        let displayName = profile?.display_name || user.email;
+
+        // Se non ha ruolo staff, cerca nella tabella imprese
+        if (!profile || role === 'client') {
+            const { data: impresa } = await supabase
+                .from('imprese')
+                .select('ragione_sociale')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            if (impresa) {
+                role = 'impresa';
+                displayName = impresa.ragione_sociale;
+            }
+        }
+
         req.user = {
             id: user.id,
             email: user.email,
-            role: profile?.role || 'client',
-            display_name: profile?.display_name || user.email,
+            role: role,
+            display_name: displayName,
             avatar_url: profile?.avatar_url || null,
             permissions
         };
@@ -116,11 +132,26 @@ export async function optionalAuthenticate(req, res, next) {
             .eq('id', user.id)
             .maybeSingle();
 
+        let role2 = profile?.role || 'client';
+        let displayName2 = profile?.display_name || user.email;
+
+        if (!profile || role2 === 'client') {
+            const { data: impresa2 } = await supabase
+                .from('imprese')
+                .select('ragione_sociale')
+                .eq('user_id', user.id)
+                .maybeSingle();
+            if (impresa2) {
+                role2 = 'impresa';
+                displayName2 = impresa2.ragione_sociale;
+            }
+        }
+
         req.user = {
             id: user.id,
             email: user.email,
-            role: profile?.role || 'client',
-            display_name: profile?.display_name || user.email,
+            role: role2,
+            display_name: displayName2,
             avatar_url: profile?.avatar_url || null,
             permissions: null
         };

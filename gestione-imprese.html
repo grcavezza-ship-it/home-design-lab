@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gestione Imprese | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+                    fontFamily: { headline: ["Noto Serif"], body: ["Manrope"], label: ["Manrope"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .fade-in { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30">
+    <div class="flex items-center gap-3 flex-1">
+        <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] leading-none">Gestione Imprese</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <span id="user-name" class="hidden md:block text-sm text-on-surface font-medium"></span>
+        <div class="relative">
+            <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-colors">
+                <img id="avatar-img" alt="Avatar" class="w-full h-full object-cover"/>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="lg:ml-64 pt-24 md:pt-28 px-4 md:px-12 pb-24 bg-surface min-h-screen">
+    <div class="max-w-6xl mx-auto space-y-8">
+
+        <section class="flex items-center justify-between">
+            <div>
+                <span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Amministrazione</span>
+                <h2 class="font-headline text-3xl md:text-4xl tracking-tight text-on-surface">Imprese e Fornitori</h2>
+                <p class="text-on-surface-variant mt-2 text-sm">Gestione anagrafica, DURC e documenti</p>
+            </div>
+            <span id="imprese-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1.5 rounded-full"></span>
+        </section>
+
+        <div id="loading-section" class="text-center py-20">
+            <span class="material-symbols-outlined text-5xl text-primary block mb-4 animate-pulse">business</span>
+            <p class="text-on-surface-variant">Caricamento imprese...</p>
+        </div>
+
+        <div id="imprese-grid" class="hidden grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"></div>
+
+        <!-- Pannello Dettaglio Impresa (slide-in) -->
+        <div id="detail-panel" class="hidden fixed inset-0 z-[60]">
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeDetail()"></div>
+            <div class="absolute right-0 top-0 h-full w-full max-w-xl bg-surface shadow-2xl overflow-y-auto">
+                <div class="p-6 md:p-8 space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h3 id="detail-titolo" class="font-headline text-xl text-on-surface">Dettaglio Impresa</h3>
+                        <button onclick="closeDetail()" class="text-stone-400 hover:text-stone-600 transition-colors p-1"><span class="material-symbols-outlined">close</span></button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Ragione Sociale</label><p id="d-ragione" class="text-sm font-medium text-on-surface"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Specializzazione</label><span id="d-specializzazione" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary"></span></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Partita IVA</label><p id="d-piva" class="text-sm text-on-surface"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Codice Fiscale</label><p id="d-cf" class="text-sm text-on-surface"></p></div>
+                            <div class="col-span-2"><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Sede Legale</label><p id="d-sede" class="text-sm text-on-surface"></p></div>
+                        </div>
+
+                        <hr class="border-stone-200"/>
+
+                        <h4 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">contact_mail</span> Contatti</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Referente</label><p id="d-referente" class="text-sm text-on-surface"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Telefono</label><p id="d-telefono" class="text-sm text-on-surface"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Email</label><p id="d-email" class="text-sm text-on-surface break-all"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Email login</label><p id="d-email-login" class="text-sm text-on-surface break-all"></p></div>
+                        </div>
+
+                        <hr class="border-stone-200"/>
+
+                        <h4 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">receipt_long</span> Fatturazione</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">PEC</label><p id="d-pec" class="text-sm text-on-surface break-all"></p></div>
+                            <div><label class="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Codice SDI</label><p id="d-sdi" class="text-sm text-on-surface font-mono"></p></div>
+                        </div>
+
+                        <hr class="border-stone-200"/>
+
+                        <h4 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">verified</span> DURC</h4>
+                        <div class="flex items-center gap-3 mb-3">
+                            <span id="d-durc-badge" class="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                            <span id="d-durc-scadenza" class="text-xs text-on-surface-variant"></span>
+                        </div>
+
+                        <hr class="border-stone-200"/>
+
+                        <h4 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">assignment</span> Cantieri Assegnati</h4>
+                        <div id="d-cantieri" class="space-y-2 text-sm"></div>
+
+                        <hr class="border-stone-200"/>
+
+                        <h4 class="font-label text-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">upload_file</span> Carica documento nell'area privata</h4>
+                        <div class="space-y-3">
+                            <select id="upload-cantiere" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                                <option value="">Seleziona cantiere</option>
+                            </select>
+                            <input type="file" id="upload-file" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" class="w-full text-sm"/>
+                            <button id="btn-upload-admin" class="bg-primary text-on-primary font-medium py-2 px-5 rounded-lg hover:bg-secondary transition-colors flex items-center gap-1.5 text-sm">
+                                <span class="material-symbols-outlined text-[18px]">upload</span> Carica per l'impresa
+                            </button>
+                            <div id="upload-admin-error" class="text-xs text-error hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin'], defaultActiveMenu: 'imprese', pageName: 'Gestione Imprese' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+var currentImpresaId = null;
+var impreseData = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(loadImprese, 500);
+});
+
+async function loadImprese() {
+    var loadingEl = document.getElementById('loading-section');
+    var gridEl = document.getElementById('imprese-grid');
+    var countEl = document.getElementById('imprese-count');
+
+    try {
+        var res = await authFetch('/api/senior/imprese');
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        impreseData = await res.json();
+
+        loadingEl.classList.add('hidden');
+        gridEl.classList.remove('hidden');
+        countEl.textContent = impreseData.length + ' imprese';
+
+        if (impreseData.length === 0) {
+            gridEl.innerHTML = '<div class="col-span-full text-center py-20 text-on-surface-variant">Nessuna impresa registrata</div>';
+            return;
+        }
+
+        gridEl.innerHTML = impreseData.map(function(i) {
+            var durcColor = 'bg-stone-100 text-stone-600';
+            var durcLabel = i.stato_durc || 'In Verifica';
+            if (i.stato_durc === 'Regolare') durcColor = 'bg-green-100 text-green-700';
+            else if (i.stato_durc === 'Scaduto') durcColor = 'bg-red-100 text-red-700';
+
+            var scadenzaHtml = '';
+            if (i.scadenza_durc) {
+                var giorniAllaScadenza = Math.ceil((new Date(i.scadenza_durc) - new Date()) / (1000*60*60*24));
+                if (giorniAllaScadenza < 0) scadenzaHtml = '<span class="text-[10px] text-red-600 font-semibold">🔴 Scaduto da ' + Math.abs(giorniAllaScadenza) + ' gg</span>';
+                else if (giorniAllaScadenza <= 30) scadenzaHtml = '<span class="text-[10px] text-amber-600 font-semibold">⚠️ Scade tra ' + giorniAllaScadenza + ' gg</span>';
+                else scadenzaHtml = '<span class="text-[10px] text-green-600">✅ Scade il ' + new Date(i.scadenza_durc).toLocaleDateString('it-IT') + '</span>';
+            }
+
+            return '<div class="bg-white rounded-xl p-5 shadow-[0px_2px_12px_rgba(27,28,28,0.04)] hover:shadow-[0px_4px_20px_rgba(27,28,28,0.08)] transition-shadow fade-in">' +
+                '<div class="flex items-start justify-between mb-3">' +
+                '<div class="flex items-center gap-3 min-w-0">' +
+                '<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-xl">business</span></div>' +
+                '<div class="min-w-0"><h4 class="font-headline text-base font-semibold text-on-surface truncate">' + (i.ragione_sociale || '---') + '</h4>' +
+                '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ' + durcColor + '">' + durcLabel + '</span>' +
+                '</div></div>' +
+                '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary shrink-0">' + (i.specializzazione || 'Generica') + '</span>' +
+                '</div>' +
+                '<div class="space-y-1 text-xs text-on-surface-variant mb-3">' +
+                (i.referente_cantiere ? '<p><strong>Referente:</strong> ' + i.referente_cantiere + (i.telefono ? ' - ' + i.telefono : '') + '</p>' : '') +
+                (i.email_principale ? '<p class="truncate"><strong>Email:</strong> ' + i.email_principale + '</p>' : '') +
+                (i.partita_iva ? '<p><strong>P.IVA:</strong> ' + i.partita_iva + '</p>' : '') +
+                (scadenzaHtml ? '<div class="mt-1">' + scadenzaHtml + '</div>' : '') +
+                '</div>' +
+                '<button onclick="openDetail(\'' + i.id + '\')" class="w-full text-center text-xs font-label font-semibold uppercase tracking-widest text-primary hover:text-secondary bg-primary/5 hover:bg-primary/10 py-2 rounded-lg transition-colors">Gestisci Impresa</button>' +
+                '</div>';
+        }).join('');
+
+    } catch (err) {
+        loadingEl.innerHTML = '<p class="text-error">Errore: ' + err.message + '</p>';
+        console.error(err);
+    }
+}
+
+async function openDetail(id) {
+    currentImpresaId = id;
+    var panel = document.getElementById('detail-panel');
+    panel.classList.remove('hidden');
+
+    var impresa = impreseData.find(function(i) { return i.id === id; });
+    if (!impresa) return;
+
+    document.getElementById('d-ragione').textContent = impresa.ragione_sociale || '---';
+    document.getElementById('d-specializzazione').textContent = impresa.specializzazione || 'Generica';
+    document.getElementById('d-piva').textContent = impresa.partita_iva || '---';
+    document.getElementById('d-cf').textContent = impresa.codice_fiscale || '---';
+    document.getElementById('d-sede').textContent = impresa.sede_legale || '---';
+    document.getElementById('d-referente').textContent = impresa.referente_cantiere || impresa.referente || '---';
+    document.getElementById('d-telefono').textContent = impresa.telefono || '---';
+    document.getElementById('d-email').textContent = impresa.email_principale || '---';
+    document.getElementById('d-email-login').textContent = impresa.email_principale || '---';
+    document.getElementById('d-pec').textContent = impresa.pec || '---';
+    document.getElementById('d-sdi').textContent = impresa.codice_sdi || '---';
+
+    // DURC badge
+    var durcBadge = document.getElementById('d-durc-badge');
+    var stato = impresa.stato_durc || 'In Verifica';
+    var durcColors = { 'Regolare': 'bg-green-100 text-green-700', 'Scaduto': 'bg-red-100 text-red-700', 'In Verifica': 'bg-amber-100 text-amber-700' };
+    durcBadge.textContent = stato;
+    durcBadge.className = 'text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full ' + (durcColors[stato] || 'bg-stone-100 text-stone-600');
+
+    var scadEl = document.getElementById('d-durc-scadenza');
+    if (impresa.scadenza_durc) {
+        var d = new Date(impresa.scadenza_durc);
+        scadEl.textContent = 'Scadenza: ' + d.toLocaleDateString('it-IT');
+    } else scadEl.textContent = 'Nessuna scadenza impostata';
+
+    // Cantieri
+    var cantEl = document.getElementById('d-cantieri');
+    cantEl.innerHTML = '<span class="text-on-surface-variant">Caricamento...</span>';
+    try {
+        var res = await authFetch('/api/impresa/dashboard');
+        if (res.ok) {
+            var db = await res.json();
+            if (db.progetti && db.progetti.length > 0) {
+                cantEl.innerHTML = db.progetti.map(function(p) {
+                    return '<a href="cantiere-impresa.html?id=' + p.id + '" class="flex items-center gap-2 p-2 rounded-lg hover:bg-surface-container-low transition-colors">' +
+                        '<span class="material-symbols-outlined text-[16px] text-primary">handyman</span>' +
+                        '<span>' + (p.titolo || 'Cantiere') + '</span></a>';
+                }).join('');
+            } else {
+                cantEl.innerHTML = '<span class="text-on-surface-variant">Nessun cantiere assegnato</span>';
+            }
+        } else {
+            cantEl.innerHTML = '<span class="text-on-surface-variant">N/D</span>';
+        }
+    } catch(e) {
+        cantEl.innerHTML = '<span class="text-on-surface-variant">Errore caricamento cantieri</span>';
+    }
+
+    // Upload select
+    var upSel = document.getElementById('upload-cantiere');
+    try {
+        var res2 = await authFetch('/api/impresa/dashboard');
+        if (res2.ok) {
+            var db2 = await res2.json();
+            upSel.innerHTML = '<option value="">Seleziona cantiere</option>' +
+                (db2.progetti || []).map(function(p) { return '<option value="' + p.id + '">' + (p.titolo || 'Cantiere') + '</option>'; }).join('');
+        }
+    } catch(e) {}
+}
+
+function closeDetail() {
+    document.getElementById('detail-panel').classList.add('hidden');
+}
+
+document.getElementById('btn-upload-admin').addEventListener('click', async function() {
+    var fileInput = document.getElementById('upload-file');
+    var cantiereSelect = document.getElementById('upload-cantiere');
+    var errorEl = document.getElementById('upload-admin-error');
+
+    if (!fileInput.files || !fileInput.files[0]) {
+        errorEl.textContent = 'Seleziona un file';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+    if (!cantiereSelect.value) {
+        errorEl.textContent = 'Seleziona un cantiere';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento...';
+
+    try {
+        var fd = new FormData();
+        fd.append('file', fileInput.files[0]);
+        fd.append('cantiere_id', cantiereSelect.value);
+        fd.append('impresa_id', currentImpresaId);
+        fd.append('title', fileInput.files[0].name);
+
+        var res = await authFetch('/api/senior/imprese/upload-privato', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore upload');
+
+        fileInput.value = '';
+        showNotification('Documento caricato nell\'area privata dell\'impresa', 'success');
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">upload</span> Carica per l\'impresa';
+    }
+});
+
+function showNotification(msg, type) {
+    var old = document.querySelector('.hdl-notification');
+    if (old) old.remove();
+    var colors = { error: '#b91c1c', success: '#166534' };
+    var icons = { error: 'error', success: 'check_circle' };
+    var el = document.createElement('div');
+    el.className = 'hdl-notification';
+    el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || '#1e40af');
+    el.innerHTML = '<span class="material-symbols-outlined">' + (icons[type] || 'info') + '</span>' + msg;
+    document.body.appendChild(el);
+    setTimeout(function() { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 4000);
+}
+</script>
+</body>
+</html>

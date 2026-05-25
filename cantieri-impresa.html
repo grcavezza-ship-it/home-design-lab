@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>I Miei Cantieri | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+                    fontFamily: { headline: ["Noto Serif"], body: ["Manrope"], label: ["Manrope"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+    <div class="flex items-center gap-3 flex-1">
+        <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none">Portale Imprese</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <span id="user-name" class="hidden md:block text-sm text-on-surface font-medium"></span>
+        <div class="relative">
+            <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <img id="avatar-img" alt="Avatar" class="w-full h-full object-cover"/>
+            </button>
+            <div id="avatar-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-surface-container-lowest border border-stone-200 dark:border-stone-700 rounded-xl shadow-xl hidden z-50 overflow-hidden">
+                <div class="px-4 py-3 border-b border-stone-100 dark:border-stone-800">
+                    <p id="dropdown-user-name" class="text-sm font-semibold text-on-surface truncate"></p>
+                    <p id="dropdown-user-role" class="text-[10px] uppercase tracking-widest text-on-surface-variant">Impresa</p>
+                </div>
+                <a href="#" id="logout-btn" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors"><span class="material-symbols-outlined text-[18px]">logout</span> Esci</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="lg:ml-64 pt-24 md:pt-28 px-4 md:px-12 pb-24 bg-surface min-h-screen">
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <section class="flex items-center justify-between">
+            <div>
+                <span class="font-label uppercase tracking-widest text-primary text-xs font-semibold mb-2 block">Portale Imprese</span>
+                <h2 class="font-headline text-3xl md:text-4xl tracking-tight text-on-surface">I Miei Cantieri</h2>
+                <p class="text-on-surface-variant mt-2 text-sm">Progetti ai quali sei stata assegnata</p>
+            </div>
+        </section>
+
+        <div id="loading-section" class="text-center py-20">
+            <span class="material-symbols-outlined text-5xl text-primary block mb-4 animate-pulse">handyman</span>
+            <p class="text-on-surface-variant">Caricamento cantieri...</p>
+        </div>
+
+        <div id="cantieri-list" class="hidden space-y-4"></div>
+
+    </div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect', 'impresa'], defaultActiveMenu: 'cantieri', pageName: 'Cantieri Impresa' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', loadCantieri);
+
+async function loadCantieri() {
+    var loadingEl = document.getElementById('loading-section');
+    var listEl = document.getElementById('cantieri-list');
+
+    try {
+        var res = await authFetch('/api/impresa/dashboard');
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        var data = await res.json();
+
+        loadingEl.classList.add('hidden');
+        listEl.classList.remove('hidden');
+
+        if (!data.progetti || data.progetti.length === 0) {
+            listEl.innerHTML = '<div class="text-center py-20 text-on-surface-variant">Nessun cantiere assegnato alla tua impresa.</div>';
+            return;
+        }
+
+        listEl.innerHTML = data.progetti.map(function(p) {
+            var cInfo = (data.cantieri || []).find(function(c) { return c.id_cantiere === p.id; });
+            var statusClass = 'bg-stone-200 text-stone-600';
+            if (p.status === 'in_corso' || p.stato === 'attivo') statusClass = 'bg-blue-100 text-blue-700';
+            else if (p.status === 'completato') statusClass = 'bg-green-100 text-green-700';
+
+            return '<a href="cantiere-impresa.html?id=' + p.id + '" class="block bg-white rounded-xl p-5 md:p-6 shadow-[0px_2px_12px_rgba(27,28,28,0.03)] hover:shadow-[0px_4px_20px_rgba(27,28,28,0.08)] transition-shadow hover:border-l-4 hover:border-primary group">' +
+                '<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">' +
+                '<div class="flex-1">' +
+                '<div class="flex items-center gap-2 mb-1">' +
+                '<span class="material-symbols-outlined text-primary group-hover:text-secondary transition-colors">handyman</span>' +
+                '<h4 class="font-headline text-lg font-semibold text-on-surface">' + (p.titolo || 'Cantiere') + '</h4>' +
+                '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ' + statusClass + '">' + (p.stato || p.status || 'n/a') + '</span>' +
+                '</div>' +
+                (p.descrizione ? '<p class="text-sm text-on-surface-variant line-clamp-2">' + p.descrizione + '</p>' : '') +
+                (cInfo ? '<div class="flex flex-wrap gap-3 mt-2 text-xs text-stone-500">' +
+                    (cInfo.note_incarico ? '<span><strong>Incarico:</strong> ' + cInfo.note_incarico + '</span>' : '') +
+                    (cInfo.data_inizio_lavori ? '<span><strong>Inizio:</strong> ' + cInfo.data_inizio_lavori + '</span>' : '') +
+                '</div>' : '') +
+                '</div>' +
+                '<div class="flex items-center gap-3 shrink-0">' +
+                (typeof p.avanzamento === 'number' ? '<div class="w-28 bg-stone-100 rounded-full h-2.5 overflow-hidden"><div class="bg-primary h-2.5 rounded-full" style="width:' + p.avanzamento + '%"></div></div><span class="text-xs font-semibold text-on-surface-variant w-8 text-right">' + p.avanzamento + '%</span>' : '') +
+                '<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">arrow_forward</span>' +
+                '</div></div></a>';
+        }).join('');
+
+    } catch (err) {
+        loadingEl.innerHTML = '<p class="text-error">Errore: ' + err.message + '</p>';
+        console.error(err);
+    }
+}
+</script>
+</body>
+</html>

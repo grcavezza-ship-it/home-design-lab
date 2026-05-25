@@ -84,9 +84,12 @@
                 <h2 class="font-headline text-3xl md:text-4xl tracking-tight text-on-surface" id="impresa-title">La Tua Dashboard</h2>
                 <p class="text-on-surface-variant mt-2 text-sm" id="impresa-subtitle">Cantieri e documenti aziendali</p>
             </div>
-            <div class="flex items-center gap-3 text-sm text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-lg">
-                <span class="material-symbols-outlined text-[18px]">business</span>
-                <span id="impresa-name">---</span>
+            <div class="flex flex-col items-end gap-1">
+                <div class="flex items-center gap-3 text-sm text-on-surface-variant bg-surface-container-low px-4 py-2 rounded-lg">
+                    <span class="material-symbols-outlined text-[18px]">business</span>
+                    <span id="impresa-name">---</span>
+                </div>
+                <div id="durc-badge-container" class="hidden flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold"></div>
             </div>
         </section>
 
@@ -100,7 +103,7 @@
         <div id="dashboard-content" class="hidden space-y-8">
 
             <!-- Cantieri -->
-            <section>
+            <section id="cantieri">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
                         <span class="material-symbols-outlined text-primary">handyman</span> I Miei Cantieri
@@ -125,6 +128,37 @@
                 <p class="text-sm text-on-surface-variant mb-4">Documenti del cantiere visibili a tutte le imprese coinvolte</p>
                 <div id="condivisi-list" class="space-y-2">
                     <div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento condiviso</div>
+                </div>
+            </section>
+
+            <div class="border-t border-stone-200/50"></div>
+
+            <!-- Documenti di Sicurezza -->
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">security</span> Documenti di Sicurezza
+                    </h3>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Carica o consulta POS, DURC aggiornato e altri documenti obbligatori</p>
+
+                <div class="bg-white rounded-xl p-4 md:p-6 shadow-[0px_4px_16px_rgba(27,28,28,0.04)] mb-4">
+                    <h4 class="font-label text-sm font-semibold text-on-surface mb-3">Carica documento di sicurezza</h4>
+                    <div class="flex flex-col md:flex-row gap-3 items-start md:items-center">
+                        <select id="upload-sicurezza-cantiere" class="w-full md:w-48 bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                            <option value="">Seleziona cantiere</option>
+                        </select>
+                        <select id="upload-tipo-sicurezza" class="w-full md:w-40 bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                            <option value="pos">POS (Piano Operativo Sicurezza)</option>
+                            <option value="durc">DURC Aggiornato</option>
+                            <option value="altro">Altro documento sicurezza</option>
+                        </select>
+                        <input type="file" id="upload-file-sicurezza" accept=".pdf,.jpg,.png" class="flex-1 text-sm text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-label file:bg-amber-600 file:text-white hover:file:bg-amber-700 transition-colors"/>
+                        <button id="btn-upload-sicurezza" class="bg-amber-600 text-white font-medium py-2 px-5 rounded-lg hover:bg-amber-700 transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[18px]">upload</span> Carica
+                        </button>
+                    </div>
+                    <div id="upload-sicurezza-error" class="text-xs text-error mt-2 hidden"></div>
                 </div>
             </section>
 
@@ -184,20 +218,7 @@ async function loadDashboard() {
     var impresaName = document.getElementById('impresa-name');
 
     try {
-        var token = null;
-        try {
-            var { data: { session } } = await window.supabaseClient.auth.getSession();
-            token = session?.access_token;
-        } catch(e) {}
-
-        if (!token) {
-            loadingEl.innerHTML = '<p class="text-error">Sessione scaduta. Effettua il login.</p>';
-            return;
-        }
-
-        var res = await fetch('/api/impresa/dashboard', {
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
+        var res = await authFetch('/api/impresa/dashboard');
         if (!res.ok) {
             var errData = await res.json();
             throw new Error(errData.error || 'Errore caricamento');
@@ -209,6 +230,26 @@ async function loadDashboard() {
 
         impresaTitle.textContent = data.impresa.ragione_sociale;
         impresaName.textContent = data.impresa.ragione_sociale;
+
+        // Mostra badge DURC nel container dedicato
+        var durcContainer = document.getElementById('durc-badge-container');
+        if (data.impresa.stato_durc) {
+            durcContainer.classList.remove('hidden');
+            var dc = data.impresa.stato_durc === 'Regolare' ? 'bg-green-100 text-green-700' : (data.impresa.stato_durc === 'Scaduto' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700');
+            durcContainer.className = 'flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-semibold ' + dc;
+
+            var durcIcon = data.impresa.stato_durc === 'Regolare' ? 'verified' : (data.impresa.stato_durc === 'Scaduto' ? 'gpp_bad' : 'hourglass_empty');
+            durcContainer.innerHTML = '<span class="material-symbols-outlined text-[16px]">' + durcIcon + '</span>' +
+                'DURC: ' + data.impresa.stato_durc.toUpperCase();
+
+            if (data.impresa.scadenza_durc) {
+                var scad = new Date(data.impresa.scadenza_durc);
+                var giorni = Math.ceil((scad - new Date()) / (1000*60*60*24));
+                if (giorni < 0) durcContainer.innerHTML += '<span class="ml-1">(Scaduto il ' + scad.toLocaleDateString('it-IT') + ')</span>';
+                else if (giorni <= 30) durcContainer.innerHTML += '<span class="ml-1">(Scade tra ' + giorni + ' gg - ' + scad.toLocaleDateString('it-IT') + ')</span>';
+                else durcContainer.innerHTML += '<span class="ml-1">(Scade il ' + scad.toLocaleDateString('it-IT') + ')</span>';
+            }
+        }
 
         renderCantieri(data.progetti, data.cantieri);
         renderCondivisi(data.documenti_condivisi);
@@ -244,7 +285,7 @@ function renderCantieri(progetti, cantieri) {
         var note = cantiereInfo ? cantiereInfo.note_incarico : '';
         var dataInizio = cantiereInfo ? cantiereInfo.data_inizio_lavori : '';
 
-        html += '<div class="bg-white rounded-xl p-4 md:p-6 shadow-[0px_2px_12px_rgba(27,28,28,0.03)] hover:shadow-[0px_4px_20px_rgba(27,28,28,0.06)] transition-shadow">';
+        html += '<a href="cantiere-impresa.html?id=' + p.id + '" class="block bg-white rounded-xl p-4 md:p-6 shadow-[0px_2px_12px_rgba(27,28,28,0.03)] hover:shadow-[0px_4px_20px_rgba(27,28,28,0.06)] transition-shadow group">';
         html += '<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">';
         html += '<div class="flex-1">';
         html += '<div class="flex items-center gap-2 mb-1">';
@@ -261,7 +302,7 @@ function renderCantieri(progetti, cantieri) {
             html += '<span class="text-xs font-semibold text-on-surface-variant">' + p.avanzamento + '%</span>';
             html += '</div>';
         }
-        html += '</div></div>';
+        html += '</div></a>';
     });
     list.innerHTML = html;
 }
@@ -317,9 +358,12 @@ function docItemHtml(d) {
 
 function populateUploadSelect(progetti) {
     var select = document.getElementById('upload-cantiere');
+    var select2 = document.getElementById('upload-sicurezza-cantiere');
     if (!progetti || progetti.length === 0) return;
-    select.innerHTML = '<option value="">Seleziona cantiere</option>' +
+    var opts = '<option value="">Seleziona cantiere</option>' +
         progetti.map(function(p) { return '<option value="' + p.id + '">' + (p.titolo || 'Cantiere') + '</option>'; }).join('');
+    select.innerHTML = opts;
+    if (select2) select2.innerHTML = opts;
 }
 
 document.getElementById('btn-upload').addEventListener('click', async function() {
@@ -345,19 +389,14 @@ document.getElementById('btn-upload').addEventListener('click', async function()
     btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento...';
 
     try {
-        var { data: { session } } = await window.supabaseClient.auth.getSession();
-        var token = session?.access_token;
-        if (!token) throw new Error('Sessione scaduta');
-
         var formData = new FormData();
         formData.append('file', fileInput.files[0]);
         formData.append('cantiere_id', cantiereSelect.value);
         formData.append('tipo', tipoSelect.value);
         formData.append('title', fileInput.files[0].name);
 
-        var res = await fetch('/api/impresa/upload', {
+        var res = await authFetch('/api/impresa/upload', {
             method: 'POST',
-            headers: { 'Authorization': 'Bearer ' + token },
             body: formData
         });
 
@@ -379,15 +418,55 @@ document.getElementById('btn-upload').addEventListener('click', async function()
     }
 });
 
+// Upload documento di sicurezza
+document.getElementById('btn-upload-sicurezza').addEventListener('click', async function() {
+    var fileInput = document.getElementById('upload-file-sicurezza');
+    var cantiereSelect = document.getElementById('upload-sicurezza-cantiere');
+    var tipoSelect = document.getElementById('upload-tipo-sicurezza');
+    var errorEl = document.getElementById('upload-sicurezza-error');
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        errorEl.textContent = 'Seleziona un file';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+    if (!cantiereSelect.value) {
+        errorEl.textContent = 'Seleziona un cantiere';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento...';
+
+    try {
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('cantiere_id', cantiereSelect.value);
+        formData.append('tipo', 'condiviso');
+        formData.append('title', '[' + (tipoSelect.options[tipoSelect.selectedIndex].text) + '] ' + fileInput.files[0].name);
+
+        var res = await authFetch('/api/impresa/upload', { method: 'POST', body: formData });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore upload');
+
+        fileInput.value = '';
+        showNotification('Documento di sicurezza caricato con successo', 'success');
+        loadDashboard();
+
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">upload</span> Carica';
+    }
+});
+
 async function downloadDoc(docId) {
     try {
-        var { data: { session } } = await window.supabaseClient.auth.getSession();
-        var token = session?.access_token;
-        if (!token) throw new Error('Sessione scaduta');
-
-        var res = await fetch('/api/impresa/documenti/' + docId + '/download', {
-            headers: { 'Authorization': 'Bearer ' + token }
-        });
+        var res = await authFetch('/api/impresa/documenti/' + docId + '/download');
         if (!res.ok) throw new Error('Errore download');
 
         var data = await res.json();

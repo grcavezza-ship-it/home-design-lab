@@ -4,7 +4,8 @@
  * Supabase per auth, DB e storage.
  */
 
-// ⚠️ CRITICAL: Env vars loaded via --env-file=.env flag
+// ⚠️ CRITICAL: Env vars loaded via dotenv
+import 'dotenv/config';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 

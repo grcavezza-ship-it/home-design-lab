@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Scheda Cantiere | Home Design Lab</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/portal-config.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#186C32",
+                        "secondary": "#4CAF50",
+                        "tertiary": "#D4BFA7",
+                        "on-primary": "#ffffff",
+                        "surface": "#fbf9f8",
+                        "on-surface": "#1b1c1c",
+                        "background": "#fbf9f8",
+                        "outline": "#707a6e",
+                        "surface-container": "#f0eded",
+                        "surface-container-low": "#f6f3f2",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    borderRadius: { DEFAULT: "0.125rem", lg: "0.25rem", xl: "0.5rem", full: "0.75rem" },
+                    fontFamily: { headline: ["Noto Serif"], body: ["Manrope"], label: ["Manrope"] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen">
+
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+    <div class="flex items-center gap-3 flex-1">
+        <button id="mobile-menu-toggle" class="lg:hidden text-stone-600 hover:text-primary transition-colors h-10 w-10 flex items-center justify-center">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <a href="cantieri-impresa.html" class="flex items-center gap-2 text-stone-500 hover:text-primary transition-colors text-sm font-label">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span> Cantieri
+        </a>
+        <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none ml-2">Scheda Cantiere</span>
+    </div>
+    <div class="flex items-center gap-4">
+        <span id="user-name" class="hidden md:block text-sm text-on-surface font-medium"></span>
+        <div class="relative">
+            <button id="avatar-btn" class="w-9 h-9 rounded-full overflow-hidden border-2 border-primary/20 hover:border-primary/50 transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <img id="avatar-img" alt="Avatar" class="w-full h-full object-cover"/>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="lg:ml-64 pt-24 md:pt-28 px-4 md:px-12 pb-24 bg-surface min-h-screen">
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <div id="loading-section" class="text-center py-20">
+            <span class="material-symbols-outlined text-5xl text-primary block mb-4 animate-pulse">folder_open</span>
+            <p class="text-on-surface-variant">Caricamento cantiere...</p>
+        </div>
+
+        <div id="cantiere-content" class="hidden space-y-8">
+
+            <section id="cantiere-header" class="bg-white rounded-xl p-5 md:p-6 shadow-[0px_2px_12px_rgba(27,28,28,0.03)]">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-primary text-3xl">handyman</span>
+                    <h2 class="font-headline text-2xl md:text-3xl tracking-tight text-on-surface" id="cantiere-titolo"></h2>
+                </div>
+                <div class="flex flex-wrap gap-3 items-center">
+                    <span id="cantiere-stato" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"></span>
+                    <span id="cantiere-location" class="text-xs text-on-surface-variant"></span>
+                    <span id="cantiere-date" class="text-xs text-on-surface-variant"></span>
+                    <span id="cantiere-avanzamento" class="text-xs font-semibold"></span>
+                </div>
+                <p id="cantiere-descrizione" class="text-sm text-on-surface-variant mt-3"></p>
+                <div id="cantiere-incarico" class="mt-3 p-3 bg-surface-container-low rounded-lg text-xs text-stone-600 hidden"></div>
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">folder_open</span> Documenti Condivisi
+                    </h3>
+                    <span id="condivisi-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Documenti del cantiere visibili a tutte le imprese coinvolte</p>
+                <div id="condivisi-list" class="space-y-2">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento condiviso</div>
+                </div>
+            </section>
+
+            <div class="border-t border-stone-200/50"></div>
+
+            <section>
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-headline text-xl text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">lock</span> Documenti Privati
+                    </h3>
+                    <span id="privati-count" class="text-xs font-label uppercase tracking-widest text-on-surface-variant bg-surface-container-low px-3 py-1 rounded-full"></span>
+                </div>
+                <p class="text-sm text-on-surface-variant mb-4">Documenti accessibili solo alla tua impresa</p>
+
+                <div class="bg-white rounded-xl p-4 md:p-6 shadow-[0px_4px_16px_rgba(27,28,28,0.04)] mb-4">
+                    <h4 class="font-label text-sm font-semibold text-on-surface mb-3">Carica un documento</h4>
+                    <div class="flex flex-col md:flex-row gap-3 items-start md:items-center">
+                        <select id="upload-tipo" class="w-full md:w-44 bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2 px-3 text-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none">
+                            <option value="privato">Area privata</option>
+                            <option value="condiviso">Documento condiviso</option>
+                        </select>
+                        <input type="file" id="upload-file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" class="flex-1 text-sm text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-label file:bg-primary file:text-on-primary hover:file:bg-primary-container transition-colors"/>
+                        <button id="btn-upload" class="bg-primary text-on-primary font-medium py-2 px-5 rounded-lg hover:bg-secondary transition-colors flex items-center gap-1.5 text-sm whitespace-nowrap">
+                            <span class="material-symbols-outlined text-[18px]">upload</span> Carica
+                        </button>
+                    </div>
+                    <div id="upload-error" class="text-xs text-error mt-2 hidden"></div>
+                </div>
+
+                <div id="privati-list" class="space-y-2">
+                    <div class="text-center py-8 text-on-surface-variant text-sm">Nessun documento privato</div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</main>
+
+<script>
+PORTAL_PAGE_CONFIG = { allowedRoles: ['senior', 'admin', 'operator', 'architect', 'impresa'], defaultActiveMenu: 'cantieri', pageName: 'Scheda Cantiere' };
+</script>
+<script src="assets/js/portal-init.js"></script>
+<script>
+var cantiereId = new URLSearchParams(window.location.search).get('id');
+
+document.addEventListener('DOMContentLoaded', loadCantiere);
+
+async function loadCantiere() {
+    if (!cantiereId) {
+        document.getElementById('loading-section').innerHTML = '<p class="text-error">Nessun cantiere specificato.</p>';
+        return;
+    }
+
+    var loadingEl = document.getElementById('loading-section');
+    var contentEl = document.getElementById('cantiere-content');
+
+    try {
+        var res = await authFetch('/api/impresa/cantiere/' + cantiereId);
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore');
+        var data = await res.json();
+
+        loadingEl.classList.add('hidden');
+        contentEl.classList.remove('hidden');
+
+        var c = data.cantiere;
+        document.getElementById('cantiere-titolo').textContent = c.titolo || 'Cantiere';
+        document.getElementById('cantiere-descrizione').textContent = c.descrizione || '';
+
+        var statoClass = 'bg-stone-200 text-stone-600';
+        if (c.stato === 'attivo' || c.status === 'in_corso') statoClass = 'bg-blue-100 text-blue-700';
+        else if (c.stato === 'completato' || c.status === 'completato') statoClass = 'bg-green-100 text-green-700';
+        document.getElementById('cantiere-stato').textContent = c.stato || c.status || 'n/a';
+        document.getElementById('cantiere-stato').className = 'text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ' + statoClass;
+
+        if (c.location) document.getElementById('cantiere-location').textContent = '📍 ' + c.location;
+        if (c.data_inizio || c.data_consegna) {
+            document.getElementById('cantiere-date').textContent = '📅 ' + (c.data_inizio || '...') + ' → ' + (c.data_consegna || '...');
+        }
+        if (typeof c.avanzamento === 'number') {
+            document.getElementById('cantiere-avanzamento').textContent = 'Avanzamento: ' + c.avanzamento + '%';
+        }
+        if (c.cliente) document.getElementById('cantiere-location').textContent = (document.getElementById('cantiere-location').textContent || '') + '  👤 ' + c.cliente;
+
+        if (data.incarico) {
+            var incEl = document.getElementById('cantiere-incarico');
+            incEl.classList.remove('hidden');
+            incEl.innerHTML = '';
+            if (data.incarico.note_incarico) incEl.innerHTML += '<p><strong>Incarico:</strong> ' + data.incarico.note_incarico + '</p>';
+            if (data.incarico.data_inizio_lavori) incEl.innerHTML += '<p><strong>Inizio lavori:</strong> ' + data.incarico.data_inizio_lavori + '</p>';
+        }
+
+        renderDocList('condivisi', data.documenti_condivisi);
+        renderDocList('privati', data.documenti_privati);
+
+    } catch (err) {
+        loadingEl.innerHTML = '<p class="text-error">Errore: ' + err.message + '</p>';
+        console.error(err);
+    }
+}
+
+function renderDocList(tipo, docs) {
+    var list = document.getElementById(tipo + '-list');
+    var count = document.getElementById(tipo + '-count');
+    if (!docs || docs.length === 0) {
+        count.textContent = '0 documenti';
+        return;
+    }
+    count.textContent = docs.length + ' documenti';
+    list.innerHTML = docs.map(function(d) {
+        var icon = 'description';
+        if (d.mime_type && d.mime_type.indexOf('pdf') !== -1) icon = 'picture_as_pdf';
+        else if (d.mime_type && d.mime_type.indexOf('image') !== -1) icon = 'image';
+
+        var size = d.size_bytes ? (d.size_bytes / 1024).toFixed(1) + ' KB' : '';
+        var date = d.created_at ? new Date(d.created_at).toLocaleDateString('it-IT') : '';
+
+        return '<div class="flex items-center justify-between bg-white rounded-lg px-4 py-3 shadow-[0px_1px_6px_rgba(27,28,28,0.03)] hover:shadow-md transition-shadow">' +
+            '<div class="flex items-center gap-3 min-w-0">' +
+            '<span class="material-symbols-outlined text-primary text-2xl shrink-0">' + icon + '</span>' +
+            '<div class="min-w-0">' +
+            '<p class="text-sm font-medium text-on-surface truncate">' + (d.title || 'Documento') + '</p>' +
+            '<p class="text-xs text-on-surface-variant">' + size + (date ? ' &middot; ' + date : '') + '</p>' +
+            '</div></div>' +
+            '<button onclick="downloadDoc(\'' + d.id + '\')" class="shrink-0 text-primary hover:text-secondary transition-colors p-1" title="Scarica">' +
+            '<span class="material-symbols-outlined text-xl">download</span></button></div>';
+    }).join('');
+}
+
+document.getElementById('btn-upload').addEventListener('click', async function() {
+    var fileInput = document.getElementById('upload-file-input');
+    var tipoSelect = document.getElementById('upload-tipo');
+    var errorEl = document.getElementById('upload-error');
+
+    if (!fileInput.files || fileInput.files.length === 0) {
+        errorEl.textContent = 'Seleziona un file';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    errorEl.classList.add('hidden');
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Caricamento...';
+
+    try {
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('cantiere_id', cantiereId);
+        formData.append('tipo', tipoSelect.value);
+        formData.append('title', fileInput.files[0].name);
+
+        var res = await authFetch('/api/impresa/upload', { method: 'POST', body: formData });
+        if (!res.ok) throw new Error((await res.json()).error || 'Errore upload');
+
+        fileInput.value = '';
+        showNotification('Documento caricato con successo', 'success');
+        loadCantiere();
+
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">upload</span> Carica';
+    }
+});
+
+async function downloadDoc(docId) {
+    try {
+        var res = await authFetch('/api/impresa/documenti/' + docId + '/download');
+        var data = await res.json();
+        if (data.url) window.open(data.url, '_blank');
+    } catch (err) {
+        showNotification('Errore download: ' + err.message, 'error');
+    }
+}
+
+function showNotification(msg, type) {
+    var old = document.querySelector('.hdl-notification');
+    if (old) old.remove();
+    var colors = { error: '#b91c1c', success: '#166534', info: '#1e40af' };
+    var icons = { error: 'error', success: 'check_circle', info: 'info' };
+    var el = document.createElement('div');
+    el.className = 'hdl-notification';
+    el.style.cssText = 'position:fixed;top:16px;right:16px;z-index:9999;display:flex;align-items:center;gap:12px;padding:14px 20px;color:#fff;font-size:14px;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.18);background:' + (colors[type] || colors.info);
+    el.innerHTML = '<span class="material-symbols-outlined">' + (icons[type] || 'info') + '</span>' + msg;
+    document.body.appendChild(el);
+    setTimeout(function() { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 4000);
+}
+</script>
+</body>
+</html>
