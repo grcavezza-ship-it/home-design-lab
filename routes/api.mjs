@@ -1616,19 +1616,37 @@ router.post('/senior/imprese/upload-privato', authenticate, requireRole('senior'
     } catch (e) { next(e); }
 });
 
+// Helper: query sicura che non crasha se la tabella non esiste
+async function safeQuery(admin, table, queryFn) {
+    try {
+        return await queryFn(admin.from(table));
+    } catch (e) {
+        if (e.code === 'PGRST205' || (e.message && e.message.includes('does not exist'))) {
+            console.log('[safeQuery] Tabella ' + table + ' non trovata, ritorno vuoto');
+            return { data: [], error: null };
+        }
+        if (e.details && e.details.includes('does not exist')) {
+            console.log('[safeQuery] Tabella ' + table + ' non trovata, ritorno vuoto');
+            return { data: [], error: null };
+        }
+        throw e;
+    }
+}
+
 // ─── ECONOMIA CANTIERI PER IMPRESA ─────────────────────────────────────────
 
 // Ottieni economia di tutti i cantieri per una impresa
 router.get('/senior/imprese/:id/economia', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
-        const { data, error } = await admin
-            .from('cantiere_impresa_economia')
-            .select('*, projects!inner(titolo, status, avanzamento)')
-            .eq('id_impresa', req.params.id)
-            .order('created_at', { ascending: false });
-        if (error) throw error;
-        res.json(data || []);
+        var result = await safeQuery(admin, 'cantiere_impresa_economia', function(q) {
+            return q
+                .select('*, projects!inner(titolo, status, avanzamento)')
+                .eq('id_impresa', req.params.id)
+                .order('created_at', { ascending: false });
+        });
+        if (result.error) throw result.error;
+        res.json(result.data || []);
     } catch (e) { next(e); }
 });
 
@@ -1639,22 +1657,25 @@ router.put('/senior/imprese/economia', authenticate, requireRole('senior', 'admi
         var { id_cantiere, id_impresa, importo_contratto, importo_lavorato, importo_fatturato, importo_percepito, ritenute, note_economiche } = req.body;
         if (!id_cantiere || !id_impresa) return res.status(400).json({ error: 'id_cantiere e id_impresa richiesti' });
 
-        const { data, error } = await admin
-            .from('cantiere_impresa_economia')
-            .upsert({
-                id_cantiere, id_impresa,
-                importo_contratto: importo_contratto || 0,
-                importo_lavorato: importo_lavorato || 0,
-                importo_fatturato: importo_fatturato || 0,
-                importo_percepito: importo_percepito || 0,
-                ritenute: ritenute || 0,
-                note_economiche: note_economiche || '',
-                updated_at: new Date().toISOString()
-            }, { onConflict: 'id_cantiere, id_impresa' })
-            .select()
-            .single();
-        if (error) throw error;
-        res.json(data);
+        var result = await safeQuery(admin, 'cantiere_impresa_economia', function(q) {
+            return q
+                .upsert({
+                    id_cantiere, id_impresa,
+                    importo_contratto: importo_contratto || 0,
+                    importo_lavorato: importo_lavorato || 0,
+                    importo_fatturato: importo_fatturato || 0,
+                    importo_percepito: importo_percepito || 0,
+                    ritenute: ritenute || 0,
+                    note_economiche: note_economiche || '',
+                    updated_at: new Date().toISOString()
+                }, { onConflict: 'id_cantiere, id_impresa' })
+                .select()
+                .single();
+        });
+        if (result.error) throw result.error;
+        // Se la tabella non esiste, safeQuery torna dati vuoti
+        if (!result.data) return res.json({ warning: 'Tabella non disponibile - esegui lo SQL' });
+        res.json(result.data);
     } catch (e) { next(e); }
 });
 
@@ -1665,13 +1686,14 @@ router.get('/impresa/economia', authenticate, requireImpresa, async (req, res, n
         var { data: impresa } = await admin.from('imprese').select('id').eq('user_id', req.user.id).maybeSingle();
         if (!impresa) return res.status(404).json({ error: 'Impresa non trovata' });
 
-        const { data, error } = await admin
-            .from('cantiere_impresa_economia')
-            .select('*, projects!inner(titolo, status, avanzamento)')
-            .eq('id_impresa', impresa.id)
-            .order('created_at', { ascending: false });
-        if (error) throw error;
-        res.json(data || []);
+        var result = await safeQuery(admin, 'cantiere_impresa_economia', function(q) {
+            return q
+                .select('*, projects!inner(titolo, status, avanzamento)')
+                .eq('id_impresa', impresa.id)
+                .order('created_at', { ascending: false });
+        });
+        if (result.error) throw result.error;
+        res.json(result.data || []);
     } catch (e) { next(e); }
 });
 
@@ -1872,13 +1894,14 @@ function parseComputoText(testo) {
 router.get('/senior/imprese/:id/computi', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
-        const { data, error } = await admin
-            .from('computi_metrici')
-            .select('*, projects!inner(id, titolo)')
-            .eq('id_impresa', req.params.id)
-            .order('created_at', { ascending: false });
-        if (error) throw error;
-        res.json(data || []);
+        var result = await safeQuery(admin, 'computi_metrici', function(q) {
+            return q
+                .select('*, projects!inner(id, titolo)')
+                .eq('id_impresa', req.params.id)
+                .order('created_at', { ascending: false });
+        });
+        if (result.error) throw result.error;
+        res.json(result.data || []);
     } catch (e) { next(e); }
 });
 
@@ -1886,13 +1909,14 @@ router.get('/senior/imprese/:id/computi', authenticate, requireRole('senior', 'a
 router.get('/senior/imprese/computi/:id/voci', authenticate, requireRole('senior', 'admin'), async (req, res, next) => {
     try {
         const admin = getAdminClient();
-        const { data, error } = await admin
-            .from('voci_computo')
-            .select('*')
-            .eq('id_computo', req.params.id)
-            .order('numero_voce');
-        if (error) throw error;
-        res.json(data || []);
+        var result = await safeQuery(admin, 'voci_computo', function(q) {
+            return q
+                .select('*')
+                .eq('id_computo', req.params.id)
+                .order('numero_voce');
+        });
+        if (result.error) throw result.error;
+        res.json(result.data || []);
     } catch (e) { next(e); }
 });
 
