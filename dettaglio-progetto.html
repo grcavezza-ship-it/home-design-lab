@@ -793,6 +793,8 @@
 
                 container.innerHTML = data.map(function(c) {
                     var i = c.imprese || {};
+                    var durcClass = i.stato_durc === 'Regolare' ? 'text-green-700 bg-green-100' : i.stato_durc === 'Scaduto' ? 'text-red-700 bg-red-100' : 'text-amber-700 bg-amber-100';
+                    var ref = i.referente_cantiere || i.referente || '';
                     return '<div class="flex items-start gap-3 p-3 rounded-xl bg-surface-container-low/50 hover:bg-surface-container-low transition-colors border border-outline-variant/10">' +
                         '<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-primary"><span class="material-symbols-outlined text-xl">handyman</span></div>' +
                         '<div class="min-w-0 flex-1">' +
@@ -802,7 +804,8 @@
                         (i.partita_iva ? '<span>P.IVA ' + i.partita_iva + '</span>' : '') +
                         '</div>' +
                         '<div class="flex flex-wrap items-center gap-2 mt-1.5">' +
-                        (i.referente ? '<span class="text-[10px] text-stone-400">👤 ' + i.referente + '</span>' : '') +
+                        '<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ' + durcClass + '">' + (i.stato_durc || 'N/D') + '</span>' +
+                        (ref ? '<span class="text-[10px] text-stone-400">👤 ' + ref + '</span>' : '') +
                         (c.data_inizio_lavori ? '<span class="text-[10px] text-stone-400">📅 ' + c.data_inizio_lavori + '</span>' : '') +
                         (c.note_incarico ? '<span class="text-[10px] text-stone-400 truncate max-w-[200px]">' + c.note_incarico + '</span>' : '') +
                         '</div></div>' +
