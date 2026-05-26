@@ -376,9 +376,18 @@ async function handlePrimoAccesso() {
 
         if (!res.ok) throw new Error(data.error || 'Errore durante l\'invio');
 
-        // Slide to success screen
-        document.getElementById('modal-slide-track').classList.add('shifted');
-
+        // Slide to success screen, passando il link diretto
+        var slide = document.getElementById('modal-slide-track');
+        slide.classList.add('shifted');
+        // Mostra link diretto come fallback se email non inviata
+        var linkContainer = document.getElementById('primo-fallback-link');
+        var successMsg = document.getElementById('primo-success-msg');
+        if (linkContainer && !data.emailSent) {
+            linkContainer.classList.remove('hidden');
+            linkContainer.innerHTML = '<p class="text-xs text-amber-700 bg-amber-50 rounded-lg p-3 mb-3">⚠️ L\'email non è stata inviata. Usa questo link diretto (valido 24h):</p>' +
+                '<a href="' + data.directLink + '" class="text-xs break-all text-primary underline">' + data.directLink + '</a>';
+            if (successMsg) successMsg.textContent = 'Impossibile inviare l\'email. Usa il link qui sotto.';
+        }
     } catch (error) {
         console.error('Primo accesso error:', error);
         var msg = error.message;
@@ -440,7 +449,14 @@ async function handlePasswordDimenticata() {
         if (!res.ok) throw new Error(data.error || 'Errore durante l\'invio');
 
         document.getElementById('pwd-modal-slide-track').classList.add('shifted');
-
+        var linkContainer = document.getElementById('pwd-fallback-link');
+        var successMsg = document.getElementById('pwd-success-msg');
+        if (linkContainer && !data.emailSent) {
+            linkContainer.classList.remove('hidden');
+            linkContainer.innerHTML = '<p class="text-xs text-amber-700 bg-amber-50 rounded-lg p-3 mb-3">⚠️ L\'email non è stata inviata. Usa questo link diretto (valido 24h):</p>' +
+                '<a href="' + data.directLink + '" class="text-xs break-all text-primary underline">' + data.directLink + '</a>';
+            if (successMsg) successMsg.textContent = 'Impossibile inviare l\'email. Usa il link qui sotto.';
+        }
     } catch (error) {
         console.error('Password dimenticata error:', error);
         var msg = error.message;
@@ -495,9 +511,10 @@ async function handlePasswordDimenticata() {
                             <span class="material-symbols-outlined text-green-600 text-3xl">check</span>
                         </div>
                         <h3 class="noto-serif text-xl text-on-surface tracking-tight mb-3">Email Inviata!</h3>
-                        <p class="text-on-surface-variant text-sm font-body leading-relaxed max-w-sm">
+                        <p id="primo-success-msg" class="text-on-surface-variant text-sm font-body leading-relaxed max-w-sm">
                             Controlla la tua casella di posta! Clicca sul link che ti abbiamo inviato per impostare la tua password e accedere.
                         </p>
+                        <div id="primo-fallback-link" class="hidden mt-3 w-full"></div>
                         <button onclick="closePrimoAccesso()" class="mt-8 text-primary-container hover:text-primary font-label text-[11px] uppercase tracking-[0.2em] transition-colors">
                             Chiudi
                         </button>
@@ -545,9 +562,10 @@ async function handlePasswordDimenticata() {
                             <span class="material-symbols-outlined text-green-600 text-3xl">check</span>
                         </div>
                         <h3 class="noto-serif text-xl text-on-surface tracking-tight mb-3">Email Inviata!</h3>
-                        <p class="text-on-surface-variant text-sm font-body leading-relaxed max-w-sm">
+                        <p id="pwd-success-msg" class="text-on-surface-variant text-sm font-body leading-relaxed max-w-sm">
                             Controlla la tua casella di posta. Clicca sul link che ti abbiamo inviato per reimpostare la password.
                         </p>
+                        <div id="pwd-fallback-link" class="hidden mt-3 w-full"></div>
                         <button onclick="closePasswordDimenticata()" class="mt-8 text-primary-container hover:text-primary font-label text-[11px] uppercase tracking-[0.2em] transition-colors">
                             Chiudi
                         </button>

@@ -337,7 +337,21 @@ router.post('/primo-accesso', async (req, res, next) => {
             }
         }
 
-        // 3. Invia l'email via SMTP (se configurazione presente)
+        // 3. Costruisci link diretto (usato come fallback se email fallisce)
+        let impostaPasswordLink = siteUrl + '/imposta-password.html';
+        if (actionLink) {
+            try {
+                const actionUrl = new URL(actionLink);
+                const tokenHash = actionUrl.searchParams.get('token');
+                if (tokenHash) {
+                    impostaPasswordLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
+                }
+            } catch (e) {
+                console.warn('Errore parsing action_link:', e.message);
+            }
+        }
+
+        // 4. Invia l'email via SMTP (se configurazione presente)
         let emailSent = false;
         let emailError = null;
         if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
@@ -351,18 +365,6 @@ router.post('/primo-accesso', async (req, res, next) => {
                     socketTimeout: 10000
                 });
 
-                let impostaPasswordLink = siteUrl + '/imposta-password.html';
-                if (actionLink) {
-                    try {
-                        const actionUrl = new URL(actionLink);
-                        const tokenHash = actionUrl.searchParams.get('token');
-                        if (tokenHash) {
-                            impostaPasswordLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
-                        }
-                    } catch (e) {
-                        console.warn('Errore parsing action_link:', e.message);
-                    }
-                }
                 await transporter.sendMail({
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,
                     to: email,
@@ -382,7 +384,8 @@ router.post('/primo-accesso', async (req, res, next) => {
         res.json({
             success: true,
             emailSent: emailSent,
-            emailError: emailError
+            emailError: emailError,
+            directLink: impostaPasswordLink
         });
 
     } catch (error) {
@@ -416,33 +419,33 @@ router.post('/reset-password', async (req, res, next) => {
 
         if (error) throw error;
 
-        // 2. Inoltre inviamo la nostra email brandizzata via SMTP
+        // 2. Genera il link di reset usando la service role key
+        let resetLink = `${siteUrl}/imposta-password.html`;
+        if (CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
+            try {
+                const adminClient = getAdminClient();
+                const { data: linkData } = await adminClient.auth.admin.generateLink({
+                    type: 'recovery', email, options: { redirectTo: `${siteUrl}/imposta-password.html` }
+                });
+                const actionLink = linkData?.properties?.action_link;
+                const authUserId = linkData?.user?.id;
+                if (actionLink && authUserId) {
+                    const actionUrl = new URL(actionLink);
+                    const tokenHash = actionUrl.searchParams.get('token');
+                    if (tokenHash) {
+                        resetLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
+                    }
+                }
+            } catch (e) {
+                console.warn('Impossibile generare link admin, uso fallback:', e.message);
+            }
+        }
+
+        // 3. Invia la nostra email brandizzata via SMTP
         let emailSent = false;
         let emailError = null;
         if (CONFIG.SMTP.HOST && CONFIG.SMTP.USER && CONFIG.SMTP.PASS) {
             try {
-                // Genera il link di reset usando la service role key (se disponibile)
-                let resetLink = `${siteUrl}/imposta-password.html`;
-                if (CONFIG.SUPABASE.SERVICE_ROLE_KEY) {
-                    try {
-                        const adminClient = getAdminClient();
-                        const { data: linkData } = await adminClient.auth.admin.generateLink({
-                            type: 'recovery', email, options: { redirectTo: `${siteUrl}/imposta-password.html` }
-                        });
-                        const actionLink = linkData?.properties?.action_link;
-                        const authUserId = linkData?.user?.id;
-                        if (actionLink && authUserId) {
-                            const actionUrl = new URL(actionLink);
-                            const tokenHash = actionUrl.searchParams.get('token');
-                            if (tokenHash) {
-                                resetLink = `${siteUrl}/imposta-password.html#token_hash=${encodeURIComponent(tokenHash)}&type=recovery&user_id=${encodeURIComponent(authUserId)}`;
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('Impossibile generare link admin, uso fallback:', e.message);
-                    }
-                }
-
                 const transporter = nodemailer.createTransport({
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
@@ -465,7 +468,7 @@ router.post('/reset-password', async (req, res, next) => {
             }
         }
 
-        res.json({ success: true, emailSent, emailError });
+        res.json({ success: true, emailSent, emailError, directLink: resetLink });
     } catch (error) {
         console.error('Reset password error:', error.message);
         res.status(500).json({ error: error.message });

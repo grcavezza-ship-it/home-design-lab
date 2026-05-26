@@ -141,7 +141,7 @@
             <!-- Header Progetto -->
             <div class="bg-white rounded-2xl p-4 md:p-10 shadow-[0px_40px_80px_-15px_rgba(25,108,50,0.06)] border border-outline-variant/20">
                 <div class="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0 md:items-start mb-6 md:mb-8">
-                    <div>
+                    <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-3 mb-2">
                             <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider rounded-full border border-primary/20">In Corso</span>
                             <span id="project-id" class="text-stone-500 text-sm">ID: Caricamento...</span>
@@ -149,14 +149,14 @@
                         <h1 id="project-title" class="text-2xl md:text-4xl font-headline text-on-surface mb-2">Caricamento...</h1>
                         <p id="project-description" class="text-sm md:text-base text-on-surface-variant">Caricamento descrizione...</p>
                     </div>
-                    <div class="relative flex items-center justify-center w-20 h-20 md:w-24 md:h-24 shrink-0 self-start">
+                    <div class="relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 shrink-0 self-start md:self-center">
                         <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                             <circle class="text-stone-200" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-width="8"></circle>
                             <circle id="progress-circle" class="text-primary progress-circle" cx="50" cy="50" fill="transparent" r="45" stroke="currentColor" stroke-dasharray="282.7" stroke-dashoffset="282.7" stroke-linecap="round" stroke-width="8"></circle>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span id="progress-text-main" class="text-lg md:text-2xl font-headline text-primary">0%</span>
-                            <span class="text-[8px] uppercase tracking-widest text-on-surface-variant font-black">Avanzamento</span>
+                            <span id="progress-text-main" class="text-xs md:text-sm font-headline text-primary">0%</span>
+                            <span class="text-[6px] uppercase tracking-widest text-on-surface-variant font-black leading-tight">Avanz.</span>
                         </div>
                     </div>
                 </div>
@@ -1563,6 +1563,7 @@
                 var offset = circumference - (circumference * percentage / 100);
                 circle.style.strokeDashoffset = offset;
             }
+            
             updatePhases();
         }
 
