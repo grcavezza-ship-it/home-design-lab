@@ -346,7 +346,9 @@ router.post('/primo-accesso', async (req, res, next) => {
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
                     secure: CONFIG.SMTP.PORT === 465,
-                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
+                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS },
+                    connectionTimeout: 8000,
+                    socketTimeout: 10000
                 });
 
                 let impostaPasswordLink = siteUrl + '/imposta-password.html';
@@ -445,7 +447,9 @@ router.post('/reset-password', async (req, res, next) => {
                     host: CONFIG.SMTP.HOST,
                     port: CONFIG.SMTP.PORT,
                     secure: CONFIG.SMTP.PORT === 465,
-                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS }
+                    auth: { user: CONFIG.SMTP.USER, pass: CONFIG.SMTP.PASS },
+                    connectionTimeout: 8000,
+                    socketTimeout: 10000
                 });
                 await transporter.sendMail({
                     from: `"${CONFIG.SMTP.FROM_NAME}" <${CONFIG.SMTP.FROM_EMAIL}>`,

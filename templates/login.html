@@ -366,7 +366,7 @@ async function handlePrimoAccesso() {
     btn.innerHTML = '<span class="inline-block w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></span> Invio in corso...';
 
     try {
-        const res = await fetch('/api/reset-password', {
+        const res = await fetch('/api/primo-accesso', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
