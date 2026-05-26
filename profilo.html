@@ -170,6 +170,68 @@ tailwind.config = {
 </div>
 </div>
 
+<!-- SEZIONE IMPRESA: Previdenza, Cassa Edile, DURC, Bancari -->
+<div id="sezione-previdenza-impresa" class="hidden bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
+<h3 class="font-headline text-lg md:text-xl text-on-surface mb-4 md:mb-6">Previdenza & Dati Bancari</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Sede INPS</label>
+<input type="text" id="field-inps-sede" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Es. INPS Napoli Est"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Codice INPS (Matricola)</label>
+<input type="text" id="field-codice-inps" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="12345678"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Posizione INAIL</label>
+<input type="text" id="field-inail" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="NA/123456/78"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">CCNL Applicato</label>
+<input type="text" id="field-ccnl" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Es. Edilizia Industria"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Cassa Edile</label>
+<input type="text" id="field-cassa-edile" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Es. CassEdile Napoli"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Matricola Cassa Edile</label>
+<input type="text" id="field-matr-cassa" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="CE12345"/>
+</div>
+</div>
+<div class="border-t border-stone-200/50 my-6"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Banca</label>
+<input type="text" id="field-cc-banca" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Es. Intesa Sanpaolo"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">IBAN</label>
+<input type="text" id="field-cc-iban" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface font-mono text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="IT12A1234567890123456789012"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Intestatario CC</label>
+<input type="text" id="field-cc-intestatario" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="B&B Schiava S.r.l.s."/>
+</div>
+</div>
+<div class="border-t border-stone-200/50 my-6"></div>
+<h4 class="font-label text-sm font-semibold text-on-surface mb-3">DURC</h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Stato DURC</label>
+<select id="field-durc-stato" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-3 text-sm outline-none focus:ring-1 focus:ring-primary">
+<option value="In Verifica">In Verifica</option>
+<option value="Regolare">Regolare</option>
+<option value="Scaduto">Scaduto</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface-variant mb-1.5">Scadenza DURC</label>
+<input type="date" id="field-durc-scadenza" class="w-full bg-surface-variant/50 border border-outline-variant/40 rounded-lg py-2.5 px-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary outline-none"/>
+</div>
+</div>
+</div>
+
 <div id="sezione-documenti" class="bg-surface-container-lowest rounded-xl p-4 md:p-8 shadow-[0px_20px_40px_rgba(27,28,28,0.04)]">
 <h3 class="font-headline text-lg md:text-xl text-on-surface mb-4 md:mb-6">Documenti</h3>
 <p class="text-sm text-on-surface-variant mb-4 md:mb-6">Carica documenti (CV, contratti, certificazioni, ecc.)</p>
@@ -208,7 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
                      sezProf.querySelector('h3').textContent = 'Dati Impresa';
                      sezDoc.style.display = 'none';
                  }
-                 // Nascodi campi iscrizione_albo, auto, trasferte, bio
+                 // Mostra sezione previdenza
+                 var sezPrev = document.getElementById('sezione-previdenza-impresa');
+                 if (sezPrev) sezPrev.classList.remove('hidden');
+                 // Nascodi campi non rilevanti in Dati Impresa
                  var nascosti = ['field-iscrizione-albo', 'field-auto-munito', 'field-auto-munito-container', 'field-trasferte', 'field-trasferte-container', 'field-bio'];
                  nascosti.forEach(function(id) {
                      var el = document.getElementById(id);
@@ -313,6 +378,17 @@ document.addEventListener('DOMContentLoaded', async function() {
                     sv('field-indirizzo-fatturazione', data.sede_legale || '');
                     sv('field-sdi', data.codice_sdi || '');
                     sv('field-pec', data.pec || '');
+                    sv('field-inps-sede', data.inps_sede || '');
+                    sv('field-codice-inps', data.codice_inps || '');
+                    sv('field-inail', data.inail_posizione || '');
+                    sv('field-ccnl', data.ccnl || '');
+                    sv('field-cassa-edile', data.cassa_edile || '');
+                    sv('field-matr-cassa', data.matricola_cassa_edile || '');
+                    sv('field-cc-banca', data.cc_banca || '');
+                    sv('field-cc-iban', data.cc_iban || '');
+                    sv('field-cc-intestatario', data.cc_intestatario || '');
+                    sv('field-durc-stato', data.stato_durc || 'In Verifica');
+                    sv('field-durc-scadenza', data.scadenza_durc ? data.scadenza_durc.substring(0, 10) : '');
                     displayAvatar(null);
                 } else {
                     sv('field-email', window.currentUser.email || '');
@@ -378,7 +454,18 @@ document.addEventListener('DOMContentLoaded', async function() {
                         codice_fiscale: gv('field-cf'),
                         sede_legale: gv('field-indirizzo-fatturazione'),
                         codice_sdi: gv('field-sdi'),
-                        pec: gv('field-pec')
+                        pec: gv('field-pec'),
+                        inps_sede: gv('field-inps-sede'),
+                        codice_inps: gv('field-codice-inps'),
+                        inail_posizione: gv('field-inail'),
+                        ccnl: gv('field-ccnl'),
+                        cassa_edile: gv('field-cassa-edile'),
+                        matricola_cassa_edile: gv('field-matr-cassa'),
+                        cc_banca: gv('field-cc-banca'),
+                        cc_iban: gv('field-cc-iban'),
+                        cc_intestatario: gv('field-cc-intestatario'),
+                        stato_durc: gv('field-durc-stato'),
+                        scadenza_durc: gv('field-durc-scadenza') || null
                     })
                 });
                 if (!res.ok) throw new Error((await res.json()).error || 'Errore salvataggio');
