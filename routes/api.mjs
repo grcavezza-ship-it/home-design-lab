@@ -1393,6 +1393,65 @@ router.get('/impresa/dashboard', authenticate, requireImpresa, async (req, res, 
     } catch (e) { next(e); }
 });
 
+// Ottieni profilo impresa (per self-service impresa)
+router.get('/impresa/profilo', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        var admin = getAdminClient();
+        var { data: impresa } = await admin
+            .from('imprese')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .maybeSingle();
+        if (!impresa) return res.status(404).json({ error: 'Impresa non trovata' });
+        res.json(impresa);
+    } catch (e) { next(e); }
+});
+
+// Aggiorna profilo impresa (self-service impresa)
+router.put('/impresa/profilo', authenticate, requireImpresa, async (req, res, next) => {
+    try {
+        var admin = getAdminClient();
+        var { ragione_sociale, referente, referente_cantiere, telefono, partita_iva, email_principale,
+               specializzazione, sede_legale, pec, codice_sdi, codice_fiscale,
+               inps_sede, codice_inps, inail_posizione, ccnl, cc_banca, cc_iban, cc_intestatario,
+               cassa_edile, matricola_cassa_edile } = req.body;
+
+        var updates = {};
+        if (ragione_sociale !== undefined) updates.ragione_sociale = ragione_sociale;
+        if (referente !== undefined) updates.referente = referente;
+        if (referente_cantiere !== undefined) updates.referente_cantiere = referente_cantiere;
+        if (telefono !== undefined) updates.telefono = telefono;
+        if (partita_iva !== undefined) updates.partita_iva = partita_iva;
+        if (email_principale !== undefined) updates.email_principale = email_principale;
+        if (specializzazione !== undefined) updates.specializzazione = specializzazione;
+        if (sede_legale !== undefined) updates.sede_legale = sede_legale;
+        if (pec !== undefined) updates.pec = pec;
+        if (codice_sdi !== undefined) updates.codice_sdi = codice_sdi;
+        if (codice_fiscale !== undefined) updates.codice_fiscale = codice_fiscale;
+        if (inps_sede !== undefined) updates.inps_sede = inps_sede;
+        if (codice_inps !== undefined) updates.codice_inps = codice_inps;
+        if (inail_posizione !== undefined) updates.inail_posizione = inail_posizione;
+        if (ccnl !== undefined) updates.ccnl = ccnl;
+        if (cc_banca !== undefined) updates.cc_banca = cc_banca;
+        if (cc_iban !== undefined) updates.cc_iban = cc_iban;
+        if (cc_intestatario !== undefined) updates.cc_intestatario = cc_intestatario;
+        if (cassa_edile !== undefined) updates.cassa_edile = cassa_edile;
+        if (matricola_cassa_edile !== undefined) updates.matricola_cassa_edile = matricola_cassa_edile;
+        updates.updated_at = new Date().toISOString();
+
+        if (Object.keys(updates).length <= 1) return res.status(400).json({ error: 'Nessun campo da aggiornare' });
+
+        var { data, error } = await admin
+            .from('imprese')
+            .update(updates)
+            .eq('user_id', req.user.id)
+            .select()
+            .single();
+        if (error) throw error;
+        res.json(data);
+    } catch (e) { next(e); }
+});
+
 // Upload file impresa (nella propria cartella privata o documenti condivisi)
 router.post('/impresa/upload', authenticate, requireImpresa, upload.single('file'), async (req, res, next) => {
     try {

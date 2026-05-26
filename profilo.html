@@ -194,16 +194,30 @@ tailwind.config = {
 </main>
 
 <script>
-// Nascondi sezioni staff ai clienti
+// Nascondi sezioni in base al ruolo
 document.addEventListener('DOMContentLoaded', function() {
     var checkRole = setInterval(function() {
         if (window.currentUserRole) {
+            var sezProf = document.getElementById('sezione-professione');
+            var sezDoc = document.getElementById('sezione-documenti');
             if (window.currentUserRole === 'client') {
-                var sezProf = document.getElementById('sezione-professione');
                 if (sezProf) sezProf.style.display = 'none';
-                var sezDoc = document.getElementById('sezione-documenti');
                 if (sezDoc) sezDoc.style.display = 'none';
-            }
+            } else if (window.currentUserRole === 'impresa') {
+                 if (sezProf) {
+                     sezProf.querySelector('h3').textContent = 'Dati Impresa';
+                     sezDoc.style.display = 'none';
+                 }
+                 // Nascodi campi iscrizione_albo, auto, trasferte, bio
+                 var nascosti = ['field-iscrizione-albo', 'field-auto-munito', 'field-auto-munito-container', 'field-trasferte', 'field-trasferte-container', 'field-bio'];
+                 nascosti.forEach(function(id) {
+                     var el = document.getElementById(id);
+                     if (el) { var p = el.closest('div'); if (p) p.style.display = 'none'; }
+                 });
+                 // Nascondi i label delle checkbox
+                 var checkLabels = document.querySelectorAll('label:has(> input[type="checkbox"])');
+                 checkLabels.forEach(function(l) { l.style.display = 'none'; });
+             }
             clearInterval(checkRole);
         }
     }, 100);
@@ -244,8 +258,16 @@ document.addEventListener('DOMContentLoaded', async function() {
             var { error: uploadError } = await window.supabase.storage.from('avatars').upload(filePath, file, { upsert: true });
             if (uploadError) throw uploadError;
             var { data: { publicUrl } } = window.supabase.storage.from('avatars').getPublicUrl(filePath);
-            var { error: updateError } = await window.supabase.from(window.currentUserRole === 'client' ? 'clienti_profiles' : 'operatori_profiles').update({ avatar_url: publicUrl }).eq('user_id', window.currentUser.id);
-            if (updateError) throw updateError;
+            if (window.currentUserRole === 'impresa') {
+                await authFetch('/api/impresa/profilo', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ /* avatar not in imprese table */ })
+                });
+            } else {
+                var { error: updateError } = await window.supabase.from(window.currentUserRole === 'client' ? 'clienti_profiles' : 'operatori_profiles').update({ avatar_url: publicUrl }).eq('user_id', window.currentUser.id);
+                if (updateError) throw updateError;
+            }
             displayAvatar(publicUrl);
             showNotification('Foto profilo aggiornata', 'success');
         } catch (err) {
@@ -275,7 +297,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function loadProfileData() {
         if (!window.supabase || !window.currentUser) return;
         try {
-            var isClient = window.currentUserRole === 'client';
+            var role = window.currentUserRole;
+            if (role === 'impresa') {
+                var res = await authFetch('/api/impresa/profilo');
+                if (!res.ok) { sv('field-email', window.currentUser.email || ''); displayAvatar(null); return; }
+                var data = await res.json();
+                if (data) {
+                    sv('field-nome', data.ragione_sociale || '');
+                    sv('field-cognome', data.referente || data.referente_cantiere || '');
+                    sv('field-email', data.email_principale || window.currentUser.email);
+                    sv('field-telefono', data.telefono || '');
+                    sv('field-specializzazione', data.specializzazione || '');
+                    sv('field-piva', data.partita_iva || '');
+                    sv('field-cf', data.codice_fiscale || '');
+                    sv('field-indirizzo-fatturazione', data.sede_legale || '');
+                    sv('field-sdi', data.codice_sdi || '');
+                    sv('field-pec', data.pec || '');
+                    displayAvatar(null);
+                } else {
+                    sv('field-email', window.currentUser.email || '');
+                    displayAvatar(null);
+                }
+                return;
+            }
+
+            var isClient = role === 'client';
             var table = isClient ? 'clienti_profiles' : 'operatori_profiles';
             var { data, error } = await window.supabase.from(table).select('*').eq('user_id', window.currentUser.id).maybeSingle();
             if (error) throw error;
@@ -295,6 +341,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     sv('field-nome', data.nome); sv('field-cognome', data.cognome);
                     sv('field-email', data.email || window.currentUser.email); sv('field-telefono', data.telefono);
                     sv('field-data-nascita', data.data_nascita); sv('field-luogo-nascita', data.luogo_nascita);
+                    sv('field-specializzazione', data.specializzazione);
                     sv('field-iscrizione-albo', data.iscrizione_albo);
                     sc('field-auto-munito', data.auto_munito); sc('field-trasferte', data.disponibilita_trasferte);
                     sv('field-bio', data.bio);
@@ -316,7 +363,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         btnSalva.disabled = true;
         btnSalva.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Salvataggio...';
         try {
-            var isClient = window.currentUserRole === 'client';
+            var role = window.currentUserRole;
+            if (role === 'impresa') {
+                var res = await authFetch('/api/impresa/profilo', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ragione_sociale: gv('field-nome'),
+                        referente: gv('field-cognome'),
+                        referente_cantiere: gv('field-cognome'),
+                        telefono: gv('field-telefono'),
+                        specializzazione: gv('field-specializzazione'),
+                        partita_iva: gv('field-piva'),
+                        codice_fiscale: gv('field-cf'),
+                        sede_legale: gv('field-indirizzo-fatturazione'),
+                        codice_sdi: gv('field-sdi'),
+                        pec: gv('field-pec')
+                    })
+                });
+                if (!res.ok) throw new Error((await res.json()).error || 'Errore salvataggio');
+                showNotification('Profilo impresa salvato con successo', 'success');
+                btnSalva.disabled = false;
+                btnSalva.innerHTML = '<span class="material-symbols-outlined text-[18px]">save</span> Salva Profilo';
+                return;
+            }
+
+            var isClient = role === 'client';
             if (isClient) {
                 var nomeCompleto = (gv('field-nome') + ' ' + gv('field-cognome')).trim();
                 var { error } = await window.supabase.from('clienti_profiles').update({
@@ -452,7 +524,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         function check() {
             attempts++;
             if (window.supabase && window.currentUser) {
-                loadProfileData(); loadDocuments(); setupAvatarDropdown();
+                loadProfileData();
+                if (window.currentUserRole !== 'impresa') loadDocuments();
+                setupAvatarDropdown();
             } else if (attempts < 60) setTimeout(check, 100);
         }
         check();
