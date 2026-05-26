@@ -1806,6 +1806,20 @@ router.get('/senior/imprese/:id/cantieri', authenticate, requireRole('senior', '
     } catch (e) { next(e); }
 });
 
+// Ottieni imprese per cantiere (per dettaglio progetto)
+router.get('/senior/cantieri/:id/imprese', authenticate, requireRole('senior', 'admin', 'operator', 'architect'), async (req, res, next) => {
+    try {
+        const admin = getAdminClient();
+        const { data, error } = await admin
+            .from('cantiere_imprese')
+            .select('id_cantiere, data_inizio_lavori, note_incarico, imprese!inner(id, ragione_sociale, partita_iva, specializzazione, telefono, email_principale, referente_cantiere, stato_durc)')
+            .eq('id_cantiere', req.params.id)
+            .order('created_at', { ascending: false });
+        if (error) throw error;
+        res.json(data || []);
+    } catch (e) { next(e); }
+});
+
 // ─── COMPUTI METRICI PER IMPRESA ─────────────────────────────────────────
 
 // Upload computo metrico PDF + parsing automatico
