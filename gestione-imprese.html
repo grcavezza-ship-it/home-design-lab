@@ -46,6 +46,7 @@
 <body class="bg-surface text-on-surface font-body antialiased min-h-screen">
 
 <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
 
 <header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 backdrop-blur-xl flex justify-between items-center px-4 md:px-8 lg:px-10 h-16 md:h-20 border-b border-stone-200/30">
     <div class="flex items-center gap-3 flex-1">
@@ -385,6 +386,42 @@ function showNotification(msg, type) {
     document.body.appendChild(el);
     setTimeout(function() { el.style.transition = 'opacity 0.3s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 300); }, 4000);
 }
+// Mobile sidebar toggle
+var menuToggle = document.getElementById('mobile-menu-toggle');
+var sidebar = document.getElementById('sidebar-menu');
+var overlay = document.getElementById('mobile-sidebar-overlay');
+function openSidebar() {
+    sidebar.classList.remove('-translate-x-full');
+    sidebar.classList.add('translate-x-0');
+    overlay.classList.remove('hidden');
+    if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
+}
+function closeSidebar() {
+    sidebar.classList.add('-translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    overlay.classList.add('hidden');
+    if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+}
+if (menuToggle) {
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) closeSidebar();
+        else openSidebar();
+    });
+}
+if (overlay) overlay.addEventListener('click', closeSidebar);
+function checkScreenSize() {
+    if (window.innerWidth >= 1024) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        overlay.classList.add('hidden');
+        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
+    } else {
+        closeSidebar();
+    }
+}
+window.addEventListener('resize', checkScreenSize);
 </script>
 </body>
 </html>

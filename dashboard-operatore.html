@@ -89,9 +89,13 @@
     <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
 </head>
 <body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container">
-<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50"></nav>
-<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-10 h-20 border-b border-stone-200/30 dark:border-stone-800/30">
-<div class="flex-1 flex items-center h-full">
+<nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+<header class="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl flex justify-between items-center px-4 lg:px-10 h-20 border-b border-stone-200/30 dark:border-stone-800/30">
+<div class="flex items-center gap-2 flex-1">
+<button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg text-on-surface hover:bg-surface-container transition-colors" aria-label="Apri menu">
+<span class="material-symbols-outlined">menu</span>
+</button>
 <span class="font-['Noto_Serif'] italic text-lg text-[#186C32] dark:text-[#4ade80] leading-none">Studio Management</span>
 </div>
 <div class="flex items-center gap-6 h-full">
@@ -120,7 +124,7 @@
 </div>
 </div>
 </header>
-<main class="ml-64 pt-20 min-h-screen bg-surface">
+<main class="lg:ml-64 pt-20 min-h-screen bg-surface px-4 md:px-8 lg:px-12 pb-24">
 <div class="p-10 max-w-7xl mx-auto flex flex-col gap-12">
 <div class="flex flex-col items-start">
 <span class="font-label text-[11px] uppercase tracking-[0.2em] text-primary font-semibold mb-3">Operator View</span>
