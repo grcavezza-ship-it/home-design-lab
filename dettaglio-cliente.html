@@ -333,7 +333,7 @@
                     '<div class="flex-1">' +
                     '<h3 class="text-lg font-headline font-bold text-on-surface mb-1">' +
                     '<a href="dettaglio-progetto.html?id=' + p.id + '" class="hover:text-primary transition-colors">' +
-                    (p.titolo || p.title || 'Progetto') +
+                    (p.titolo || 'Progetto') +
                     '</a></h3>' +
                     '<p class="text-sm text-on-surface-variant mb-2">' + (p.descrizione || p.description || 'Nessuna descrizione') + '</p>' +
                     '<div class="flex items-center gap-4 text-xs">' +
@@ -375,7 +375,7 @@
                 var status = p.status || p.stato || 'attivo';
                 return '<tr>' +
                     '<td class="px-4 py-3"><a href="dettaglio-progetto.html?id=' + p.id + '" class="text-sm font-medium text-primary hover:text-primary/80">' +
-                    (p.titolo || p.title || 'Progetto') + '</a></td>' +
+                    (p.titolo || 'Progetto') + '</a></td>' +
                     '<td class="px-4 py-3 text-sm text-right font-medium">€' + budget.toLocaleString('it-IT', {minimumFractionDigits: 2}) + '</td>' +
                     '<td class="px-4 py-3 text-right"><span class="px-2 py-1 text-xs font-bold rounded-full bg-primary/10 text-primary">' +
                     status + '</span></td></tr>';
@@ -386,7 +386,7 @@
             if (!currentClient) { toast('Carica il cliente prima', 'error'); return; }
             supabase
                 .from('projects')
-                .select('id, titolo, title, budget')
+                .select('id, titolo, budget')
                 .is('cliente_id', null)
                 .order('titolo', { ascending: true })
                 .then(function(res) {
