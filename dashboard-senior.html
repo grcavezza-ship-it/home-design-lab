@@ -258,14 +258,15 @@ async function loadSeniorDashboard() {
     }
 
     var { data: immobili } = await window.supabase
-        .from('properties')
-        .select('id, status');
+        .from('immobili')
+        .select('id, stato_immobile, prezzo_richiesta, created_at');
 
     var statsImmobili = document.getElementById('stats-immobili');
     if (statsImmobili) statsImmobili.textContent = String(immobili ? immobili.length : 0);
 
     var inRevisione = immobili ? immobili.filter(function(p) {
-        return p.status === 'in_progress' || p.status === 'revisione' || p.status === 'in_revisione' || p.status === 'review';
+        var stato = (p.stato_immobile || '').toLowerCase();
+        return stato === 'in revisione' || stato === 'in_revisione' || stato === 'revisione' || stato === 'review';
     }) : [];
 
     var statsImmobiliSub = document.getElementById('stats-immobili-sub');
