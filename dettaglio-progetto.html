@@ -1424,7 +1424,12 @@
             var budgetElement = document.getElementById('project-budget');
             var operaValueInput = document.getElementById('opera-value');
             if (budgetElement && operaValueInput) {
-                var budgetValue = parseFloat(budgetElement.textContent.replace(/[^0-9.-]+/g, ''));
+                var budgetValue = parseFloat(
+    budgetElement.textContent
+        .replace(/[^\d,.-]/g, '')
+        .replace(/\./g, '')
+        .replace(',', '.')
+) || 0;
                 if (budgetValue > 0) { operaValueInput.value = budgetValue; await calcolaParcella(); }
             }
         }
