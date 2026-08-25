@@ -5,10 +5,10 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "start": "node bootstrap.mjs",
-    "dev": "nodemon --env-file=.env bootstrap.mjs",
+    "start": "node --import ./account-invite-inject.mjs bootstrap.mjs",
+    "dev": "nodemon --env-file=.env --exec \"node --import ./account-invite-inject.mjs bootstrap.mjs\"",
     "build": "echo 'Build completed'",
-    "test": "node --check bootstrap.mjs"
+    "test": "node --check bootstrap.mjs && node --check account-invite-inject.mjs"
   },
   "keywords": [
     "real-estate",
