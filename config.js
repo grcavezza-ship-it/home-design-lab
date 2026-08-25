@@ -3,9 +3,13 @@ const toInt = (value, fallback) => {
     return Number.isNaN(parsed) ? fallback : parsed;
 };
 
-const smtpHost = (process.env.SMTP_HOST || 'smtps.aruba.it').trim();
-const configuredPort = toInt(process.env.SMTP_PORT, 465);
-const smtpPort = smtpHost === 'smtps.aruba.it' && configuredPort === 587 ? 465 : configuredPort;
+// Aruba SMTP: usa SMTP submission su 587 (STARTTLS), più affidabile
+// da ambienti cloud come Render rispetto alla porta SMTPS 465.
+const rawSmtpHost = (process.env.SMTP_HOST || 'smtp.aruba.it').trim();
+const isArubaSmtp = /^(smtps?\.aruba\.it)$/i.test(rawSmtpHost);
+const smtpHost = isArubaSmtp ? 'smtp.aruba.it' : rawSmtpHost;
+const configuredPort = toInt(process.env.SMTP_PORT, 587);
+const smtpPort = isArubaSmtp ? 587 : configuredPort;
 const smtpUser = (process.env.SMTP_USER || '').trim();
 
 const CONFIG = {
