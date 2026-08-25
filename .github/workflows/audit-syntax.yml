@@ -1,0 +1,29 @@
+name: Audit syntax
+
+on:
+  push:
+    branches: [audit-safe-2026-08-20]
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check server syntax
+        run: node --check server.mjs
+      - name: Check middleware syntax
+        run: node --check middleware/legacy-account-guard.mjs
+      - name: Extract and check inline client JavaScript
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          text = Path('gestione-clienti.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script(?:[^>]*)>(.*?)</script>', text, flags=re.S|re.I)
+          Path('/tmp/client-inline.mjs').write_text('\n'.join(s for s in scripts if s.strip()), encoding='utf-8')
+          PY
+          node --check /tmp/client-inline.mjs
