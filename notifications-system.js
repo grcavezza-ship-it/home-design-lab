@@ -227,8 +227,6 @@ window.createNotification = function(title, message, userId) {
     const page = pathModules[path] || pageConfig.defaultActiveMenu || '';
     if (!page) return;
 
-    // PORTAL_CONFIG è dichiarato con `let` nello script globale e quindi non è una
-    // proprietà di window; recuperiamolo dal global lexical scope.
     const portalConfig = (typeof PORTAL_CONFIG !== 'undefined') ? PORTAL_CONFIG : null;
     const supabaseUrl = portalConfig?.supabase?.url;
     const anonKey = portalConfig?.supabase?.anonKey;
@@ -264,7 +262,6 @@ window.createNotification = function(title, message, userId) {
         try{
             const {data:{session}} = await window.supabase.auth.getSession();
             if(!session){ window.location.replace('/login'); return; }
-
             const pageResult = await callAccess({page}, session.access_token);
             if(!pageResult.data?.allowed){
                 if(pageResult.data?.code === 'ACCESS_DISABLED'){
@@ -272,7 +269,6 @@ window.createNotification = function(title, message, userId) {
                 }
                 deny(pageResult.data?.role || window.currentUserRole); return;
             }
-
             const menuResult = await callAccess({page:'menu'}, session.access_token);
             if(menuResult.data?.allowed){
                 const modules = menuResult.data.modules || {};
@@ -292,7 +288,6 @@ window.createNotification = function(title, message, userId) {
                     });
                 }
             }
-
             document.getElementById('portal-access-guard-style')?.remove();
             document.body.style.opacity='1';
         }catch(err){
@@ -301,4 +296,14 @@ window.createNotification = function(title, message, userId) {
         }
     }
     runGuard();
+})();
+
+// Load shared runtime fixes after the current page has authenticated.
+(function loadPortalRuntimeFixes(){
+    if (window.__portalRuntimeFixes) return;
+    window.__portalRuntimeFixes = true;
+    const s = document.createElement('script');
+    s.src = 'assets/js/portal-runtime-fixes.js?v=20260825';
+    s.async = true;
+    document.head.appendChild(s);
 })();
