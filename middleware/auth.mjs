@@ -28,7 +28,7 @@ function extractToken(req) {
 async function loadOperatorAccess(supabase, user) {
     const { data, error } = await supabase
         .from('operatori_profiles')
-        .select('id, ruolo, ruolo_portale, accesso_attivo, nome, cognome, avatar_url, permessi_dettagli, progetti_assegnati')
+        .select('id, user_id, email, ruolo, ruolo_portale, accesso_attivo, nome, cognome, avatar_url, permessi_dettagli, progetti_assegnati')
         .or(`user_id.eq.${user.id},email.eq.${user.email}`)
         .limit(1)
         .maybeSingle();
@@ -38,6 +38,41 @@ async function loadOperatorAccess(supabase, user) {
         return null;
     }
     return data || null;
+}
+
+function moduleKey(feature) {
+    const aliases = {
+        blog: 'journal',
+        portfolio: 'progettazione',
+        collection: 'immobiliare',
+        clients: 'clienti',
+        client: 'clienti',
+        properties: 'immobiliare',
+        immobili: 'immobiliare',
+        projects: 'progettazione',
+        progetti: 'progettazione',
+        team: 'team',
+        finanza: 'finanze',
+        finance: 'finanze',
+        documents: 'documenti'
+    };
+    return aliases[feature] || feature;
+}
+
+function permissionLevel(value) {
+    if (typeof value === 'string') return value;
+    if (value && typeof value === 'object' && typeof value.level === 'string') return value.level;
+    if (value === true) return 'view';
+    return 'none';
+}
+
+function hasPermissionLevel(profilePermissions, feature, required = 'view') {
+    const p = profilePermissions && typeof profilePermissions === 'object' ? profilePermissions : {};
+    const modules = p.modules && typeof p.modules === 'object' ? p.modules : {};
+    const module = moduleKey(feature);
+    const rank = { none: 0, view: 1, edit: 2, manage: 3 };
+    const actual = permissionLevel(modules[module] ?? p[module] ?? p[`can_${feature}`]);
+    return (rank[actual] ?? 0) >= (rank[required] ?? 1);
 }
 
 export async function authenticate(req, res, next) {
@@ -57,21 +92,8 @@ export async function authenticate(req, res, next) {
         if (profileError) console.error('[auth] profile fetch error:', profileError.message);
 
         const operatorProfile = await loadOperatorAccess(supabase, user);
-
-        // accesso_attivo è un kill-switch server-side: se l'account operatore è
-        // sospeso, il token Supabase esistente non può più usare le API protette.
         if (operatorProfile && operatorProfile.accesso_attivo === false) {
             return res.status(403).json({ error: 'Accesso sospeso dall’amministratore', code: 'ACCESS_DISABLED' });
-        }
-
-        let permissions = null;
-        if (profile?.role === 'operator') {
-            const { data: perms } = await supabase
-                .from('operator_permissions')
-                .select('can_blog, can_portfolio, can_collection, can_clients, allowed_client_ids')
-                .eq('operator_id', profile.id)
-                .maybeSingle();
-            permissions = perms;
         }
 
         let role = profile?.role || 'client';
@@ -104,7 +126,7 @@ export async function authenticate(req, res, next) {
             portal_role: operatorProfile?.ruolo_portale || null,
             display_name: displayName,
             avatar_url: operatorProfile?.avatar_url || profile?.avatar_url || null,
-            permissions: operatorProfile?.permessi_dettagli || permissions,
+            permissions: operatorProfile?.permessi_dettagli || null,
             assigned_projects: operatorProfile?.progetti_assegnati || null,
             operator_profile_id: operatorProfile?.id || null
         };
@@ -162,18 +184,26 @@ export function requireOperator(req, res, next) {
     return next();
 }
 
-export function requirePermission(feature) {
+export function requirePermission(feature, requiredLevel = 'view') {
     return (req, res, next) => {
         if (!req.user) return res.status(401).json({ error: 'Non autenticato' });
-        // Admin e senior hanno accesso completo. Il controllo granulare dei nuovi
-        // moduli viene effettuato dalle API che dichiarano esplicitamente la feature.
         if (['admin', 'senior'].includes(req.user.role)) return next();
-        const p = req.user.permissions || {};
-        const allowed = p?.[feature] ?? p?.[`can_${feature}`];
-        if (allowed === true || allowed === 'gestisci' || allowed === 'modifica' || allowed === 'view') return next();
-        // Compatibilità: i vecchi operatori senza configurazione granulare non vengono bloccati.
-        if (!req.user.portal_role) return next();
-        return res.status(403).json({ error: `Permesso mancante: ${feature}` });
+
+        const portalRole = req.user.portal_role;
+        if (portalRole === 'segretaria') {
+            const module = moduleKey(feature);
+            if (['clienti', 'finanze', 'documenti'].includes(module)) return next();
+            return res.status(403).json({ error: `Permesso mancante: ${module}` });
+        }
+
+        if (portalRole === 'collaboratore') {
+            if (hasPermissionLevel(req.user.permissions, feature, requiredLevel)) return next();
+            return res.status(403).json({ error: `Permesso mancante: ${moduleKey(feature)}` });
+        }
+
+        // Compatibilità con utenti staff precedenti che non hanno ancora ruolo_portale.
+        if (!portalRole) return next();
+        return res.status(403).json({ error: `Permesso mancante: ${moduleKey(feature)}` });
     };
 }
 
