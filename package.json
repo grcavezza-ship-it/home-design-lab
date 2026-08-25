@@ -5,10 +5,10 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "start": "node bootstrap.mjs",
-    "dev": "nodemon --env-file=.env --exec \"node bootstrap.mjs\"",
+    "start": "node --import ./resend-mail-patch.mjs bootstrap.mjs",
+    "dev": "nodemon --env-file=.env --exec \"node --import ./resend-mail-patch.mjs bootstrap.mjs\"",
     "build": "echo 'Build completed'",
-    "test": "node --check bootstrap.mjs && node --check server.mjs && node --check assets/js/account-invite-actions.js && node --check assets/js/portal-runtime-fixes.js"
+    "test": "node --check resend-mail-patch.mjs && node --check bootstrap.mjs && node --check server.mjs && node --check assets/js/account-invite-actions.js && node --check assets/js/portal-runtime-fixes.js"
   },
   "keywords": [
     "real-estate",
