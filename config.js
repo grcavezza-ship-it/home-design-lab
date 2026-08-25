@@ -3,6 +3,11 @@ const toInt = (value, fallback) => {
     return Number.isNaN(parsed) ? fallback : parsed;
 };
 
+const smtpHost = (process.env.SMTP_HOST || 'smtps.aruba.it').trim();
+const configuredPort = toInt(process.env.SMTP_PORT, 465);
+const smtpPort = smtpHost === 'smtps.aruba.it' && configuredPort === 587 ? 465 : configuredPort;
+const smtpUser = (process.env.SMTP_USER || '').trim();
+
 const CONFIG = {
     APP: {
         NAME: 'Home Design Lab',
@@ -32,12 +37,12 @@ const CONFIG = {
         ENABLED: Boolean(process.env.GOOGLE_SERVICE_ACCOUNT_KEY && process.env.GOOGLE_DRIVE_ROOT_FOLDER_ID)
     },
     SMTP: {
-        HOST: process.env.SMTP_HOST || 'smtps.aruba.it',
-        PORT: toInt(process.env.SMTP_PORT, 587),
-        USER: process.env.SMTP_USER || '',
+        HOST: smtpHost,
+        PORT: smtpPort,
+        USER: smtpUser,
         PASS: process.env.SMTP_PASS || '',
         FROM_NAME: process.env.SMTP_FROM_NAME || 'Home Design Lab',
-        FROM_EMAIL: process.env.SMTP_FROM_EMAIL || ''
+        FROM_EMAIL: (process.env.SMTP_FROM_EMAIL || smtpUser).trim()
     },
     INSTAGRAM_TOKEN: process.env.INSTAGRAM_TOKEN || ''
 };
