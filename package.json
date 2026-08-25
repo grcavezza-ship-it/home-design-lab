@@ -5,10 +5,10 @@
   "type": "module",
   "main": "server.mjs",
   "scripts": {
-    "start": "node --import ./account-invite-inject.mjs bootstrap.mjs",
-    "dev": "nodemon --env-file=.env --exec \"node --import ./account-invite-inject.mjs bootstrap.mjs\"",
+    "start": "node bootstrap.mjs",
+    "dev": "nodemon --env-file=.env --exec \"node bootstrap.mjs\"",
     "build": "echo 'Build completed'",
-    "test": "node --check bootstrap.mjs && node --check account-invite-inject.mjs"
+    "test": "node --check bootstrap.mjs && node --check server.mjs && node --check assets/js/account-invite-actions.js && node --check assets/js/portal-runtime-fixes.js"
   },
   "keywords": [
     "real-estate",
