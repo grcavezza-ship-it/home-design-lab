@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Check bootstrap syntax
+        run: node --check bootstrap.mjs
       - name: Check server syntax
         run: node --check server.mjs
       - name: Check middleware syntax
