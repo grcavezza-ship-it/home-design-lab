@@ -319,3 +319,119 @@ window.createNotification = function(title, message, userId) {
         return window.notificationSystem.create(title, message, userId);
     }
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Centralized portal access guard
+// ─────────────────────────────────────────────────────────────────────────────
+(function initPortalAccessGuard(){
+    if (window.__portalAccessGuardInitialized) return;
+    window.__portalAccessGuardInitialized = true;
+
+    const pageConfig = window.PORTAL_PAGE_CONFIG;
+    if (!pageConfig || !pageConfig.allowedRoles) return;
+
+    const path = (window.location.pathname || '').split('/').pop() || 'index.html';
+    const pathModules = {
+        'dashboard-senior.html':'dashboard',
+        'dashboard-operatore.html':'dashboard',
+        'gestione-progetti.html':'progetti',
+        'dettaglio-progetto.html':'progetti',
+        'gestione-immobili.html':'immobili',
+        'dettaglio-immobile.html':'immobili',
+        'gestione-clienti.html':'clienti',
+        'dettaglio-cliente.html':'clienti',
+        'gestione-journal.html':'journal',
+        'dettaglio-journal.html':'journal',
+        'gestione-team.html':'team',
+        'gestione-compiti.html':'compiti',
+        'gestione-imprese.html':'imprese',
+        'gestione-finanze.html':'finanze',
+        'documenti-contratti.html':'documenti'
+    };
+    const page = pathModules[path] || pageConfig.defaultActiveMenu || '';
+    if (!page) return;
+
+    const supabaseUrl = window.PORTAL_CONFIG?.supabase?.url;
+    const anonKey = window.PORTAL_CONFIG?.supabase?.anonKey;
+    if (!supabaseUrl || !anonKey || !window.supabase?.auth) return;
+
+    const guardStyle = document.createElement('style');
+    guardStyle.id = 'portal-access-guard-style';
+    guardStyle.textContent = 'body{opacity:0 !important}.portal-access-denied{display:flex!important}';
+    document.head.appendChild(guardStyle);
+
+    const roleFallbackPage = {
+        admin:'/dashboard-senior.html',
+        senior:'/dashboard-senior.html',
+        segretaria:'/dashboard-operatore.html',
+        collaboratore:'/dashboard-operatore.html',
+        operator:'/dashboard-operatore.html',
+        architect:'/dashboard-operatore.html'
+    };
+
+    async function callAccess(body, token){
+        const r = await fetch(supabaseUrl.replace(/\/$/, '') + '/functions/v1/portal-access', {
+            method:'POST',
+            headers:{
+                'Authorization':'Bearer ' + token,
+                'apikey':anonKey,
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(body)
+        });
+        const data = await r.json().catch(()=>({}));
+        return {ok:r.ok,data};
+    }
+
+    function deny(role){
+        const target = roleFallbackPage[role] || '/login';
+        window.location.replace(target + (target.includes('?')?'&':'?') + 'access=denied');
+    }
+
+    async function runGuard(){
+        try{
+            const {data:{session}} = await window.supabase.auth.getSession();
+            if(!session){ window.location.replace('/login'); return; }
+
+            const pageResult = await callAccess({page}, session.access_token);
+            if(!pageResult.data?.allowed){
+                if(pageResult.data?.code === 'ACCESS_DISABLED'){
+                    window.location.replace('/login?access=suspended');
+                    return;
+                }
+                deny(pageResult.data?.role || window.currentUserRole);
+                return;
+            }
+
+            // Ridisegna i soli collegamenti autorizzati, senza cambiare il layout.
+            const menuResult = await callAccess({page:'menu'}, session.access_token);
+            if(menuResult.data?.allowed){
+                const modules = menuResult.data.modules || {};
+                const hrefModule = {
+                    'gestione-progetti.html':'progettazione','dettaglio-progetto.html':'progettazione','gestione-compiti.html':'progettazione',
+                    'gestione-immobili.html':'immobiliare','dettaglio-immobile.html':'immobiliare',
+                    'gestione-clienti.html':'clienti','dettaglio-cliente.html':'clienti',
+                    'gestione-journal.html':'journal','dettaglio-journal.html':'journal',
+                    'gestione-team.html':'team','gestione-imprese.html':'team','gestione-finanze.html':'finanze','documenti-contratti.html':'documenti'
+                };
+                const sidebar = document.getElementById('sidebar-menu');
+                if(sidebar){
+                    sidebar.querySelectorAll('a[href]').forEach(a=>{
+                        const raw=(a.getAttribute('href')||'').split('/').pop();
+                        const mod=hrefModule[raw];
+                        if(mod && modules[mod]===false) a.remove();
+                    });
+                }
+            }
+
+            document.getElementById('portal-access-guard-style')?.remove();
+            document.body.style.opacity='1';
+        }catch(err){
+            console.error('[Portal Access Guard]',err);
+            // Fail closed: a protected page must not remain visible if the authorization check fails.
+            window.location.replace('/login?access=check-failed');
+        }
+    }
+
+    runGuard();
+})();
