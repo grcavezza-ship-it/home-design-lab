@@ -3,8 +3,13 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     const menu = document.getElementById('mobile-menu');
-    const btn = document.getElementById('mobile-menu-button');
+    const btn = document.getElementById('mobile-menu-button') || document.getElementById('mobile-menu-btn');
     if (!menu || !btn) return;
+    if (btn.dataset.hdlMobileMenuBound === 'true') return;
+
+    btn.dataset.hdlMobileMenuBound = 'true';
+    btn.type = 'button';
+    btn.setAttribute('aria-expanded', 'false');
 
     const style = document.createElement('style');
     style.textContent = `
@@ -15,7 +20,7 @@
         transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
       }
       #mobile-menu.open {
-        max-height: 480px;
+        max-height: 600px;
         opacity: 1;
       }
       #mobile-menu.open > div > a {
@@ -41,7 +46,7 @@
 
     menu.classList.remove('hidden');
 
-    var overlay = document.getElementById('mobile-menu-overlay');
+    let overlay = document.getElementById('mobile-menu-overlay');
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.id = 'mobile-menu-overlay';
@@ -49,13 +54,18 @@
       document.body.appendChild(overlay);
     }
 
+    function setIcon(open) {
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (icon) icon.textContent = open ? 'close' : 'menu';
+      btn.setAttribute('aria-expanded', String(open));
+    }
+
     function openMenu() {
       menu.classList.add('open');
       overlay.style.opacity = '1';
       overlay.style.pointerEvents = 'auto';
       document.body.style.overflow = 'hidden';
-      var icon = btn.querySelector('.material-symbols-outlined');
-      if (icon) icon.textContent = 'close';
+      setIcon(true);
     }
 
     function closeMenu() {
@@ -63,11 +73,12 @@
       overlay.style.opacity = '0';
       overlay.style.pointerEvents = 'none';
       document.body.style.overflow = '';
-      var icon = btn.querySelector('.material-symbols-outlined');
-      if (icon) icon.textContent = 'menu';
+      setIcon(false);
     }
 
-    btn.addEventListener('click', function() {
+    btn.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
       if (menu.classList.contains('open')) closeMenu();
       else openMenu();
     });
@@ -78,12 +89,8 @@
       link.addEventListener('click', closeMenu);
     });
 
-    var resizeTimer;
     window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        if (window.innerWidth >= 768) closeMenu();
-      }, 100);
+      if (window.innerWidth >= 768) closeMenu();
     });
   });
 })();
