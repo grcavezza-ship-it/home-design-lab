@@ -50,6 +50,10 @@
       #team-list > button > div > div:last-child { min-width: 0; }
       #team-list > button > div > div:last-child p { overflow-wrap: anywhere; }
 
+      /* Team detail actions: keep the action row visually separated from the information blocks. */
+      #detail .account-action-grid { margin-bottom: 28px !important; }
+      #detail .account-action-grid + * { margin-top: 0 !important; }
+
       /* Mobile team layout: eliminate nested scrolling and compressed/attached controls. */
       @media (max-width: 767px) {
         body:has(#team-list) main > header { padding-left: 12px !important; padding-right: 12px !important; }
@@ -71,10 +75,15 @@
 
         body:has(#team-list) #empty-state { min-height: 360px !important; padding: 28px 20px !important; }
         body:has(#team-list) #detail { margin-top: 20px !important; }
+        body:has(#team-list) #detail .account-action-grid { margin-bottom: 30px !important; }
         body:has(#team-list) #profile-modal { padding: 10px !important; }
         body:has(#team-list) #profile-modal > div { max-height: 94vh !important; border-radius: 18px !important; }
         body:has(#team-list) #profile-modal > div > div:first-child { padding: 18px !important; }
         body:has(#team-list) #profile-modal > div > div:last-child { padding: 16px !important; }
+
+        /* The final "Apri gestione completa" action must not touch the last permission card. */
+        body:has(#team-list) #detail button { margin-bottom: 0; }
+        body:has(#team-list) #detail button.team-full-management-action { margin-top: 26px !important; }
       }
 
       @media (min-width: 768px) and (max-width: 1279px) {
@@ -90,6 +99,18 @@
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function applyTeamDetailSpacing() {
+    const detail = document.getElementById('detail');
+    if (!detail) return;
+    const buttons = Array.from(detail.querySelectorAll('button'));
+    buttons.forEach(button => {
+      const text = (button.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+      if (text.includes('apri gestione completa')) {
+        button.classList.add('team-full-management-action');
+      }
+    });
   }
 
   function applyAvatarFallback() {
@@ -197,21 +218,25 @@
   ensureMobileSidebarToggle();
   window.addEventListener('load', () => {
     applyAvatarFallback();
+    applyTeamDetailSpacing();
     ensureAvatarDropdown();
     ensureMobileSidebarToggle();
   });
   document.addEventListener('DOMContentLoaded', () => {
     applyAvatarFallback();
+    applyTeamDetailSpacing();
     ensureAvatarDropdown();
     ensureMobileSidebarToggle();
   });
   setTimeout(() => {
     applyAvatarFallback();
+    applyTeamDetailSpacing();
     ensureAvatarDropdown();
     ensureMobileSidebarToggle();
   }, 300);
   setTimeout(() => {
     applyAvatarFallback();
+    applyTeamDetailSpacing();
     ensureAvatarDropdown();
     ensureMobileSidebarToggle();
   }, 1000);
