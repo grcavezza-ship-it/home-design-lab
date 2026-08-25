@@ -1,1317 +1,159 @@
 <!DOCTYPE html>
-
-<html lang="it"><head>
+<html lang="it">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Gestione Team | Home Design Lab</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "surface-container": "#f0eded",
-                        "on-error-container": "#93000a",
-                        "tertiary": "#524431",
-                        "on-secondary": "#ffffff",
-                        "tertiary-fixed-dim": "#d8c3ab",
-                        "outline-variant": "#bfc9bc",
-                        "surface-dim": "#dcd9d9",
-                        "error-container": "#ffdad6",
-                        "secondary-container": "#91f78e",
-                        "surface-variant": "#e4e2e1",
-                        "on-secondary-fixed-variant": "#005313",
-                        "on-background": "#1b1c1c",
-                        "primary-container": "#186c32",
-                        "surface": "#fbf9f8",
-                        "surface-container-lowest": "#ffffff",
-                        "on-tertiary": "#ffffff",
-                        "on-primary-fixed-variant": "#005321",
-                        "on-secondary-container": "#00731e",
-                        "inverse-surface": "#303030",
-                        "on-primary-container": "#98eba2",
-                        "on-tertiary-fixed": "#251a0a",
-                        "surface-container-low": "#f6f3f2",
-                        "on-tertiary-container": "#ead4bb",
-                        "primary-fixed-dim": "#87d992",
-                        "tertiary-container": "#6b5b47",
-                        "inverse-on-surface": "#f3f0f0",
-                        "on-error": "#ffffff",
-                        "tertiary-fixed": "#f5dfc6",
-                        "on-primary": "#ffffff",
-                        "surface-container-high": "#eae8e7",
-                        "secondary-fixed-dim": "#78dc77",
-                        "on-surface": "#1b1c1c",
-                        "primary-fixed": "#a3f5ac",
-                        "surface-tint": "#196c32",
-                        "primary": "#005220",
-                        "error": "#ba1a1a",
-                        "secondary-fixed": "#94f990",
-                        "surface-container-highest": "#e4e2e1",
-                        "on-surface-variant": "#40493f",
-                        "background": "#fbf9f8",
-                        "secondary": "#006e1c",
-                        "on-secondary-fixed": "#002204",
-                        "surface-bright": "#fbf9f8",
-                        "on-primary-fixed": "#002109",
-                        "on-tertiary-fixed-variant": "#534432",
-                        "outline": "#707a6e",
-                        "inverse-primary": "#87d992"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.125rem",
-                        "lg": "0.25rem",
-                        "xl": "0.5rem",
-                        "full": "0.75rem"
-                    },
-                    "fontFamily": {
-                        "headline": ["Noto Serif"],
-                        "display": ["Noto Serif"],
-                        "body": ["Manrope"],
-                        "label": ["Manrope"]
-                    }
-                }
-            }
-        }
-    </script>
-    <link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+ tailwind.config = {
+  darkMode: 'class',
+  theme: { extend: {
+   colors: {
+    'surface-container':'#f0eded','on-error-container':'#93000a','tertiary':'#524431','on-secondary':'#ffffff',
+    'tertiary-fixed-dim':'#d8c3ab','outline-variant':'#bfc9bc','surface-dim':'#dcd9d9','error-container':'#ffdad6',
+    'secondary-container':'#91f78e','surface-variant':'#e4e2e1','on-secondary-fixed-variant':'#005313','on-background':'#1b1c1c',
+    'primary-container':'#186c32','surface':'#fbf9f8','surface-container-lowest':'#ffffff','on-tertiary':'#ffffff',
+    'on-primary-fixed-variant':'#005321','on-secondary-container':'#00731e','inverse-surface':'#303030','on-primary-container':'#98eba2',
+    'on-tertiary-fixed':'#251a0a','surface-container-low':'#f6f3f2','on-tertiary-container':'#ead4bb','primary-fixed-dim':'#87d992',
+    'tertiary-container':'#6b5b47','inverse-on-surface':'#f3f0f0','on-error':'#ffffff','tertiary-fixed':'#f5dfc6',
+    'on-primary':'#ffffff','surface-container-high':'#eae8e7','secondary-fixed-dim':'#78dc77','on-surface':'#1b1c1c',
+    'primary-fixed':'#a3f5ac','surface-tint':'#196c32','primary':'#005220','error':'#ba1a1a','secondary-fixed':'#94f990',
+    'surface-container-highest':'#e4e2e1','on-surface-variant':'#40493f','background':'#fbf9f8','secondary':'#006e1c',
+    'on-secondary-fixed':'#002204','surface-bright':'#fbf9f8','on-primary-fixed':'#002109','on-tertiary-fixed-variant':'#534432',
+    'outline':'#707a6e','inverse-primary':'#87d992'
+   },
+   borderRadius:{DEFAULT:'0.125rem',lg:'0.25rem',xl:'0.5rem',full:'0.75rem'},
+   fontFamily:{headline:['Noto Serif'],display:['Noto Serif'],body:['Manrope'],label:['Manrope']}
+  }}
+ };
+</script>
+<link rel="icon" type="image/png" href="assets/images/Logo Home Design Lab.png"/>
+<style>
+ .team-scroll{scrollbar-width:thin;scrollbar-color:#cfd6cf transparent}
+ .team-scroll::-webkit-scrollbar{width:6px}.team-scroll::-webkit-scrollbar-thumb{background:#cfd6cf;border-radius:999px}
+ .team-card-active{border-color:#39a85a;background:linear-gradient(180deg,#ffffff 0%,#f5fbf6 100%);box-shadow:0 12px 30px rgba(0,82,32,.06)}
+ .permission-level.active{border-color:#196c32;background:#effbf1;color:#005220}
+ .fade-in{animation:fadein .18s ease-out}.modal-enter{animation:modalin .18s ease-out}
+ @keyframes fadein{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+ @keyframes modalin{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+</style>
 </head>
 <body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex">
-<!-- SideNavBar -->
+
+<!-- SideNavBar: IDENTICA A QUELLA DELLE ALTRE PAGINE -->
 <nav id="sidebar-menu" class="h-screen w-64 fixed left-0 top-0 bg-[#f6f3f2] dark:bg-stone-900 flex flex-col py-8 z-50 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"></nav>
 <div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/40 z-[45] hidden"></div>
+
 <!-- Main Content Area -->
 <main class="lg:ml-64 flex-1 relative min-h-screen pb-24">
-<!-- TopAppBar Master Shell -->
+
+<!-- TopAppBar: IDENTICA A QUELLA DELLE ALTRE PAGINE -->
 <header class="bg-[#fbf9f8]/80 dark:bg-stone-950/80 backdrop-blur-xl text-[#186C32] dark:text-[#4ade80] font-['Noto_Serif'] italic text-lg fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] z-40 border-b border-stone-200/30 dark:border-stone-800/30 flex justify-between items-center px-4 lg:px-10 h-20 transition-all">
 <button id="mobile-menu-toggle" class="lg:hidden flex items-center justify-center w-10 h-10 -ml-1 rounded-lg text-on-surface hover:bg-surface-container transition-colors mr-2" aria-label="Apri menu"><span class="material-symbols-outlined">menu</span></button>
-<div class="flex-1 flex items-center h-full">
-<span class="leading-none">Studio Management</span>
-</div>
+<div class="flex-1 flex items-center h-full"><span class="leading-none">Studio Management</span></div>
 <div class="flex items-center gap-6 h-full">
-<div class="relative w-64 hidden lg:flex items-center">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span>
-<input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/>
-</div>
+<div class="relative w-64 hidden lg:flex items-center"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-sm pointer-events-none">search</span><input class="w-full bg-surface-variant/50 border-none rounded-full py-2 pl-10 pr-4 text-sm font-body not-italic text-on-surface focus:ring-1 focus:ring-primary outline-none placeholder:text-stone-400" placeholder="Search resources..." type="text"/></div>
 <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">notifications</span></button>
 <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">history</span></button>
 <button class="text-stone-400 hover:opacity-70 transition-opacity flex items-center justify-center h-10 w-10"><span class="material-symbols-outlined">account_tree</span></button>
-<!-- Avatar Dropdown -->
 <div class="relative" id="avatar-dropdown-container">
-<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square">
-<img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/>
-</button>
-<!-- Dropdown Menu -->
+<button id="avatar-btn" class="flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border border-stone-200 hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 aspect-square"><img id="avatar-img" alt="User Avatar" class="w-full h-full object-cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%23e5e7eb'/%3E%3C/svg%3E"/></button>
 <div id="avatar-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-stone-900 rounded-lg shadow-lg border border-stone-200 dark:border-stone-700 py-1 z-50">
-<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-<span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
-<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors">
-<span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
+<a href="profilo.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">person</span>👤 Profilo</a>
+<a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"><span class="material-symbols-outlined text-[18px]">settings</span>⚙️ Impostazioni</a>
 <div class="border-t border-stone-200 dark:border-stone-700 my-1"></div>
-<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors">
-<span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+<a href="#" id="dropdown-logout" class="flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/10 transition-colors"><span class="material-symbols-outlined text-[18px]">logout</span>🚪 Esci</a>
+</div></div>
+</div></header>
+
+<div class="pt-24 lg:pt-32 px-4 lg:px-10 max-w-[1500px] mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-7">
+<div><span class="font-label text-xs uppercase tracking-widest text-primary font-semibold block mb-2">Team &amp; Permessi</span><h1 class="font-display text-2xl md:text-4xl text-on-surface tracking-tight">Collaboratori Studio</h1><p class="text-sm text-on-surface-variant mt-2">Gestisci dati, accessi, moduli e progetti assegnati senza cambiare il layout del portale.</p></div>
+<button id="btn-new" class="bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-md py-3 px-5 flex items-center justify-center gap-2 font-label font-medium shadow-[0px_20px_40px_rgba(27,28,28,0.06)] hover:opacity-90 transition-all text-sm"><span class="material-symbols-outlined text-lg">person_add</span>Nuovo collaboratore</button>
 </div>
-</div>
-</div>
-</header>
-<!-- Page Content -->
-<div class="pt-24 lg:pt-32 px-4 lg:px-10 max-w-7xl mx-auto">
-<!-- Page Header -->
-<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8 md:mb-12">
-<div>
-<span class="font-label text-xs uppercase tracking-widest text-primary font-semibold block mb-2">Team &amp; Permessi</span>
-<h1 class="font-display text-2xl md:text-4xl text-on-surface tracking-tight">Collaboratori Studio</h1>
-</div>
-<button onclick="openOperatorModal()" class="bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-md py-3 px-4 md:px-6 flex items-center justify-center gap-2 font-label font-medium shadow-[0px_20px_40px_rgba(27,28,28,0.06)] hover:opacity-90 transition-all self-stretch md:self-auto text-sm md:text-base whitespace-nowrap">
-<span class="material-symbols-outlined text-lg md:text-base">person_add</span>
-                    Aggiungi
-                </button>
-</div>
-<!-- Collaboratori Grid / Table Replacement -->
-<div class="bg-surface-container-low rounded-xl p-4 md:p-8 mb-8">
-<!-- Headers (Hidden on mobile, visible on desktop) -->
-<div class="hidden md:grid grid-cols-12 gap-6 pb-6 mb-6 border-b border-surface-variant text-xs font-label uppercase tracking-widest text-on-surface-variant">
-<div class="col-span-3">Collaboratore</div>
-<div class="col-span-2">Ruolo</div>
-<div class="col-span-3">Progetti Attivi</div>
-<div class="col-span-3">Livello Accesso</div>
-<div class="col-span-1 text-right">Azioni</div>
-</div>
-<div id="team-list-container" class="space-y-4"></div>
+
+<div id="notice" class="hidden mb-5 rounded-xl border px-4 py-3 text-sm"></div>
+
+<div class="grid grid-cols-1 xl:grid-cols-[330px_minmax(0,1fr)] gap-5">
+<!-- LISTA -->
+<section class="bg-surface-container-low rounded-xl p-4 md:p-5">
+<div class="flex items-center justify-between mb-4"><div><p class="text-xs uppercase tracking-widest text-on-surface-variant font-semibold">Elenco</p><p id="team-count" class="text-sm text-on-surface-variant mt-1">Caricamento...</p></div><button id="btn-refresh" class="h-9 w-9 rounded-lg hover:bg-surface-variant flex items-center justify-center" title="Aggiorna"><span class="material-symbols-outlined text-[18px]">refresh</span></button></div>
+<div class="space-y-3 mb-4"><div class="relative"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-lg">search</span><input id="team-search" class="w-full bg-white border-stone-200 rounded-lg py-2.5 pl-10 pr-3 text-sm focus:ring-1 focus:ring-primary" placeholder="Cerca collaboratore..."/></div><select id="status-filter" class="w-full bg-white border-stone-200 rounded-lg py-2.5 px-3 text-sm focus:ring-1 focus:ring-primary"><option value="all">Tutti gli stati</option><option value="active">Attivi</option><option value="suspended">Sospesi</option></select></div>
+<div id="team-list" class="team-scroll max-h-[calc(100vh-340px)] overflow-auto pr-1 space-y-3"></div>
+</section>
+
+<!-- DETTAGLIO -->
+<section id="detail-panel" class="min-w-0">
+<div id="empty-state" class="bg-surface-container-low rounded-xl min-h-[600px] flex items-center justify-center p-8"><div class="max-w-md text-center"><div class="w-16 h-16 rounded-2xl bg-primary/10 mx-auto flex items-center justify-center mb-4"><span class="material-symbols-outlined text-primary text-3xl">groups</span></div><h2 class="font-display text-2xl">Seleziona un collaboratore</h2><p class="text-sm text-on-surface-variant mt-2">Apri una scheda per vedere anagrafica, accesso, permessi, progetti, documenti e attività.</p></div></div>
+<div id="detail" class="hidden fade-in"></div>
+</section>
 </div>
 </div>
 </main>
 
+<!-- MODALE PROFILO -->
+<div id="profile-modal" class="hidden fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm items-center justify-center p-4">
+<div class="modal-enter bg-white rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden shadow-2xl">
+<div class="p-6 border-b border-stone-200 flex items-center justify-between"><div><p id="modal-kicker" class="text-xs uppercase tracking-widest text-primary font-semibold">Collaboratore</p><h3 id="modal-title" class="font-display text-2xl">Nuovo collaboratore</h3></div><button id="modal-close" class="h-10 w-10 rounded-lg hover:bg-stone-100"><span class="material-symbols-outlined">close</span></button></div>
+<div class="p-6 overflow-y-auto max-h-[65vh]">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="text-sm">Nome<input id="f-nome" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Cognome<input id="f-cognome" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Email<input id="f-email" type="email" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Telefono<input id="f-telefono" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Data di nascita<input id="f-data" type="date" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Luogo di nascita<input id="f-luogo" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Specializzazione<input id="f-specializzazione" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+<label class="text-sm">Iscrizione albo<input id="f-albo" class="mt-1 w-full rounded-lg border-stone-200"/></label>
+</div>
+<div class="mt-5 p-4 rounded-xl bg-stone-50 border border-stone-200"><p class="text-sm font-semibold">Ruolo nel portale</p><div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3"><label class="cursor-pointer"><input type="radio" name="portal-role" value="admin" class="sr-only"><span class="role-chip block rounded-lg border px-3 py-2 text-center text-sm">Admin</span></label><label class="cursor-pointer"><input type="radio" name="portal-role" value="segreteria" class="sr-only"><span class="role-chip block rounded-lg border px-3 py-2 text-center text-sm">Segreteria</span></label><label class="cursor-pointer"><input type="radio" name="portal-role" value="collaboratore" class="sr-only" checked><span class="role-chip block rounded-lg border px-3 py-2 text-center text-sm">Collaboratore</span></label></div></div>
+<div class="mt-5"><p class="text-sm font-semibold">Moduli</p><div id="module-editor" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3"></div></div>
+<div class="mt-5 p-4 rounded-xl bg-stone-50 border border-stone-200"><p class="text-sm font-semibold">Perimetro dati</p><div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-2"><label class="flex items-center gap-2 text-sm"><input type="radio" name="scope" value="all"> Tutto</label><label class="flex items-center gap-2 text-sm"><input type="radio" name="scope" value="assigned" checked> Solo assegnati</label><label class="flex items-center gap-2 text-sm"><input type="radio" name="scope" value="custom"> Personalizzato</label></div></div>
+<div id="project-picker" class="mt-5 hidden"><div class="flex items-center justify-between"><p class="text-sm font-semibold">Progetti assegnati</p><span class="text-xs text-stone-500">Solo per il perimetro personalizzato</span></div><div id="project-options" class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 max-h-56 overflow-auto"></div></div>
+<div class="mt-5 flex items-center justify-between p-4 rounded-xl border border-stone-200"><div><p class="text-sm font-semibold">Accesso al portale</p><p class="text-xs text-stone-500 mt-1">Configurazione salvata per l'account.</p></div><label class="relative inline-flex items-center cursor-pointer"><input id="f-active" type="checkbox" class="sr-only peer" checked><span class="w-11 h-6 bg-stone-300 rounded-full peer peer-checked:bg-primary transition-all"></span><span class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-5"></span></label></div>
+</div>
+<div class="p-6 border-t border-stone-200 flex flex-col-reverse sm:flex-row justify-end gap-3"><button id="modal-cancel" class="px-5 py-2.5 rounded-lg border border-stone-200 text-sm">Annulla</button><button id="modal-save" class="px-5 py-2.5 rounded-lg bg-primary text-white text-sm">Salva</button></div>
+</div></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/portal-config.js"></script>
 <script>
-PORTAL_PAGE_CONFIG = {
-    allowedRoles: ['senior', 'admin', 'operator', 'architect'],
-    defaultActiveMenu: 'team',
-    pageName: 'Gestione Collaboratori'
-};
+PORTAL_PAGE_CONFIG = { allowedRoles:['admin','senior','operator'], defaultActiveMenu:'team', pageName:'Gestione Collaboratori' };
 </script>
 <script src="assets/js/portal-init.js"></script>
-
-<!-- Avatar Dropdown Script -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const avatarBtn = document.getElementById('avatar-btn');
-    const avatarDropdown = document.getElementById('avatar-dropdown');
-    const dropdownLogout = document.getElementById('dropdown-logout');
-    
-    // Carica il team quando Supabase è pronto
-    const checkSupabase = setInterval(() => {
-        if (window.supabase && typeof window.supabase.from === 'function') {
-            clearInterval(checkSupabase);
-            loadStudioCollaboratori();
-        }
-    }, 100);
-    
-    if (avatarBtn) {
-        avatarBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            avatarDropdown.classList.toggle('hidden');
-        });
-    }
-    
-    document.addEventListener('click', function() {
-        if (avatarDropdown) avatarDropdown.classList.add('hidden');
-    });
-    
-    if (dropdownLogout) {
-        dropdownLogout.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.clear();
-            alert('Logout effettuato con successo.');
-            window.location.href = '/login';
-        });
-    }
-    
-    // Configurazione campi - Unica fonte di verità
-    const TEAM_FIELDS = {
-        anagrafica: ['nome', 'cognome', 'email', 'telefono', 'data_nascita', 'luogo_nascita', 'ruolo', 'livello_accesso'],
-        logistica: ['auto_munito', 'disponibilita_trasferte', 'iscrizione_albo'],
-        fatturazione: ['indirizzo_fatturazione', 'pec'],
-        json_fatturazione: ['piva', 'cf', 'sdi'] // questi andranno dentro dati_fatturazione
-    };
-
-    // Helper di Input/Output Sicuri
-    window.safeSet = function(id, value) {
-        const element = document.getElementById('op-' + id);
-        if (element) {
-            if (element.type === 'checkbox') {
-                element.checked = value;
-            } else {
-                element.value = value || '';
-            }
-        }
-    };
-
-    window.safeGet = function(id, type = 'string') {
-        const element = document.getElementById('op-' + id);
-        if (!element) return null;
-        
-        if (element.type === 'checkbox') {
-            return element.checked;
-        }
-        
-        const value = element.value.trim();
-        
-        if (type === 'date') {
-            return value || null; // Restituisce null per date vuote
-        }
-        
-        if (type === 'string') {
-            return value || null; // Restituisce null per stringhe vuote
-        }
-        
-        return value;
-    };
-
-    // Funzioni per gestione team
-    window.openOperatorModal = function(operatorId = null) {
-        const modal = document.getElementById('modal-add-operator');
-        const content = document.getElementById('modal-operator-content');
-        
-        // Mostra modal con animazione
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            modal.classList.remove('opacity-0');
-            modal.classList.add('opacity-100');
-            content.classList.remove('scale-95');
-            content.classList.add('scale-100');
-        }, 10);
-        
-        // Aggiorna titolo del modal
-        const titleElement = document.getElementById('modal-operator-title');
-        if (titleElement) {
-            titleElement.textContent = operatorId ? 'Dettagli Collaboratore' : 'Nuovo Collaboratore';
-        }
-        
-        // Se è passato un ID, carica i dati dell'operatore esistente
-        if (operatorId) {
-            loadOperatorData(operatorId);
-        } else {
-            // Modal per nuovo operatore - pulisci tutto
-            clearOperatorForm();
-            switchOperatorTab('anagrafica');
-        }
-    };
-
-    window.loadOperatorData = async function(operatorId) {
-        try {
-            const { data, error } = await window.supabase
-                .from('operatori_profiles')
-                .select('*')
-                .eq('id', operatorId)
-                .single();
-            
-            if (error) throw error;
-            
-            if (!data) return;
-            
-            // Popola campo ID per riferimento primario
-            const idElement = document.getElementById('op-id');
-            if (idElement) {
-                idElement.value = data.id || '';
-            }
-            
-            // Popola campi usando safeSet
-            TEAM_FIELDS.anagrafica.forEach(field => {
-                safeSet(field, data[field]);
-            });
-            
-            TEAM_FIELDS.logistica.forEach(field => {
-                safeSet(field, data[field]);
-            });
-            
-            TEAM_FIELDS.fatturazione.forEach(field => {
-                safeSet(field, data[field]);
-            });
-            
-            // Popola campi JSON fatturazione
-            if (data.dati_fatturazione) {
-                TEAM_FIELDS.json_fatturazione.forEach(field => {
-                    safeSet(field, data.dati_fatturazione[field]);
-                });
-            }
-            
-            // Popola permessi
-            if (data.permessi_dettagli) {
-                const scope = data.permessi_dettagli.scope || 'assigned';
-                const scopeElement = document.querySelector(`input[name="project_scope"][value="${scope}"]`);
-                if (scopeElement) scopeElement.checked = true;
-                
-                const modules = data.permessi_dettagli.modules || {};
-                document.getElementById('perm-immobili').checked = modules.immobili || false;
-                document.getElementById('perm-clienti').checked = modules.clienti || false;
-                document.getElementById('perm-journal').checked = modules.journal || false;
-                document.getElementById('perm-finanze').checked = modules.finanze || false;
-                document.getElementById('perm-team').checked = modules.team || false;
-            }
-            
-            // Carica progetti assegnati
-            if (data.progetti_assegnati) {
-                setTimeout(() => {
-                    const progettiArray = data.progetti_assegnati.split(',').map(p => p.trim());
-                    document.querySelectorAll('[id^="proj-"]').forEach(checkbox => {
-                        checkbox.checked = progettiArray.includes(checkbox.value);
-                    });
-                }, 500); // Attendi che i checkbox siano caricati
-            }
-            
-            // Carica documenti se esiste folder ID
-            if (data.collaboratore_drive_folder_id) {
-                loadOperatorDocuments(data.collaboratore_drive_folder_id);
-            }
-            
-        } catch (error) {
-            console.error('Errore caricamento dati operatore:', error);
-        }
-    };
-
-    window.loadOperatorDocuments = async function(folderId) {
-        try {
-            const { data, error } = await window.supabase.functions.invoke('get-drive-files', {
-                folderId: folderId
-            });
-            
-            if (error) throw error;
-            
-            const container = document.getElementById('operatori-documenti-container');
-            if (!container) return;
-            
-            if (data && data.files && data.files.length > 0) {
-                container.innerHTML = data.files.map(file => `
-                    <div class="flex items-center gap-3 p-3 border border-stone-200 rounded-lg hover:bg-stone-50 transition-colors cursor-pointer">
-                        <span class="material-symbols-outlined text-stone-400">${file.mimeType.includes('pdf') ? 'picture_as_pdf' : 'description'}</span>
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-stone-700">${file.name}</p>
-                            <p class="text-xs text-stone-500">${formatFileSize(file.size)}</p>
-                        </div>
-                        <a href="${file.url}" target="_blank" class="text-primary hover:text-primary/80">
-                            <span class="material-symbols-outlined">download</span>
-                        </a>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-stone-400">
-                        <span class="material-symbols-outlined text-4xl mb-2">folder_open</span>
-                        <p class="text-sm">Nessun documento disponibile</p>
-                    </div>
-                `;
-            }
-            
-        } catch (error) {
-            console.error('Errore caricamento documenti operatore:', error);
-        }
-    };
-
-window.loadOperatorData = async function(operatorId) {
-    try {
-        const { data, error } = await window.supabase
-            .from('operatori_profiles')
-            .select('*')
-            .eq('id', operatorId)
-            .single();
-        
-        if (error) throw error;
-        
-        if (!data) return;
-        
-        // Popola campo ID per riferimento primario
-        const idElement = document.getElementById('op-id');
-        if (idElement) {
-            idElement.value = data.id;
-        }
-        
-        // Popola campi usando safeSet
-        TEAM_FIELDS.anagrafica.forEach(field => {
-            safeSet(field, data[field]);
-        });
-        
-        TEAM_FIELDS.logistica.forEach(field => {
-            safeSet(field, data[field]);
-        });
-        
-        TEAM_FIELDS.fatturazione.forEach(field => {
-            safeSet(field, data[field]);
-        });
-        
-        // Popola campi JSON fatturazione
-        if (data.dati_fatturazione) {
-            TEAM_FIELDS.json_fatturazione.forEach(field => {
-                safeSet(field, data.dati_fatturazione[field]);
-            });
-        }
-        
-        // Popola permessi
-        if (data.permessi_dettagli) {
-            const scope = data.permessi_dettagli.scope || 'assigned';
-            const scopeElement = document.querySelector(`input[name="project_scope"][value="${scope}"]`);
-            if (scopeElement) scopeElement.checked = true;
-            
-            const modules = data.permessi_dettagli.modules || {};
-            document.getElementById('perm-immobili').checked = modules.immobili || false;
-            document.getElementById('perm-clienti').checked = modules.clienti || false;
-            document.getElementById('perm-journal').checked = modules.journal || false;
-            document.getElementById('perm-finanze').checked = modules.finanze || false;
-            document.getElementById('perm-team').checked = modules.team || false;
-        }
-        
-        // Visualizza progetti assegnati nel modal fascicolo
-        const progettiContainer = document.getElementById('modal-progetti-assegnati');
-        if (progettiContainer) {
-            if (data.progetti_assegnati && data.progetti_assegnati.trim() !== '') {
-                const progettiArray = data.progetti_assegnati.split(',').map(p => p.trim());
-                progettiContainer.innerHTML = `
-                    <div class="mt-4 p-4 bg-stone-50 rounded-lg">
-                        <h4 class="text-sm font-semibold text-stone-700 mb-2">Progetti Assegnati</h4>
-                        <div class="flex flex-wrap gap-2">
-                            ${progettiArray.map(progetto => 
-                                `<span class="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-sm font-label">${progetto}</span>`
-                            ).join('')}
-                        </div>
-                    </div>
-                `;
-            } else {
-                progettiContainer.innerHTML = `
-                    <div class="mt-4 p-4 bg-stone-50 rounded-lg">
-                        <h4 class="text-sm font-semibold text-stone-700 mb-2">Progetti Assegnati</h4>
-                        <p class="text-xs text-stone-500">Nessun progetto attualmente assegnato</p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Carica documenti se esiste folder ID
-        if (data.collaboratore_drive_folder_id) {
-            loadOperatorDocuments(data.collaboratore_drive_folder_id);
-        }
-            
-        } catch (error) {
-            console.error('Errore caricamento progetti:', error);
-            const container = document.getElementById('progetti-checkbox-container');
-            if (container) {
-                // In caso di errore, mostra array vuoto per non bloccare la pagina
-                container.innerHTML = `
-                    <div class="text-center py-8 text-stone-400">
-                        <span class="material-symbols-outlined text-4xl mb-2">architecture</span>
-                        <p class="text-sm">Nessun progetto disponibile</p>
-                    </div>
-                `;
-            }
-        }
-    };
-
-    window.clearOperatorForm = function() {
-        // Pulisci campo ID
-        const idElement = document.getElementById('op-id');
-        if (idElement) {
-            idElement.value = '';
-        }
-        
-        // Pulisci tutti i campi usando safeSet
-        TEAM_FIELDS.anagrafica.forEach(field => {
-            safeSet(field, '');
-        });
-        
-        TEAM_FIELDS.logistica.forEach(field => {
-            safeSet(field, field === 'auto_munito' || field === 'disponibilita_trasferte' ? false : '');
-        });
-        
-        TEAM_FIELDS.fatturazione.forEach(field => {
-            safeSet(field, '');
-        });
-        
-        TEAM_FIELDS.json_fatturazione.forEach(field => {
-            safeSet(field, '');
-        });
-        
-        // Resetta permessi
-        const scopeElement = document.querySelector('input[name="project_scope"][value="assigned"]');
-        if (scopeElement) scopeElement.checked = true;
-        
-        document.getElementById('perm-immobili').checked = false;
-        document.getElementById('perm-clienti').checked = false;
-        document.getElementById('perm-journal').checked = false;
-        document.getElementById('perm-finanze').checked = false;
-        document.getElementById('perm-team').checked = false;
-        
-        // Resetta documenti
-        const container = document.getElementById('operatori-documenti-container');
-        if (container) {
-            container.innerHTML = `
-                <div class="text-center py-8 text-stone-400">
-                    <span class="material-symbols-outlined text-4xl mb-2">folder_open</span>
-                    <p class="text-sm">Nessun documento disponibile</p>
-                </div>
-            `;
-        }
-        
-        // Resetta checkbox progetti
-        document.querySelectorAll('[id^="proj-"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-    };
-
-    window.openProjectAssignment = async function(collaboratorId) {
-        try {
-            console.log('Apertura assegnazione progetti per collaboratore:', collaboratorId);
-            
-            // Recupera dati collaboratore
-            const { data: collaborator, error } = await window.supabase
-                .from('operatori_profiles')
-                .select('*')
-                .eq('id', collaboratorId)
-                .single();
-            
-            if (error) {
-                console.error('Errore caricamento collaboratore:', error);
-                throw new Error('Errore caricamento dati collaboratore: ' + error.message);
-            }
-            
-            // Recupera elenco progetti con select('id, titolo') e fallback
-            const { data: projects, error: projectsError } = await window.supabase
-                .from('projects')
-                .select('id, titolo');
-            
-            if (projectsError) {
-                console.error('Errore caricamento progetti:', projectsError);
-                throw new Error('Errore caricamento progetti: ' + projectsError.message);
-            }
-            
-            console.log('Progetti caricati:', projects);
-            
-            // Crea modal per assegnazione progetti
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 z-50 bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl">
-                    <div class="p-6 border-b border-stone-100 flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-stone-800">Assegnazione Progetti</h3>
-                        <button onclick="this.closest('.fixed').remove()" class="text-stone-400 hover:text-stone-700">
-                            <span class="material-symbols-outlined">close</span>
-                        </button>
-                    </div>
-                    <div class="p-6 overflow-y-auto max-h-[60vh]">
-                        <div class="space-y-4">
-                            ${projects.map(project => {
-                                const projectName = project.titolo || project.nome || 'Progetto senza nome';
-                                const isAssigned = collaborator.progetti_assegnati?.includes(projectName);
-                                return `
-                                    <label class="flex items-center gap-3 p-3 border border-stone-200 rounded-lg cursor-pointer hover:bg-stone-50 transition-colors">
-                                        <input type="checkbox" 
-                                               id="assign-proj-${project.id}" 
-                                               value="${projectName}" 
-                                               ${isAssigned ? 'checked' : ''}
-                                               class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                                        <span class="text-sm text-stone-700">${projectName}</span>
-                                    </label>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                    <div class="p-6 border-t border-stone-100 flex justify-end gap-4">
-                        <button onclick="this.closest('.fixed').remove()" class="px-6 py-2 text-stone-600 font-medium hover:bg-stone-100 rounded-lg transition-colors">
-                            Annulla
-                        </button>
-                        <button onclick="saveProjectAssignment('${collaboratorId}')" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
-                            Salva Assegnazione
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(modal);
-            
-        } catch (error) {
-            console.error('Errore apertura assegnazione progetti:', error);
-            alert('Errore nell\'apertura dell\'assegnazione progetti: ' + error.message);
-        }
-    };
-
-    window.closeProjectAssignmentModal = function() {
-        const modal = document.getElementById('modal-assign-projects');
-        if (modal) {
-            modal.classList.add('opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
-    };
-
-    window.saveProjectAssignment = async function(collaboratorId) {
-        try {
-            // Raccogli progetti selezionati
-            const selectedProjects = [];
-            document.querySelectorAll('[id^="assign-proj-"]:checked').forEach(checkbox => {
-                selectedProjects.push(checkbox.value);
-            });
-            
-            // Salva nel database
-            const progettiString = selectedProjects.length > 0 ? selectedProjects.join(', ') : null;
-            const { error } = await window.supabase
-                .from('operatori_profiles')
-                .update({ 
-                    progetti_assegnati: progettiString 
-                })
-                .eq('id', collaboratorId); // <--- CLAUSOLA WHERE CORRETTA
-            
-            if (error) throw error;
-            
-            // Chiudi modal e ricarica
-            closeProjectAssignmentModal();
-            loadStudioCollaboratori();
-            
-            alert('Progetti assegnati con successo!');
-            
-        } catch (error) {
-            console.error('Errore salvataggio assegnazione progetti:', error);
-            alert('Impossibile salvare l\'assegnazione progetti: ' + error.message);
-        }
-    };
-
-    window.formatFileSize = function(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    };
-
-    window.closeOperatorModal = function() {
-        const modal = document.getElementById('modal-add-operator');
-        const content = document.getElementById('modal-operator-content');
-        
-        // Nascondi modal con animazione
-        modal.classList.remove('opacity-100');
-        modal.classList.add('opacity-0');
-        content.classList.remove('scale-100');
-        content.classList.add('scale-95');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            // Pulisci tutti i campi usando la funzione centralizzata
-            clearOperatorForm();
-        }, 300);
-    };
-
-    window.loadStudioCollaboratori = async function() {
-        try {
-            console.log('Caricamento collaboratori da operatori_profiles...');
-            
-            // Query esplicita e pulita con solo colonne esistenti
-            const { data, error } = await window.supabase
-                .from('operatori_profiles')
-                .select('id, nome, cognome, email, telefono, ruolo, livello_accesso, data_nascita, luogo_nascita, auto_munito, disponibilita_trasferte, iscrizione_albo, indirizzo_fatturazione, pec, permessi_dettagli, dati_fatturazione, progetti_assegnati, collaboratore_drive_folder_id, avatar_url, created_at, updated_at');
-            
-            if (error) {
-                console.error("Errore critico Supabase:", error.message);
-                console.error("Codice errore:", error.code);
-                return;
-            }
-            
-            console.log('Collaboratori caricati:', data?.length || 0);
-            renderCollaboratoriList(data || []);
-            
-        } catch (error) {
-            console.error('Errore loadStudioCollaboratori:', error);
-        }
-    };
-
-    window.renderCollaboratoriList = function(teamArray) {
-        try {
-            console.log('Rendering collaboratori:', teamArray?.length || 0);
-            
-            const container = document.getElementById('team-list-container');
-            if (!container) {
-                console.error('Container team-list-container non trovato');
-                return;
-            }
-            
-            if (!teamArray || teamArray.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-stone-400">
-                        <span class="material-symbols-outlined text-4xl mb-2">groups</span>
-                        <p class="text-sm">Nessun operatore trovato</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            const htmlContent = teamArray.map(member => {
-                try {
-                    // Genera iniziali colorate se non c'è avatar - ULTRA RESILIENTE
-                    const initials = member?.nome ? member.nome.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : '??';
-                    const avatarContent = member?.avatar_url 
-                        ? `<img alt="${member?.nome || 'Collaboratore'}" class="w-12 h-12 rounded-full object-cover" src="${member.avatar_url}"/>`
-                        : `<div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary font-display text-xl font-bold">${initials}</div>`;
-                    
-                    // Mappa ruolo con pillolina colorata
-                    const roleColors = {
-                        'Junior Architect': 'bg-surface-variant text-on-surface-variant',
-                        'Senior Architect': 'bg-secondary-container text-on-secondary-container',
-                        'Interior Designer': 'bg-tertiary-container text-on-tertiary-container',
-                        'Drafter': 'bg-surface-variant text-on-surface-variant',
-                        'Admin': 'bg-error-container text-on-error-container'
-                    };
-                    const roleClass = roleColors[member?.ruolo] || 'bg-surface-variant text-on-surface-variant';
-                    
-                    // Genera badge per moduli abilitati - ULTRA RESILIENTE
-                    const permessi = member?.permessi_dettagli || {};
-                    const modules = permessi?.modules || {};
-                    
-                    const moduleBadges = [];
-                    if (modules?.immobili) {
-                        moduleBadges.push('<span class="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full" title="Modulo Immobiliare"><span class="material-symbols-outlined text-[14px]">real_estate_agent</span></span>');
-                    }
-                    if (modules?.journal) {
-                        moduleBadges.push('<span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-600 rounded-full" title="Modulo Journal"><span class="material-symbols-outlined text-[14px]">menu_book</span></span>');
-                    }
-                    if (modules?.clienti) {
-                        moduleBadges.push('<span class="inline-flex items-center justify-center w-8 h-8 bg-purple-100 text-purple-600 rounded-full" title="Modulo Clienti"><span class="material-symbols-outlined text-[14px]">handshake</span></span>');
-                    }
-                    if (modules?.finanze) {
-                        moduleBadges.push('<span class="inline-flex items-center justify-center w-8 h-8 bg-orange-100 text-orange-600 rounded-full" title="Modulo Finanze"><span class="material-symbols-outlined text-[14px]">payments</span></span>');
-                    }
-                    
-                    const permissions = moduleBadges.length > 0 ? moduleBadges.join(' ') : '<span class="text-xs text-stone-400">Nessun modulo</span>';
-                    
-                    // Dati fatturazione con fallback
-                    const datiFatturazione = member?.dati_fatturazione || {};
-                    const piva = datiFatturazione?.piva || '';
-                    const cf = datiFatturazione?.cf || '';
-                    const sdi = datiFatturazione?.sdi || '';
-                    
-                    // Progetti con split sicuro
-                    const progettiArray = member?.progetti_assegnati ? member.progetti_assegnati.split(',') : [];
-                    
-                    return `
-                        <div class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-6 items-start md:items-center bg-surface-container-lowest p-4 rounded-xl mb-4 shadow-[0px_10px_20px_rgba(27,28,28,0.02)] transition-all hover:bg-surface-bright">
-                            <!-- Profile -->
-                            <div class="flex items-center gap-4 w-full md:col-span-3">
-                                ${avatarContent}
-                                <div class="min-w-0 flex-1">
-                                    <p class="font-display text-base md:text-lg text-on-surface leading-tight truncate">${member?.nome || ''} ${member?.cognome || ''}</p>
-                                    <p class="text-xs md:text-sm text-on-surface-variant font-label truncate">${member?.email || 'Nessuna email'}</p>
-                                </div>
-                            </div>
-                            <!-- Role -->
-                            <div class="md:col-span-2">
-                                <span class="inline-flex items-center px-2.5 py-1 rounded-sm text-xs font-medium ${roleClass} font-label">
-                                    ${member?.ruolo || 'Nessun ruolo'}
-                                </span>
-                            </div>
-                            <!-- Projects -->
-                            <div class="md:col-span-3">
-                                <div class="flex flex-wrap gap-1 md:gap-2">
-                                    ${progettiArray.length > 0 ? progettiArray.slice(0,3).map(project => 
-                                        `<span class="text-[10px] md:text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-sm font-label">${(project || '').trim()}</span>`
-                                    ).join('') : '<span class="text-xs text-stone-400">Nessun progetto</span>'}
-                                    ${progettiArray.length > 3 ? `<span class="text-[10px] text-on-surface-variant">+${progettiArray.length - 3}</span>` : ''}
-                                </div>
-                            </div>
-                            <!-- Permessi Moduli -->
-                            <div class="md:col-span-3">
-                                <div class="flex gap-1 md:gap-2 items-center flex-wrap">
-                                    ${permissions}
-                                </div>
-                                <div class="text-[10px] md:text-xs text-stone-500 mt-1">
-                                    ${permessi?.scope === 'all' ? 'Tutti i progetti' : 'Solo progetti assegnati'}
-                                </div>
-                            </div>
-                            <!-- Actions -->
-                            <div class="md:col-span-1 flex md:block justify-end gap-2 md:gap-0 md:text-right mt-2 md:mt-0">
-                                <button onclick="openOperatorModal('${member?.id}')" class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-variant">
-                                    <span class="material-symbols-outlined text-lg md:text-base">folder_open</span>
-                                </button>
-                                <button onclick="openProjectAssignment('${member?.id}')" class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-variant">
-                                    <span class="material-symbols-outlined text-lg md:text-base">more_vert</span>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                } catch (memberError) {
-                    console.error('Errore rendering collaboratore:', member?.id, memberError);
-                    return `
-                        <div class="col-span-12 bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl mb-4">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined">error</span>
-                                <span>Errore nel caricamento del collaboratore</span>
-                            </div>
-                        </div>
-                    `;
-                }
-            }).join('');
-            
-            container.innerHTML = htmlContent;
-            console.log('Rendering completato');
-            
-        } catch (error) {
-            console.error('Errore critico renderCollaboratoriList:', error);
-            const container = document.getElementById('team-list-container');
-            if (container) {
-                container.innerHTML = `
-                    <div class="text-center py-8 text-red-400">
-                        <span class="material-symbols-outlined text-4xl mb-2">error</span>
-                        <p class="text-sm">Errore nel caricamento della lista collaboratori</p>
-                    </div>
-                `;
-            }
-        }
-    };
-
-    window.switchOperatorTab = function(tabName) {
-    // 1. Nascondi tutti i contenuti
-    document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.classList.add('hidden'));
-    // 2. Deseleziona tutti i bottoni del menu (rimuovi stili attivi)
-    document.querySelectorAll('[id^="tab-btn-"]').forEach(el => {
-        el.classList.remove('bg-white', 'text-primary', 'shadow-sm', 'border-stone-200');
-        el.classList.add('text-stone-500', 'border-transparent');
-    });
-    
-    // 3. Mostra il contenuto richiesto
-    const targetContent = document.getElementById('tab-content-' + tabName);
-    if(targetContent) targetContent.classList.remove('hidden');
-    
-    // 4. Attiva il bottone cliccato
-    const targetBtn = document.getElementById('tab-btn-' + tabName);
-    if(targetBtn) {
-        targetBtn.classList.remove('text-stone-500', 'border-transparent');
-        targetBtn.classList.add('bg-white', 'text-primary', 'shadow-sm', 'border-stone-200');
-    }
+(() => {
+const MODULES = {
+  progettazione:'Progettazione', immobiliare:'Immobiliare', clienti:'Clienti', finanze:'Finanze', documenti:'Documenti', journal:'Journal'
 };
-
-    window.saveNewOperator = async function() {
-    try {
-        // 1. Racogli dati usando TEAM_FIELDS e helper sicuri
-        const operatorData = {};
-        
-        // Campi anagrafici
-        TEAM_FIELDS.anagrafica.forEach(field => {
-            const value = safeGet(field, field === 'data_nascita' ? 'date' : 'string');
-            if (value !== null) {
-                operatorData[field] = value;
-            }
-        });
-        
-        // Fix specifico per data_nascita: assicura null se vuoto
-        const dataNascita = document.getElementById('op-data-nascita')?.value || null;
-        if (dataNascita !== null) {
-            operatorData.data_nascita = dataNascita;
-        }
-        
-        // Campi logistica (checkbox e string)
-        TEAM_FIELDS.logistica.forEach(field => {
-            const value = safeGet(field, field === 'auto_munito' || field === 'disponibilita_trasferte' ? 'checkbox' : 'string');
-            if (value !== null && value !== false) { // Include false solo se è un checkbox checked
-                operatorData[field] = value;
-            }
-        });
-        
-        // Campi fatturazione diretti
-        TEAM_FIELDS.fatturazione.forEach(field => {
-            const value = safeGet(field, 'string');
-            if (value !== null) {
-                operatorData[field] = value;
-            }
-        });
-        
-        // 2. Costruisci oggetto dati_fatturazione
-        const datiFatturazione = {};
-        TEAM_FIELDS.json_fatturazione.forEach(field => {
-            const value = safeGet(field, 'string');
-            if (value !== null) {
-                datiFatturazione[field] = value;
-            }
-        });
-        
-        // Aggiungi dati_fatturazione solo se non è vuoto
-        if (Object.keys(datiFatturazione).length > 0) {
-            operatorData.dati_fatturazione = datiFatturazione;
-        }
-        
-        // 3. Costruisci permessi_dettagli
-        const scopeElement = document.querySelector('input[name="project_scope"]:checked');
-        const scopeValue = scopeElement ? scopeElement.value : 'assigned';
-        
-        const permessiDettagli = {
-            scope: scopeValue,
-            modules: {
-                immobili: document.getElementById('perm-immobili')?.checked || false,
-                clienti: document.getElementById('perm-clienti')?.checked || false,
-                journal: document.getElementById('perm-journal')?.checked || false,
-                finanze: document.getElementById('perm-finanze')?.checked || false,
-                team: document.getElementById('perm-team')?.checked || false
-            }
-        };
-        
-        operatorData.permessi_dettagli = permessiDettagli;
-        
-        // 4. Raccogli progetti assegnati
-        const progettiAssegnati = [];
-        document.querySelectorAll('[id^="proj-"]:checked').forEach(checkbox => {
-            progettiAssegnati.push(checkbox.value);
-        });
-        
-        if (progettiAssegnati.length > 0) {
-            operatorData.progetti_assegnati = progettiAssegnati.join(', ');
-        }
-        
-        // 5. Verifica se è presente un ID (modifica esistente)
-        const operatorId = document.getElementById('op-id')?.value;
-        if (operatorId) {
-            operatorData.id = operatorId;
-        }
-        
-        // 6. Validazione campi obbligatori
-        if (!operatorData.nome || !operatorData.email) {
-            alert("Inserisci almeno Nome ed Email.");
-            return;
-        }
-        
-        // 7. Usa upsert() basato su email per gestire sia nuovi inserimenti che modifiche
-        const { error } = await window.supabase
-            .from('operatori_profiles')
-            .upsert([operatorData], { 
-                onConflict: 'email' // Permette sia creazione che modifica senza errori di chiave duplicata
-            });
-
-        if (error) {
-            console.error('Errore Supabase:', error);
-            throw error;
-        }
-
-        // 8. Successo: chiudi e ricarica
-        closeOperatorModal();
-        
-        if (typeof window.loadStudioCollaboratori === 'function') {
-            window.loadStudioCollaboratori();
-        }
-
-    } catch (error) {
-        console.error("Errore saveNewOperator:", error);
-        alert("Impossibile salvare il collaboratore: " + error.message);
-    }
-};
-
-    // Funzione globale per controllo permessi
-    window.checkPermission = function(modulo) {
-        // Recupera dati utente corrente (da implementare con auth)
-        const currentUser = window.currentUser || {};
-        const permessi = currentUser.permessi_dettagli || {};
-        const modules = permessi.modules || {};
-        
-        return modules[modulo] === true;
-    };
-});
+const LEVELS = [{v:'none',l:'Nessun accesso'},{v:'view',l:'Visualizza'},{v:'edit',l:'Modifica'},{v:'manage',l:'Gestisce'}];
+let team=[]; let projects=[]; let selectedId=null; let editingId=null;
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+const normPerms=p=>{const x=p&&typeof p==='object'?p:{};const modules=x.modules&&typeof x.modules==='object'?x.modules:{};const out={portal_role:x.portal_role||'collaboratore',accesso_attivo:x.accesso_attivo!==false,scope:x.scope||'assigned',modules:{}};for(const k of Object.keys(MODULES)){const m=modules[k];out.modules[k]=typeof m==='string'?m:(m?.level?m.level:(m===true?'view':'none'));}return out;};
+const roleLabel=r=>({admin:'Admin',segreteria:'Segreteria',collaboratore:'Collaboratore'}[r]||'Collaboratore');
+const roleColor=r=>r==='admin'?'bg-error-container text-on-error-container':r==='segreteria'?'bg-tertiary-container text-on-tertiary-container':'bg-secondary-container text-on-secondary-container';
+const stateLabel=a=>a?'Attivo':'Sospeso';
+function notify(msg,ok=true){const n=$('notice');n.textContent=msg;n.className='mb-5 rounded-xl border px-4 py-3 text-sm '+(ok?'bg-green-50 border-green-200 text-green-800':'bg-red-50 border-red-200 text-red-800');n.classList.remove('hidden');setTimeout(()=>n.classList.add('hidden'),3500);}
+async function getSupabase(){for(let i=0;i<100;i++){if(window.supabase&&typeof window.supabase.from==='function')return window.supabase;await new Promise(r=>setTimeout(r,100));}throw new Error('Supabase non disponibile');}
+async function load(){try{const s=await getSupabase();const r=await s.from('operatori_profiles').select('id,user_id,nome,cognome,email,telefono,data_nascita,luogo_nascita,ruolo,livello_accesso,permessi_dettagli,dati_fatturazione,progetti_assegnati,collaboratore_drive_folder_id,avatar_url,specializzazione,bio,created_at,updated_at').order('nome',{ascending:true});if(r.error)throw r.error;team=r.data||[];const pr=await s.from('projects').select('id,titolo').order('titolo',{ascending:true});if(!pr.error)projects=pr.data||[];renderList();if(selectedId&&team.some(x=>x.id===selectedId))renderDetail(team.find(x=>x.id===selectedId));else if(team[0]){selectedId=team[0].id;renderDetail(team[0]);}else{$('detail').classList.add('hidden');$('empty-state').classList.remove('hidden');} }catch(e){console.error(e);notify('Impossibile caricare i collaboratori: '+e.message,false);}}
+function renderList(){const q=$('team-search').value.trim().toLowerCase();const f=$('status-filter').value;const rows=team.filter(m=>{const p=normPerms(m.permessi_dettagli);const hay=((m.nome||'')+' '+(m.cognome||'')+' '+(m.email||'')).toLowerCase();return(!q||hay.includes(q))&&(f==='all'||(f==='active'?p.accesso_attivo:!p.accesso_attivo));});$('team-count').textContent=`${team.length} collaboratori`;$('team-list').innerHTML=rows.length?rows.map(m=>{const p=normPerms(m.permessi_dettagli);const initials=esc(((m.nome||'')+' '+(m.cognome||'')).trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()||'??');return `<button onclick="window.selectCollaborator('${m.id}')" class="w-full text-left rounded-xl border p-3 transition team-card ${m.id===selectedId?'team-card-active border-primary':'border-stone-200 bg-white hover:bg-stone-50'}"><div class="flex items-center gap-3"><div class="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-primary/10 flex items-center justify-center text-primary font-semibold">${m.avatar_url?`<img src="${esc(m.avatar_url)}" class="w-full h-full object-cover"/>`:initials}</div><div class="min-w-0 flex-1"><div class="flex items-center gap-2"><p class="font-medium truncate">${esc((m.nome||'')+' '+(m.cognome||''))}</p><span class="w-2 h-2 rounded-full ${p.accesso_attivo?'bg-green-500':'bg-orange-400'}"></span></div><p class="text-xs text-on-surface-variant truncate">${esc(roleLabel(p.portal_role))}</p><p class="text-xs text-stone-400 truncate">${esc(m.email)}</p></div><span class="material-symbols-outlined text-stone-400 text-lg">chevron_right</span></div><div class="mt-3 flex items-center justify-between text-[11px]"><span class="px-2 py-1 rounded bg-stone-100 text-stone-600">${p.scope==='all'?'Tutti i dati':'Solo assegnati'}</span><span class="${p.accesso_attivo?'text-green-700':'text-orange-600'}">${stateLabel(p.accesso_attivo)}</span></div></button>`;}).join(''):'<div class="text-center py-10 text-stone-400 text-sm">Nessun collaboratore trovato.</div>';}
+window.selectCollaborator=id=>{selectedId=id;renderList();const m=team.find(x=>x.id===id);if(m)renderDetail(m);};
+function renderDetail(m){$('empty-state').classList.add('hidden');$('detail').classList.remove('hidden');const p=normPerms(m.permessi_dettagli);const initials=esc(((m.nome||'')+' '+(m.cognome||'')).trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()||'??');const assigned=(m.progetti_assegnati||'').split(',').map(x=>x.trim()).filter(Boolean);const moduleCards=Object.keys(MODULES).map(k=>`<div class="rounded-xl border border-stone-200 bg-white p-4"><div class="flex items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">${k==='progettazione'?'architecture':k==='immobiliare'?'home_work':k==='clienti'?'group':k==='finanze'?'payments':k==='documenti'?'folder':'menu_book'}</span></div><div><p class="text-sm font-semibold">${MODULES[k]}</p><p class="text-xs text-stone-500">${LEVELS.find(x=>x.v===p.modules[k])?.l||'Nessun accesso'}</p></div></div><span class="px-2 py-1 rounded-full text-[10px] ${p.modules[k]==='none'?'bg-stone-100 text-stone-500':'bg-green-50 text-green-700'}">${p.modules[k]==='none'?'OFF':'ON'}</span></div></div>`).join('');$('detail').innerHTML=`<div class="bg-white rounded-xl border border-stone-200 overflow-hidden"><div class="p-6 border-b border-stone-200"><div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5"><div class="flex items-center gap-4 min-w-0"><div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold overflow-hidden shrink-0">${m.avatar_url?`<img src="${esc(m.avatar_url)}" class="w-full h-full object-cover"/>`:initials}</div><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><h2 class="font-display text-2xl md:text-3xl truncate">${esc((m.nome||'')+' '+(m.cognome||''))}</h2><span class="px-2.5 py-1 rounded-full text-xs font-medium ${roleColor(p.portal_role)}">${roleLabel(p.portal_role)}</span><span class="px-2.5 py-1 rounded-full text-xs font-medium ${p.accesso_attivo?'bg-green-50 text-green-700':'bg-orange-50 text-orange-700'}">${stateLabel(p.accesso_attivo)}</span></div><div class="flex flex-wrap gap-x-5 gap-y-1 mt-2 text-sm text-on-surface-variant"><span>✉ ${esc(m.email||'-')}</span><span>☎ ${esc(m.telefono||'-')}</span></div><div class="text-xs text-stone-400 mt-2">ID collaboratore: ${esc(m.id)}</div></div></div><div class="flex gap-2"><button onclick="window.openEdit('${m.id}')" class="px-4 py-2 rounded-lg border border-stone-200 hover:bg-stone-50 text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">edit</span>Modifica</button><button onclick="window.toggleAccess('${m.id}')" class="px-4 py-2 rounded-lg border ${p.accesso_attivo?'border-orange-200 text-orange-700 hover:bg-orange-50':'border-green-200 text-green-700 hover:bg-green-50'} text-sm flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">${p.accesso_attivo?'pause_circle':'play_circle'}</span>${p.accesso_attivo?'Sospendi accesso':'Riattiva accesso'}</button></div></div><div class="flex gap-1 overflow-x-auto mt-6 -mb-6" id="detail-tabs"><button data-tab="overview" class="tab-btn px-4 py-3 text-sm border-b-2 border-primary text-primary whitespace-nowrap">Panoramica</button><button data-tab="anagrafica" class="tab-btn px-4 py-3 text-sm border-b-2 border-transparent text-stone-500 whitespace-nowrap">Anagrafica</button><button data-tab="permessi" class="tab-btn px-4 py-3 text-sm border-b-2 border-transparent text-stone-500 whitespace-nowrap">Permessi</button><button data-tab="progetti" class="tab-btn px-4 py-3 text-sm border-b-2 border-transparent text-stone-500 whitespace-nowrap">Progetti</button><button data-tab="documenti" class="tab-btn px-4 py-3 text-sm border-b-2 border-transparent text-stone-500 whitespace-nowrap">Documenti</button><button data-tab="log" class="tab-btn px-4 py-3 text-sm border-b-2 border-transparent text-stone-500 whitespace-nowrap">Log attività</button></div></div><div class="p-6 space-y-5" id="tab-content"><div data-content="overview" class="grid grid-cols-1 lg:grid-cols-2 gap-5"><div class="rounded-xl bg-surface-container-low p-5"><p class="text-xs uppercase tracking-widest text-on-surface-variant font-semibold">Ruolo e moduli</p><div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">${moduleCards}</div></div><div class="rounded-xl bg-surface-container-low p-5"><div class="flex items-center justify-between"><p class="text-xs uppercase tracking-widest text-on-surface-variant font-semibold">Stato accesso</p><span class="text-sm font-semibold ${p.accesso_attivo?'text-green-700':'text-orange-600'}">${stateLabel(p.accesso_attivo)}</span></div><div class="mt-4 space-y-3 text-sm"><div class="flex justify-between"><span class="text-stone-500">Perimetro</span><strong>${p.scope==='all'?'Tutto':'Solo assegnati'}</strong></div><div class="flex justify-between"><span class="text-stone-500">Progetti assegnati</span><strong>${assigned.length}</strong></div><div class="flex justify-between"><span class="text-stone-500">Ultima modifica</span><strong>${m.updated_at?new Date(m.updated_at).toLocaleString('it-IT'):'-'}</strong></div></div></div></div><div data-content="anagrafica" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">${[['Nome',m.nome],['Cognome',m.cognome],['Email',m.email],['Telefono',m.telefono],['Data di nascita',m.data_nascita],['Luogo di nascita',m.luogo_nascita],['Specializzazione',m.specializzazione],['Iscrizione albo',m.iscrizione_albo]].map(([l,v])=>`<div class="rounded-xl border border-stone-200 p-4"><p class="text-xs uppercase tracking-widest text-stone-400">${l}</p><p class="mt-1 text-sm font-medium">${esc(v||'-')}</p></div>`).join('')}</div><div data-content="permessi" class="hidden"><div class="grid grid-cols-1 md:grid-cols-2 gap-3">${moduleCards}</div><div class="mt-5 rounded-xl border border-stone-200 p-5"><p class="text-sm font-semibold">Perimetro dati</p><p class="text-sm text-stone-500 mt-1">${p.scope==='all'?'Accesso a tutto lo studio.':'Accesso limitato ai dati assegnati.'}</p></div></div><div data-content="progetti" class="hidden"><div class="flex items-center justify-between mb-4"><div><p class="text-sm font-semibold">Progetti assegnati</p><p class="text-xs text-stone-500 mt-1">Gestione tramite Modifica.</p></div><span class="text-xs px-2 py-1 rounded-full bg-stone-100">${assigned.length}</span></div><div class="space-y-2">${assigned.length?assigned.map(x=>`<div class="flex items-center justify-between rounded-lg border border-stone-200 px-4 py-3"><span class="text-sm">${esc(x)}</span><span class="text-xs text-primary">Assegnato</span></div>`).join(''):'<div class="text-sm text-stone-400 py-6 text-center border border-dashed border-stone-200 rounded-xl">Nessun progetto assegnato</div>'}</div></div><div data-content="documenti" class="hidden"><div class="rounded-xl border border-dashed border-stone-200 p-10 text-center text-stone-400"><span class="material-symbols-outlined text-4xl">folder_open</span><p class="mt-2 text-sm">La cartella Drive del collaboratore è disponibile qui.</p><p class="text-xs mt-1">${esc(m.collaboratore_drive_folder_id||'Nessuna cartella associata')}</p></div></div><div data-content="log" class="hidden"><div class="rounded-xl border border-stone-200 p-5"><p class="text-sm font-semibold">Attività</p><p class="text-sm text-stone-400 mt-3">Il log amministrativo verrà popolato quando collegheremo le operazioni di modifica al registro audit.</p></div></div></div></div>`;document.querySelectorAll('#detail-tabs .tab-btn').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.tab;document.querySelectorAll('.tab-btn').forEach(x=>{x.classList.remove('border-primary','text-primary');x.classList.add('border-transparent','text-stone-500')});b.classList.add('border-primary','text-primary');b.classList.remove('border-transparent','text-stone-500');document.querySelectorAll('[data-content]').forEach(x=>x.classList.add('hidden'));const target=document.querySelector(`[data-content="${t}"]`);if(target)target.classList.remove('hidden');}));}
+function openModal(m=null){editingId=m?.id||null;$('profile-modal').classList.remove('hidden');$('profile-modal').classList.add('flex');$('modal-title').textContent=m?'Modifica collaboratore':'Nuovo collaboratore';$('f-nome').value=m?.nome||'';$('f-cognome').value=m?.cognome||'';$('f-email').value=m?.email||'';$('f-telefono').value=m?.telefono||'';$('f-data').value=m?.data_nascita||'';$('f-luogo').value=m?.luogo_nascita||'';$('f-specializzazione').value=m?.specializzazione||'';$('f-albo').value=m?.iscrizione_albo||'';const p=normPerms(m?.permessi_dettagli);document.querySelectorAll('input[name="portal-role"]').forEach(x=>x.checked=x.value===p.portal_role);document.querySelectorAll('input[name="scope"]').forEach(x=>x.checked=x.value===p.scope);$('f-active').checked=p.accesso_attivo;$('project-picker').classList.toggle('hidden',p.scope!=='custom');$('module-editor').innerHTML=Object.keys(MODULES).map(k=>`<div class="rounded-xl border border-stone-200 bg-white p-3"><div class="flex items-center justify-between gap-2 mb-2"><span class="text-sm font-medium">${MODULES[k]}</span><span class="text-[10px] text-stone-400 uppercase tracking-wider">Accesso</span></div><div class="grid grid-cols-4 gap-1">${LEVELS.map(l=>`<button type="button" class="permission-level rounded-md border px-2 py-2 text-[11px] ${p.modules[k]===l.v?'active':''}" data-module="${k}" data-level="${l.v}">${l.l.replace('Nessun accesso','Nessuno').replace('Visualizza','Vedi').replace('Modifica','Modifica').replace('Gestisce','Gestisci')}</button>`).join('')}</div></div>`).join('');$('project-options').innerHTML=projects.length?projects.map(pr=>`<label class="flex items-center gap-2 rounded-lg border border-stone-200 bg-white p-3 text-sm"><input type="checkbox" class="project-check rounded" value="${esc(pr.titolo||pr.id)}"> <span class="truncate">${esc(pr.titolo||pr.id)}</span></label>`).join(''):'<div class="text-sm text-stone-400">Nessun progetto disponibile.</div>';const assigned=(m?.progetti_assegnati||'').split(',').map(x=>x.trim()).filter(Boolean);document.querySelectorAll('.project-check').forEach(c=>c.checked=assigned.includes(c.value));}
+window.openEdit=id=>openModal(team.find(x=>x.id===id));
+window.toggleAccess=async id=>{const m=team.find(x=>x.id===id);if(!m)return;const p=normPerms(m.permessi_dettagli);p.accesso_attivo=!p.accesso_attivo;try{const s=await getSupabase();const r=await s.from('operatori_profiles').update({permessi_dettagli:p,updated_at:new Date().toISOString()}).eq('id',id);if(r.error)throw r.error;notify(p.accesso_attivo?'Accesso riattivato':'Accesso impostato come sospeso');await load();selectedId=id;}catch(e){notify('Errore salvataggio accesso: '+e.message,false);}}
+$('btn-new').onclick=()=>openModal();$('btn-refresh').onclick=load;$('team-search').oninput=renderList;$('status-filter').onchange=renderList;$('modal-close').onclick=$('modal-cancel').onclick=()=>{$('profile-modal').classList.add('hidden');$('profile-modal').classList.remove('flex');};
+document.addEventListener('click',e=>{const btn=e.target.closest('.permission-level');if(btn){document.querySelectorAll(`.permission-level[data-module="${btn.dataset.module}"]`).forEach(x=>x.classList.remove('active'));btn.classList.add('active')}});
+document.querySelectorAll('input[name="scope"]').forEach(r=>r.addEventListener('change',()=>$('project-picker').classList.toggle('hidden',r.value!=='custom'||!r.checked)));
+$('modal-save').onclick=async()=>{try{const s=await getSupabase();const current=editingId?team.find(x=>x.id===editingId):null;const p=normPerms(current?.permessi_dettagli);p.portal_role=document.querySelector('input[name="portal-role"]:checked')?.value||'collaboratore';p.scope=document.querySelector('input[name="scope"]:checked')?.value||'assigned';p.accesso_attivo=$('f-active').checked;document.querySelectorAll('.permission-level.active').forEach(b=>p.modules[b.dataset.module]=b.dataset.level);const selected=[...document.querySelectorAll('.project-check:checked')].map(x=>x.value);const data={nome:$('f-nome').value.trim(),cognome:$('f-cognome').value.trim()||null,email:$('f-email').value.trim(),telefono:$('f-telefono').value.trim()||null,data_nascita:$('f-data').value||null,luogo_nascita:$('f-luogo').value.trim()||null,specializzazione:$('f-specializzazione').value.trim()||null,iscrizione_albo:$('f-albo').value.trim()||null,permessi_dettagli:p,progetti_assegnati:selected.length?selected.join(', '):null,updated_at:new Date().toISOString()};if(!data.nome||!data.email)throw new Error('Nome ed email sono obbligatori');let r;if(editingId)r=await s.from('operatori_profiles').update(data).eq('id',editingId);else{data.created_at=new Date().toISOString();r=await s.from('operatori_profiles').insert(data)}if(r.error)throw r.error;$('profile-modal').classList.add('hidden');$('profile-modal').classList.remove('flex');notify(editingId?'Collaboratore aggiornato':'Collaboratore creato');await load();}catch(e){notify('Errore salvataggio: '+e.message,false);}};
+// Avatar/dropdown comportamento identico al portale
+const avatarBtn=$('avatar-btn'),avatarDropdown=$('avatar-dropdown');if(avatarBtn)avatarBtn.addEventListener('click',e=>{e.stopPropagation();avatarDropdown.classList.toggle('hidden')});document.addEventListener('click',()=>avatarDropdown?.classList.add('hidden'));const logout=$('dropdown-logout');if(logout)logout.addEventListener('click',async e=>{e.preventDefault();try{const s=await getSupabase();await s.auth.signOut()}catch{}localStorage.clear();window.location.href='/login'});
+load();
+})();
 </script>
-
-<!-- Modal Aggiungi Collaboratore -->
-<div id="modal-add-operator" class="fixed inset-0 z-50 hidden bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity opacity-0">
-    <div class="bg-white rounded-2xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden shadow-2xl transform scale-95 transition-transform mx-4" id="modal-operator-content">
-    
-    <div class="p-5 border-b border-stone-100 flex justify-between items-center bg-white flex-shrink-0">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined">badge</span>
-            </div>
-            <h3 class="text-xl font-headline font-bold text-stone-800" id="modal-operator-title">Nuovo Collaboratore</h3>
-        </div>
-        <button onclick="closeOperatorModal()" class="text-stone-400 hover:text-stone-700 bg-stone-50 p-2 rounded-full transition-colors">
-            <span class="material-symbols-outlined">close</span>
-        </button>
-    </div>
-    
-    <div class="flex flex-1 overflow-hidden bg-surface-container-low">
-        
-        <!-- Sidebar Navigazione -->
-        <div class="w-1/3 max-w-[280px] bg-stone-50 border-r border-stone-200 p-4 space-y-2 overflow-y-auto custom-scrollbar">
-            <button onclick="switchOperatorTab('anagrafica')" id="tab-btn-anagrafica" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold bg-white text-primary shadow-sm border border-stone-200 transition-all">
-                <span class="material-symbols-outlined text-[20px]">person</span> Anagrafica
-            </button>
-            <button onclick="switchOperatorTab('professione')" id="tab-btn-professione" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold text-stone-500 hover:bg-white hover:text-stone-700 transition-all border border-transparent">
-                <span class="material-symbols-outlined text-[20px]">work</span> Professione & Logistica
-            </button>
-            <button onclick="switchOperatorTab('fatturazione')" id="tab-btn-fatturazione" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold text-stone-500 hover:bg-white hover:text-stone-700 transition-all border border-transparent">
-                <span class="material-symbols-outlined text-[20px]">receipt_long</span> Fatturazione
-            </button>
-            <button onclick="switchOperatorTab('permessi')" id="tab-btn-permessi" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold text-stone-500 hover:bg-white hover:text-stone-700 transition-all border border-transparent">
-                <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span> Permessi Sistema
-            </button>
-            <button onclick="switchOperatorTab('progetti')" id="tab-btn-progetti" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold text-stone-500 hover:bg-white hover:text-stone-700 transition-all border border-transparent">
-                <span class="material-symbols-outlined text-[20px]">architecture</span> Progetti Assegnati
-            </button>
-            <button onclick="switchOperatorTab('documenti')" id="tab-btn-documenti" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-bold text-stone-500 hover:bg-white hover:text-stone-700 transition-all border border-transparent">
-                <span class="material-symbols-outlined text-[20px]">folder_open</span> Documenti PDF
-            </button>
-        </div>
-
-        <!-- Area Contenuti -->
-        <div class="flex-1 bg-white p-8 overflow-y-auto custom-scrollbar relative" id="modal-operator-forms">
-            
-            <div id="tab-content-anagrafica" class="space-y-6">
-                <input type="hidden" id="op-id" value="">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Dati Personali</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Nome</label>
-                        <input type="text" id="op-nome" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Cognome</label>
-                        <input type="text" id="op-cognome" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                    </div>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Email</label>
-                    <input type="email" id="op-email" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Telefono</label>
-                    <input type="text" id="op-telefono" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Data di Nascita</label>
-                        <input type="date" id="op-data-nascita" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Luogo di Nascita</label>
-                        <input type="text" id="op-luogo-nascita" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-content-professione" class="hidden space-y-6">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Dettagli Professionali</h4>
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">local_shipping</span>
-                        Logistica
-                    </h4>
-                    <div class="space-y-3">
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" id="op-auto-munito" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                            <span class="text-sm text-stone-700">Auto-munito</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" id="op-trasferte" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                            <span class="text-sm text-stone-700">Disponibile per trasferte</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">badge</span>
-                        Professione
-                    </h4>
-                    <div>
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Iscrizione Albo/Matricola</label>
-                        <input type="text" id="op-iscrizione-albo" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-content-fatturazione" class="hidden space-y-6">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Dati di Fatturazione</h4>
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">receipt_long</span>
-                        Dati Fatturazione
-                    </h4>
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">P.IVA</label>
-                            <input type="text" id="op-piva" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Codice Fiscale</label>
-                            <input type="text" id="op-cf" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Indirizzo Fatturazione</label>
-                            <input type="text" id="op-indirizzo-fatturazione" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Codice SDI</label>
-                                <input type="text" id="op-sdi" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">PEC</label>
-                                <input type="email" id="op-pec" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sezione Progetti Assegnati (sola lettura) -->
-            <div id="modal-progetti-assegnati" class="mt-4">
-                <!-- Contenuto popolato dinamicamente da loadOperatorData -->
-            </div>
-
-            <div id="tab-content-permessi" class="hidden space-y-6">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Accessi al Sistema</h4>
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">admin_panel_settings</span>
-                        Permessi di Accesso
-                    </h4>
-                    <div class="space-y-3">
-                        <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-1">Livello di Accesso</label>
-                        <select id="op-accesso" class="w-full rounded-xl border-stone-200 text-sm focus:ring-primary focus:border-primary px-3 py-2">
-                            <option value="">Seleziona...</option>
-                            <option value="Lettura">Sola Lettura</option>
-                            <option value="Lettura/Scrittura">Lettura/Scrittura</option>
-                            <option value="Amministratore">Amministratore</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <!-- Ambito Progetti -->
-                <div class="mb-6">
-                    <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-3">Ambito Progetti</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center gap-3 cursor-pointer hover:bg-stone-50 p-2 rounded-lg transition-colors">
-                            <input type="radio" name="project_scope" value="assigned" class="text-primary focus:ring-primary">
-                            <span class="text-sm text-stone-700">Solo Progetti Assegnati</span>
-                        </label>
-                        <label class="flex items-center gap-3 cursor-pointer hover:bg-stone-50 p-2 rounded-lg transition-colors">
-                            <input type="radio" name="project_scope" value="all" class="text-primary focus:ring-primary">
-                            <span class="text-sm text-stone-700">Tutti i Progetti dello Studio</span>
-                        </label>
-                    </div>
-                </div>
-                
-                <!-- Moduli Abilitati -->
-                <div class="border-t border-stone-100 pt-4">
-                    <label class="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-3">Moduli Abilitati</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-stone-400 text-[18px]">real_estate_agent</span>
-                                <span class="text-sm font-bold text-stone-700">Immobili</span>
-                            </div>
-                            <input type="checkbox" id="perm-immobili" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                        </label>
-
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-stone-400 text-[18px]">handshake</span>
-                                <span class="text-sm font-bold text-stone-700">Clienti</span>
-                            </div>
-                            <input type="checkbox" id="perm-clienti" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                        </label>
-
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-stone-400 text-[18px]">menu_book</span>
-                                <span class="text-sm font-bold text-stone-700">Journal</span>
-                            </div>
-                            <input type="checkbox" id="perm-journal" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                        </label>
-
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-stone-400 text-[18px]">payments</span>
-                                <span class="text-sm font-bold text-stone-700">Finanze</span>
-                            </div>
-                            <input type="checkbox" id="perm-finanze" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                        </label>
-
-                        <label class="flex items-center justify-between p-3 border border-stone-200 rounded-xl cursor-pointer hover:bg-stone-50 transition-colors">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-stone-400 text-[18px]">groups</span>
-                                <span class="text-sm font-bold text-stone-700">Team</span>
-                            </div>
-                            <input type="checkbox" id="perm-team" class="form-checkbox h-4 w-4 text-primary rounded border-stone-300 focus:ring-primary">
-                        </label>
-
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-content-progetti" class="hidden space-y-6">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Assegnazione Progetti</h4>
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">architecture</span>
-                        Seleziona i Progetti
-                    </h4>
-                    <div id="progetti-checkbox-container" class="space-y-3">
-                        <div class="text-center py-8 text-stone-400">
-                            <span class="material-symbols-outlined text-4xl mb-2">hourglass_empty</span>
-                            <p class="text-sm">Caricamento progetti...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-content-documenti" class="hidden space-y-6">
-                <h4 class="text-sm font-bold text-stone-500 uppercase tracking-wider border-b border-stone-100 pb-2 mb-4">Archivio Documenti</h4>
-                <div class="bg-stone-50 rounded-xl p-4 border border-stone-100">
-                    <h4 class="text-sm font-semibold text-stone-800 mb-4 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary">folder</span>
-                        Documenti Personali
-                    </h4>
-                    <div id="operatori-documenti-container" class="space-y-2">
-                        <div class="text-center py-8 text-stone-400">
-                            <span class="material-symbols-outlined text-4xl mb-2">folder_open</span>
-                            <p class="text-sm">Nessun documento disponibile</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="p-4 md:p-6 border-t border-stone-100 flex justify-end gap-4 bg-white flex-shrink-0">
-        <button onclick="closeOperatorModal()" class="px-6 py-3 text-stone-600 font-bold hover:bg-stone-100 rounded-xl transition-colors text-sm">Annulla</button>
-        <button onclick="saveNewOperator()" class="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 transition-all shadow-lg text-sm flex items-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">save</span> Salva Fascicolo
-        </button>
-    </div>
-</div>
-</div>
-
-<!-- Modal Assegnazione Progetti -->
-<div id="modal-assign-projects" class="fixed inset-0 z-50 hidden bg-stone-900/50 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity opacity-0">
-    <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden shadow-2xl transform scale-95 transition-transform">
-        <div class="p-6 border-b border-stone-100 flex justify-between items-center">
-            <h3 class="text-xl font-bold text-stone-800">Assegna Progetti</h3>
-            <button onclick="closeProjectAssignmentModal()" class="text-stone-400 hover:text-stone-700">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-        </div>
-        <div class="p-6 overflow-y-auto max-h-[60vh]">
-            <div id="projects-checkbox-container" class="space-y-4">
-                <div class="text-center py-8 text-stone-400">
-                    <span class="material-symbols-outlined text-4xl mb-2">hourglass_empty</span>
-                    <p class="text-sm">Caricamento progetti...</p>
-                </div>
-            </div>
-        </div>
-        <div class="p-6 border-t border-stone-100 flex justify-end gap-4">
-            <button onclick="closeProjectAssignmentModal()" class="px-6 py-2 text-stone-600 font-medium hover:bg-stone-100 rounded-lg transition-colors">
-                Annulla
-            </button>
-            <button onclick="saveProjectAssignment()" class="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors">
-                Salva Assegnazione
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Mobile sidebar toggle
-    var menuToggle = document.getElementById('mobile-menu-toggle');
-    var sidebar = document.getElementById('sidebar-menu');
-    var overlay = document.getElementById('mobile-sidebar-overlay');
-    function openSidebar() {
-        sidebar.classList.remove('-translate-x-full');
-        sidebar.classList.add('translate-x-0');
-        overlay.classList.remove('hidden');
-        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'close';
-    }
-    function closeSidebar() {
-        sidebar.classList.add('-translate-x-full');
-        sidebar.classList.remove('translate-x-0');
-        overlay.classList.add('hidden');
-        if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
-    }
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var isOpen = !sidebar.classList.contains('-translate-x-full');
-            if (isOpen) closeSidebar();
-            else openSidebar();
-        });
-    }
-    if (overlay) overlay.addEventListener('click', closeSidebar);
-    function checkScreenSize() {
-        if (window.innerWidth >= 1024) {
-            sidebar.classList.remove('-translate-x-full');
-            sidebar.classList.remove('translate-x-0');
-            overlay.classList.add('hidden');
-            if (menuToggle) menuToggle.querySelector('.material-symbols-outlined').textContent = 'menu';
-        } else {
-            closeSidebar();
-        }
-    }
-    window.addEventListener('resize', checkScreenSize);
-</script>
-</body></html>
+</body>
+</html>
