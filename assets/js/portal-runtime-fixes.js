@@ -50,6 +50,14 @@
       @media (max-width: 640px) {
         #team-list > button { min-height: 80px; padding: 14px !important; }
       }
+
+      /* Mobile portal sidebar: use the existing sidebar/overlay elements and classes. */
+      @media (max-width: 1023px) {
+        #sidebar-menu { transform: translateX(-100%); transition: transform 300ms ease-in-out !important; }
+        #sidebar-menu.portal-mobile-open { transform: translateX(0) !important; }
+        #mobile-sidebar-overlay.portal-mobile-visible { display: block !important; }
+        body.portal-sidebar-open { overflow: hidden; }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -108,11 +116,73 @@
     }, true);
   }
 
+  function ensureMobileSidebarToggle() {
+    const sidebar = document.getElementById('sidebar-menu');
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const overlay = document.getElementById('mobile-sidebar-overlay');
+    if (!sidebar || !toggle || !overlay || toggle.dataset.sidebarBound === '1') return;
+
+    toggle.dataset.sidebarBound = '1';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-controls', 'sidebar-menu');
+
+    const icon = toggle.querySelector('.material-symbols-outlined');
+
+    const closeSidebar = () => {
+      sidebar.classList.remove('portal-mobile-open');
+      overlay.classList.remove('portal-mobile-visible');
+      document.body.classList.remove('portal-sidebar-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      if (icon) icon.textContent = 'menu';
+    };
+
+    const openSidebar = () => {
+      sidebar.classList.add('portal-mobile-open');
+      overlay.classList.add('portal-mobile-visible');
+      document.body.classList.add('portal-sidebar-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      if (icon) icon.textContent = 'close';
+    };
+
+    toggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (sidebar.classList.contains('portal-mobile-open')) closeSidebar();
+      else openSidebar();
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+    sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', closeSidebar));
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) closeSidebar();
+    });
+
+    closeSidebar();
+  }
+
   window.portalAvatarInitialsSvg = initialsSvg;
   installScopedStyles();
   ensureAvatarDropdown();
-  window.addEventListener('load', () => { applyAvatarFallback(); ensureAvatarDropdown(); });
-  document.addEventListener('DOMContentLoaded', () => { applyAvatarFallback(); ensureAvatarDropdown(); });
-  setTimeout(() => { applyAvatarFallback(); ensureAvatarDropdown(); }, 300);
-  setTimeout(() => { applyAvatarFallback(); ensureAvatarDropdown(); }, 1000);
+  ensureMobileSidebarToggle();
+  window.addEventListener('load', () => {
+    applyAvatarFallback();
+    ensureAvatarDropdown();
+    ensureMobileSidebarToggle();
+  });
+  document.addEventListener('DOMContentLoaded', () => {
+    applyAvatarFallback();
+    ensureAvatarDropdown();
+    ensureMobileSidebarToggle();
+  });
+  setTimeout(() => {
+    applyAvatarFallback();
+    ensureAvatarDropdown();
+    ensureMobileSidebarToggle();
+  }, 300);
+  setTimeout(() => {
+    applyAvatarFallback();
+    ensureAvatarDropdown();
+    ensureMobileSidebarToggle();
+  }, 1000);
 })();
