@@ -47,8 +47,38 @@
       #team-list > button > div { gap: 14px !important; }
       #team-list > button .w-11.h-11 { width: 48px !important; height: 48px !important; flex: 0 0 48px !important; }
       #team-list > button p { line-height: 1.25; }
-      @media (max-width: 640px) {
-        #team-list > button { min-height: 80px; padding: 14px !important; }
+      #team-list > button > div > div:last-child { min-width: 0; }
+      #team-list > button > div > div:last-child p { overflow-wrap: anywhere; }
+
+      /* Mobile team layout: eliminate nested scrolling and compressed/attached controls. */
+      @media (max-width: 767px) {
+        body:has(#team-list) main > header { padding-left: 12px !important; padding-right: 12px !important; }
+        body:has(#team-list) main > header > div:last-child { gap: 6px !important; }
+        body:has(#team-list) main > header > div:last-child > button { width: 36px !important; height: 36px !important; }
+        body:has(#team-list) main > header > div:last-child > #avatar-dropdown-container #avatar-btn { width: 36px !important; height: 36px !important; }
+        body:has(#team-list) main > header > div:first-of-type { min-width: 0; }
+        body:has(#team-list) main > header > div:first-of-type > span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        body:has(#team-list) main > div { padding-left: 12px !important; padding-right: 12px !important; }
+        body:has(#team-list) #btn-new { width: 100% !important; justify-content: center !important; min-height: 46px !important; }
+        body:has(#team-list) #team-list { max-height: none !important; overflow: visible !important; padding-right: 0 !important; }
+        body:has(#team-list) #team-list > button { min-height: 88px !important; padding: 14px !important; border-radius: 14px !important; }
+        body:has(#team-list) #team-list > button + button { margin-top: 10px; }
+        body:has(#team-list) #team-list > button > div { gap: 12px !important; align-items: center !important; }
+        body:has(#team-list) #team-list > button .w-11.h-11 { width: 50px !important; height: 50px !important; flex-basis: 50px !important; }
+        body:has(#team-list) #team-list > button p { line-height: 1.3 !important; }
+        body:has(#team-list) #team-list > button .text-xs { line-height: 1.25 !important; }
+
+        body:has(#team-list) #empty-state { min-height: 360px !important; padding: 28px 20px !important; }
+        body:has(#team-list) #detail { margin-top: 20px !important; }
+        body:has(#team-list) #profile-modal { padding: 10px !important; }
+        body:has(#team-list) #profile-modal > div { max-height: 94vh !important; border-radius: 18px !important; }
+        body:has(#team-list) #profile-modal > div > div:first-child { padding: 18px !important; }
+        body:has(#team-list) #profile-modal > div > div:last-child { padding: 16px !important; }
+      }
+
+      @media (min-width: 768px) and (max-width: 1279px) {
+        body:has(#team-list) #team-list { max-height: 58vh; }
       }
 
       /* Mobile portal sidebar: use the existing sidebar/overlay elements and classes. */
