@@ -9,11 +9,9 @@ const originalSendFile = express.response.sendFile;
 const protectedPages = new Map([
   ['dashboard-senior.html','dashboard'],['dashboard-operatore.html','dashboard_collaboratore'],['gestione-team.html','team'],['gestione-clienti.html','clienti'],['dettaglio-cliente.html','clienti'],['gestione-immobili.html','immobiliare'],['creazione-immobile.html','immobiliare'],['gestione-journal.html','journal'],['gestione-progetti.html','progettazione'],['gestione-imprese.html','imprese'],['scheda-impresa.html','imprese'],['cantieri-impresa.html','imprese'],['cantiere-impresa.html','imprese'],['gestione-compiti.html','progettazione']
 ]);
-const injectedScripts={
-  'gestione-team.html':['/assets/js/portal-runtime-fixes.js','/assets/js/account-invite-actions.js'],
-  'gestione-clienti.html':['/assets/js/portal-runtime-fixes.js','/assets/js/account-invite-actions.js'],
-  'gestione-imprese.html':['/assets/js/portal-runtime-fixes.js']
-};
+const injectedScripts = Object.fromEntries([...protectedPages.keys()].map(page => [page, ['/assets/js/portal-runtime-fixes.js']]));
+injectedScripts['gestione-team.html'].push('/assets/js/account-invite-actions.js');
+injectedScripts['gestione-clienti.html'].push('/assets/js/account-invite-actions.js');
 function getPageKey(pathname){return protectedPages.get((pathname.split('/').pop()||''))||null;}
 function moduleLevel(value){if(typeof value==='string')return value;if(value&&typeof value==='object'&&typeof value.level==='string')return value.level;if(value===true)return'view';return'none';}
 function hasPermission(permissions,moduleName,required='view'){const p=permissions&&typeof permissions==='object'?permissions:{};const modules=p.modules&&typeof p.modules==='object'?p.modules:{};const value=modules[moduleName]??p[moduleName];const rank={none:0,view:1,edit:2,manage:3};return(rank[moduleLevel(value)]||0)>=(rank[required]||1);}
